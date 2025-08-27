@@ -1,0 +1,32 @@
+:root {
+	--bg: #eee;
+	--fg: #3a3a3a;
+
+	--text: #3b3b3b;
+	--text-emphasized: #2a2a2a;
+
+	--bg-nav: #333;
+	--fg-nav: #eee;
+}
+
+.dark {
+	--bg: #222;
+	--fg: #eee;
+
+	--text: #efefef;
+	--text-emphasized: #fff;
+
+	--bg-nav: #eee;
+	--fg-nav: #3a3a3a;
+}
+
+*:has(#theme-switch:checked) {
+	--bg: #222;
+	--fg: #eee;
+
+	--text: #efefef;
+	--text-emphasized: #fff;
+
+	--bg-nav: #bbb;
+	--fg-nav: #111;
+}

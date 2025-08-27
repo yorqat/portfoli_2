@@ -1,0 +1,37 @@
+.blog {
+	background: var(--color-bg);
+	padding-inline: clamp(0.8rem, 10vw, 2rem);
+
+	font-family: 'League Spartan', sans-serif;
+	color: var(--color-text);
+}
+
+blockquote {
+	border-left: grey 0.4rem solid;
+	border-radius: 0.4rem;
+	padding: 0.6rem 1.8rem;
+	margin: 0;
+}
+
+blockquote footer {
+	font-weight: 800;
+}
+
+p,
+li {
+	font-size: 1.25rem;
+	line-height: 1.5;
+}
+
+h1,
+h2 {
+	font-size: clamp(1.8rem, 10vw, 2.4rem);
+	font-weight: 800;
+	view-transition-name: logo;
+	padding-inline: 1rem;
+}
+
+h2 {
+	font-size: clamp(1.4rem, 10vw, 1.8rem);
+	font-weight: 600;
+}

@@ -1,0 +1,32 @@
+@use './_variables.scss' as v;
+@use './_theming.scss' as t;
+
+$btn-padding: v.$space-5;
+$btn-radius: v.$space-1;
+
+@mixin button(
+	$bg: var(--color-primary),
+	$color: var(--color-surface),
+	$padding: $btn-padding,
+	$radius: $btn-radius
+) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: $padding;
+	background-color: $bg;
+	color: $color;
+	border-radius: $radius;
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: var(--color-primary-hover);
+	}
+
+	&:focus {
+		outline: 2px solid var(--color-focus-ring);
+		outline-offset: 2px;
+	}
+}

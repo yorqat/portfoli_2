@@ -1,0 +1,8 @@
+@use '_index' as *;
+
+#brand-identity {
+	@include layout-respond('2xl') {
+		max-width: $x-breakpoint-xl-content;
+		margin-inline: auto;
+	}
+}

@@ -1,0 +1,49 @@
+input[type='button'] {
+	all: unset;
+
+	font-family: 'Anonymous Pro', monospace;
+	width: 100%;
+	padding: 0.6rem 1rem;
+	border: 1px solid var(--primary);
+	border-radius: 12px;
+	box-shadow: 0 2px 2.9px var(--secondary);
+	font-size: 1.2rem;
+	text-align: center;
+
+	transition:
+		box-shadow 0.2s,
+		background 0.1s;
+
+	box-sizing: border-box;
+}
+
+input[type='checkbox']:hover:not(:disabled) {
+	background: var(--primary);
+	filter: saturate(1.5);
+
+	box-shadow: 0 0px 3.1px var(--secondary);
+}
+
+input:hover:not(:disabled) {
+	/* background: rgba(217, 216, 217, 0.32); */
+	filter: saturate(1.05) brightness(1.1);
+
+	box-shadow: 0 0px 3.1px var(--secondary);
+}
+
+/* tab selected */
+input:focus-visible {
+	outline: 2px dashed var(--secondary);
+}
+
+input:active:not(:disabled),
+input.pressed:not(:disabled) {
+	box-shadow: 5px 4px 4px var(--secondary) inset;
+	background: var(--primary);
+	color: white;
+}
+
+input.spinbutton__button {
+	padding: 0.2rem 1rem;
+	border-radius: 4px;
+}

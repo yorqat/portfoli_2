@@ -1,0 +1,45 @@
+:root {
+	--primary: #884dff;
+	--secondary: #59308f;
+	--box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.alkali_metal {
+	--bg: #893838;
+}
+
+.alkaline_earth_metal {
+	--bg: #cf8b56;
+}
+
+.transition_metal {
+	--bg: #8b624c;
+}
+
+.post-transition_metal {
+	--bg: #5878a1;
+}
+
+.metalloid {
+	--bg: #507850;
+}
+
+.non-metal {
+	--bg: #cc4b4b;
+}
+
+.halogen {
+	--bg: #ab5393;
+}
+
+.noble_gas {
+	--bg: #884dff;
+}
+
+.lanthanide {
+	--bg: #7f6caa;
+}
+
+.actinide {
+	--bg: #b05266;
+}

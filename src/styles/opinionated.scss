@@ -1,0 +1,168 @@
+/* Opiniontated defaults */
+
+@use '_variables.scss' as v;
+@use '_layouts.scss' as layouts;
+
+@mixin hover-primary--color {
+	color: var(--color-success);
+}
+
+@mixin hover-primary--bg {
+	background-color: var(--color-primary-hover);
+}
+
+html,
+body {
+	box-sizing: border-box;
+
+	/* Readable fonts yes please */
+	font-family: system-ui, sans-serif;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+
+	// @include layouts.viewport-full-height();
+	// @include layouts.viewport-full-height-capped();
+	@include layouts.viewport-full-height-lockdown();
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0;
+}
+
+img,
+video {
+	max-width: 100%;
+	display: block;
+	height: auto;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+
+	&:hover {
+		color: var(--color-success);
+		@include hover-primary--color();
+	}
+}
+
+/*
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	line-height: 150%;
+	font-weight: bold;
+	// margin-bottom: v.$space-1;
+}
+
+h1 {
+	font-size: v.$font-size-2xl;
+}
+
+h2 {
+	font-size: v.$font-size-xl;
+}
+
+h3 {
+	font-size: v.$font-size-lg;
+}
+
+h4 {
+	font-size: v.$font-size-md;
+}
+*/
+@mixin no-default($selector...) {
+	// variadic
+	// Loop through each selector
+	@each $sel in $selector {
+		:not(.no-default:has(#{$sel})) #{$sel} {
+			@content;
+		}
+	}
+}
+/*
+@include no-default(p, blockquote, li) {
+	line-height: 150%;
+
+	margin-bottom: v.$space-2;
+}
+
+@include no-default(ul) {
+	list-style: square;
+	margin-left: v.$space-8;
+}
+
+@include no-default(li, blockquote, a, p, h1, h2, h3, h4) {
+	// @include layouts.padding-lengthy(v.$space-2, v.$space-1);
+}
+
+// labels interaction
+label[for],
+label > input {
+	cursor: pointer;
+}
+
+// Targets all usual suspects that might overflow and scroll
+div,
+p,
+ul,
+ol,
+li,
+blockquote,
+main,
+section,
+aside,
+article,
+header,
+footer,
+nav
+.scroll-scheme {
+	// overflow: auto;
+
+	&::-webkit-scrollbar {
+		width: 12px;
+		height: 12px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: var(--color-surface-alt);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--color-primary);
+		border-radius: 6px;
+		border: 3px solid var(--color-surface-alt);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background-color: var(--color-primary-hover);
+	}
+
+	scrollbar-width: thin;
+
+	@include layouts.respond('2xl') {
+		& {
+			scrollbar-width: auto;
+		}
+	}
+
+	& {
+		scrollbar-color: var(--color-primary) var(--color-surface-alt);
+	}
+}
+
+*/
