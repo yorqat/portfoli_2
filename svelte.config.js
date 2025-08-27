@@ -1,5 +1,5 @@
-// import adapter from '@sveltejs/adapter-vercel'
-import adapter from '@sveltejs/adapter-node'
+import adapter from '@sveltejs/adapter-vercel'
+// import adapter from '@sveltejs/adapter-node'
 import { sveltePreprocess } from 'svelte-preprocess'
 import path from 'path'
 
