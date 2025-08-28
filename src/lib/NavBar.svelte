@@ -23,6 +23,34 @@
 	let toggle = $state(false)
 
 	import '@material-symbols/font-400'
+
+	import gsap from 'gsap'
+	import { SplitText } from 'gsap/all'
+
+	const duration = 0.8
+
+	$effect(() => {
+		gsap.registerPlugin(SplitText)
+
+		let tl = gsap.timeline()
+
+		let splitLinks = SplitText.create('.nav__link', {
+			type: 'chars,words',
+			mask: 'lines' // <-- this can be "lines" or "words" or "chars"
+		})
+
+		tl.from(
+			splitLinks.chars,
+			{
+				duration,
+				x: -20,
+				stagger: 0.008,
+				transformOrigin: '50% 50% -20',
+				ease: 'back.out(1.7)'
+			},
+			`<`
+		)
+	})
 </script>
 
 {#key page.url.pathname}
@@ -52,7 +80,9 @@
 		<ul class="nav-links desktop">
 			{#each navLinks as { path, name }}
 				<li>
-					<a href={'/' + path} style={'view-transition-name: nav-link-' + name}>{name}</a>
+					<a class="nav__link" href={'/' + path} style={'view-transition-name: nav-link-' + name}
+						>{name}</a
+					>
 				</li>
 			{/each}
 		</ul>
@@ -91,7 +121,7 @@
 		a {
 			padding: $mobile-padding;
 			font-size: $x-font-size-2xl;
-			font-weight: bold;
+			font-family: 'Satoshi-Bold', sans-serif;
 		}
 	}
 
@@ -121,6 +151,8 @@
 	.nav-bar {
 		color: var(--color-text);
 		padding-block: v.$space-3;
+
+		font-family: 'Satoshi-Regular', sans-serif;
 
 		position: sticky;
 

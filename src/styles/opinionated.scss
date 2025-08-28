@@ -20,9 +20,11 @@ body {
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
 
+	// don't uncomment cuz it breaks smoothscroll
 	// @include layouts.viewport-full-height();
 	// @include layouts.viewport-full-height-capped();
-	@include layouts.viewport-full-height-lockdown();
+	// @include layouts.viewport-full-height-lockdown();
+	overscroll-behavior: none;
 }
 
 *,
