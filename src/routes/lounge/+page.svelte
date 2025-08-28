@@ -15,12 +15,12 @@
 	$effect(() => {
 		gsap.registerPlugin(SplitText)
 		gsap.registerPlugin(ScrollTrigger)
-    gsap.registerPlugin(ScrollSmoother)
+		gsap.registerPlugin(ScrollSmoother)
 
-ScrollSmoother.create({
-  smooth: 1,
-  effects: true,
-});
+		ScrollSmoother.create({
+			smooth: 1,
+			effects: true
+		})
 
 		let tl =
 			gsap.timeline(/*{
@@ -107,7 +107,7 @@ ScrollSmoother.create({
 					</li>
 				{/each}
 			</ul>
-<!--
+			<!--
 			<div>
 				<Marquee text="BLOGS MAKES PROBLEMS GO AWAY" separator='•' />
 			</div>
