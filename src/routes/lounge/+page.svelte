@@ -63,7 +63,7 @@
 				scrollTrigger: {
 					trigger: section,
 					start: 'top 80%',
-          toggleActions: "restart none none reverse"
+					toggleActions: 'restart none none reverse'
 				}
 			})
 		})
