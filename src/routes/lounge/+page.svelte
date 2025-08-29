@@ -1,14 +1,11 @@
 <script lang="ts">
 	import A11y from '$lib/A11y.svelte'
-	import SymbolInput from '$lib/components/SymbolInput.svelte'
 
 	import { navLinks as loungeNav, keyboardNav } from '$lib/navLinks'
 	import gsap from 'gsap'
 	import { SplitText, ScrollTrigger, ScrollSmoother } from 'gsap/all'
 
 	import '@material-symbols/font-400'
-
-	import Marquee from '$lib/components/Marquee.svelte'
 
 	import DrawSVGPlugin from 'gsap/DrawSVGPlugin'
 
@@ -21,9 +18,9 @@
 		gsap.registerPlugin(SplitText)
 		gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 
-    gsap.registerPlugin(DrawSVGPlugin)
+		gsap.registerPlugin(DrawSVGPlugin)
 
-gsap.from(".draw-me", {duration:1,drawSVG: 0});
+		gsap.from('.draw-me', { duration: 1, drawSVG: 0 })
 
 		// create the smooth scroller FIRST!
 		let smoother = ScrollSmoother.create({
@@ -53,6 +50,23 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 			},
 			`<`
 		)
+
+		gsap.utils.toArray<HTMLElement>('.section--slide').forEach((section) => {
+			const header = section.querySelector('.section__header--3d')
+			if (!header) return
+
+			gsap.from(header, {
+				y: 50,
+				opacity: 0,
+				duration: 0.4,
+				ease: 'sine.in',
+				scrollTrigger: {
+					trigger: section,
+					start: 'top 80%',
+          toggleActions: "restart none none reverse"
+				}
+			})
+		})
 	})
 </script>
 
@@ -66,8 +80,12 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 
 {#snippet Heading3D(heading: string)}
 	<div class="section__header--3d corsette">
-		<div class="section__header  section__header--3d--blue" aria-hidden="true" data-lag="0.05">{heading}</div>
-		<div class="section__header section__header--3d--red" aria-hidden="true" data-lag="0.15">{heading}</div>
+		<div class="section__header section__header--3d--blue" aria-hidden="true" data-lag="0.05">
+			{heading}
+		</div>
+		<div class="section__header section__header--3d--red" aria-hidden="true" data-lag="0.15">
+			{heading}
+		</div>
 
 		<h1 class="section__header section__header--3d" data-lag="0.1">
 			{heading}
@@ -103,7 +121,7 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 				</ul>
 			</nav>
 
-			<div class="hero__backdrop draw-me"></div>
+			<div class="hero__backdrop draw-me" id="backdrop-nav"></div>
 		</section>
 
 		<!-- Secondary Hero -->
@@ -168,8 +186,9 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 		}
 	}
 
-  .section__note {
-  }
+	.section__note {
+		display: none;
+	}
 
 	.section__header {
 		font-size: $x-font-size-6xl;
@@ -183,19 +202,15 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 		&--3d {
 			position: relative;
 
-      &--red {
-        color: red;
-        color: #ff6666;
-        color: #ff0050;
-        opacity: 0.75;
-      }
+			&--red {
+				color: #ff0050;
+				opacity: 0.75;
+			}
 
-      &--blue {
-        color: #00ffff;
-        color: #ccffff;
-        color: #00f2ea;
-        opacity: 0.75;
-      }
+			&--blue {
+				color: #00f2ea;
+				opacity: 0.75;
+			}
 
 			> * {
 				position: absolute;
@@ -208,7 +223,7 @@ gsap.from(".draw-me", {duration:1,drawSVG: 0});
 		$padding: $x-space-4 $x-space-6;
 		align-items: center;
 
-		@include layout-respond('xl') {
+		@include layout-respond('lg') {
 			max-width: $x-breakpoint-lg-content;
 			margin-inline: auto;
 		}
