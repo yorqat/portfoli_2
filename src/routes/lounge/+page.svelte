@@ -2,72 +2,12 @@
 	import A11y from '$lib/A11y.svelte'
 
 	import { navLinks as loungeNav, keyboardNav } from '$lib/navLinks'
-	import gsap from 'gsap'
-	import { SplitText, ScrollTrigger, ScrollSmoother } from 'gsap/all'
 
 	import '@material-symbols/font-400'
 
-	import DrawSVGPlugin from 'gsap/DrawSVGPlugin'
+	import { animateLoungeElements } from './animations'
 
-	const duration = 0.5
-
-	const smoothDesktop = 2
-	const smoothTouch = 0.5
-
-	$effect(() => {
-		gsap.registerPlugin(SplitText)
-		gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
-
-		gsap.registerPlugin(DrawSVGPlugin)
-
-		gsap.from('.draw-me', { duration: 1, drawSVG: 0 })
-
-		// create the smooth scroller FIRST!
-		let smoother = ScrollSmoother.create({
-			smooth: smoothDesktop,
-			smoothTouch: smoothTouch,
-			effects: true
-		})
-
-		let tl = gsap.timeline({
-			// yes, we can add it to an entire timeline!
-			// scrollTrigger: {}
-		})
-
-		let splitLinks = SplitText.create('.nav__link', {
-			type: 'chars,words',
-			mask: 'chars' // <-- this can be "lines" or "words" or "chars"
-		})
-
-		tl.from(
-			splitLinks.chars,
-			{
-				duration,
-				y: 100,
-				stagger: 0.015,
-				transformOrigin: '50% 50% -20',
-				ease: 'back.out(1.7)'
-			},
-			`<`
-		)
-
-		gsap.utils.toArray<HTMLElement>('.section--slide').forEach((section) => {
-			const header = section.querySelector('.section__header--3d')
-			if (!header) return
-
-			gsap.from(header, {
-				y: 50,
-				opacity: 0,
-				duration: 0.4,
-				ease: 'sine.in',
-				scrollTrigger: {
-					trigger: section,
-					start: 'top 80%',
-					toggleActions: 'restart none none reverse'
-				}
-			})
-		})
-	})
+	$effect(animateLoungeElements)
 </script>
 
 <svelte:head>
@@ -120,13 +60,27 @@
 					{/each}
 				</ul>
 			</nav>
-
-			<div class="hero__backdrop draw-me" id="backdrop-nav"></div>
 		</section>
 
 		<!-- Secondary Hero -->
 		<section class="section section--intro">
 			{@render Heading3D('I design products that ship, scale, and serve real users')}
+
+			<div class="morpher-container" aria-hidden="true">
+				<svg
+					width="400"
+					height="400"
+					viewBox="0 0 400 400"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						id="morpher"
+						d="M21.4998 227.5C-6.1161 176.145 -20.4999 32.5002 77.0001 4.00016C156.076 -19.1143 388 77 318 219C253.258 350.334 50 280.5 21.4998 227.5Z"
+						stroke="black"
+					/>
+				</svg>
+			</div>
 		</section>
 
 		<!-- Slides -->
@@ -163,13 +117,40 @@
 		<!-- Call to Action -->
 		<section class="section section--cta">
 			{@render Heading3D('Curious of what I bring to the table?')}
-			<button class="cta__button">Review my work together?</button>
+			<button class="cta__button corsette">Review my work together?</button>
 		</section>
 	</div>
 </div>
 
 <style lang="scss">
 	@use '_index' as *;
+
+	.draw-me-container {
+		position: absolute;
+		width: 100vw;
+		height: auto;
+
+		.draw-me {
+			stroke: var(--color-text);
+
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.morpher-container {
+		width: 100%;
+		display: grid;
+		place-items: center;
+	}
+
+	#morpher {
+		stroke: var(--color-primary-accent);
+		fill: var(--color-primary-accent);
+
+		position: fixed;
+		margin-inline: auto;
+	}
 
 	#backdrop-nav {
 		background: var(--color-bg);
@@ -204,11 +185,13 @@
 
 			&--red {
 				color: #ff0050;
+				color: var(--color-secondary-accent);
 				opacity: 0.75;
 			}
 
 			&--blue {
 				color: #00f2ea;
+				color: var(--color-primary-accent);
 				opacity: 0.75;
 			}
 
@@ -256,11 +239,11 @@
 			align-items: center;
 
 			@include layout-respond-between('0', '2xl') {
-				font-size: $x-font-size-2xl;
+				font-size: $x-font-size-xl;
 			}
 
 			@include layout-respond('2xl') {
-				font-size: $x-font-size-4xl;
+				font-size: $x-font-size-2xl;
 			}
 		}
 

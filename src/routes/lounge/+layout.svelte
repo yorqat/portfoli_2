@@ -33,10 +33,18 @@
 	@use '_index' as *;
 
 	$custom-light-theme: (
-		bg: $x-gray-100
+		bg: $x-gray-100,
+
+		primary-accent: #fff430,
+		// yellow
+		secondary-accent: #9c59d1 // purple
 	);
 
-	$custom-dark-theme: ();
+	$custom-dark-theme: (
+		primary-accent: #9c59d1,
+		// purple
+		secondary-accent: #fff430 // yellow
+	);
 
 	@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
 	@include theming-impose-schemes-basic();
