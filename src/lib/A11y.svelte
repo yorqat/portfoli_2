@@ -75,32 +75,31 @@
 		toggle = false
 	}}
 >
-	<label class="a11y-toggle">
-		Preferences
-		<input type="checkbox" bind:checked={toggle} />
-	</label>
+	<details bind:open={toggle}>
+		<summary class="a11y-toggle"> Toggle Accessibility </summary>
 
-	<div class="a11y-menu">
-		<!-- Don't  forget label and input binding -->
-		<h3 class="no-default">Preferences</h3>
+		<div class="a11y-menu">
+			<!-- Don't  forget label and input binding -->
+			<h3 class="no-default">Preferences</h3>
 
-		<div class="preferences">
-			<label class="a11y-menu__item">
-				{'Dark Mode'}
-				<ThreeState {...themeHandlers} ariaChecked={themeChecked} />
-			</label>
+			<div class="preferences">
+				<label class="a11y-menu__item">
+					{'Dark Mode'}
+					<ThreeState {...themeHandlers} ariaChecked={themeChecked} />
+				</label>
 
-			<label class="a11y-menu__item">
-				{'Reduced Motion'}
-				<ThreeState {...reducedMotionHandlers} ariaChecked={reducedMotionChecked} />
-			</label>
+				<label class="a11y-menu__item">
+					{'Reduced Motion'}
+					<ThreeState {...reducedMotionHandlers} ariaChecked={reducedMotionChecked} />
+				</label>
+			</div>
+
+			<div class="legal">
+				<a href="/privacy">Privacy Policy</a>
+				<a href="/terms">Terms of Use</a>
+			</div>
 		</div>
-
-		<div class="legal">
-			<a href="/privacy">Privacy Policy</a>
-			<a href="/terms">Terms of Use</a>
-		</div>
-	</div>
+	</details>
 </div>
 
 <style lang="scss">
@@ -128,8 +127,6 @@
 		box-shadow: $x-bs-sketch-falloff;
 		font-size: $x-font-size-md;
 
-		display: none;
-
 		.preferences {
 			@include layout-flex-column();
 			gap: $x-space-xs;
@@ -155,18 +152,12 @@
 	}
 
 	.a11y-toggle {
-		@include theming-colored-svg-mask('/display_settings.svg', var(--color-text), $x-font-size-2xl);
+		@include theming-colored-svg-mask('/lightbulb.svg', var(--color-text), $x-font-size-2xl);
 
 		@include layout-grid-center();
 
 		input {
 			opacity: 0;
 		}
-	}
-
-	.a11y:has(.a11y-toggle input:checked) .a11y-menu {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
 	}
 </style>

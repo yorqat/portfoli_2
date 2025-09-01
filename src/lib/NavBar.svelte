@@ -39,17 +39,13 @@
 			mask: 'lines' // <-- this can be "lines" or "words" or "chars"
 		})
 
-		tl.from(
-			splitLinks.chars,
-			{
-				duration,
-				x: -20,
-				stagger: 0.008,
-				transformOrigin: '50% 50% -20',
-				ease: 'back.out(1.7)'
-			},
-			`<`
-		)
+		tl.from(splitLinks.chars, {
+			duration,
+			x: -20,
+			stagger: 0.008,
+			transformOrigin: '50% 50% -20',
+			ease: 'back.out(1.7)'
+		})
 	})
 </script>
 
@@ -63,7 +59,7 @@
 
 		<div class="nothing"></div>
 
-		<details style="display: contents;" class="nav-toggle-container expand">
+		<details bind:open={toggle} style="display: contents;" class="nav-toggle-container expand">
 			<summary class="nav-toggle">
 				<span class="material-symbols-outlined"> </span>
 			</summary>
@@ -127,7 +123,9 @@
 
 	.nav-toggle,
 	.material-symbols-outlined {
+		/*
 		@include default-theming.colored-svg-mask('/close.svg', var(--color-text), v.$font-size-4xl);
+    */
 	}
 
 	.nav-links {
@@ -153,8 +151,6 @@
 		padding-block: v.$space-3;
 
 		font-family: 'Satoshi-Regular', sans-serif;
-
-		position: sticky;
 
 		width: 100%;
 
@@ -218,17 +214,17 @@
 				grid-row-gap: v.$space-0;
 
 				.nav-toggle {
+					/*
 					@include default-theming.colored-svg-mask(
 						'/menu.svg',
 						var(--color-text),
 						v.$font-size-4xl
 					);
+          */
 				}
 
 				.nav-links {
 					@include semantics.hide-animatable();
-
-					overflow: clip;
 
 					gap: 0.2rem;
 				}
