@@ -63,5 +63,8 @@
 		view-transition-name: backdrop-nav;
 		background: var(--color-surface);
 		box-shadow: $x-bs-sketch-falloff;
+		position: sticky;
+		top: 0;
+		z-index: 999;
 	}
 </style>

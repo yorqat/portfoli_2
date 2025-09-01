@@ -6,8 +6,28 @@
 	import '@material-symbols/font-400'
 
 	import { animateLoungeElements } from './animations'
+	import { onMount } from 'svelte'
+	import NavBar from '$lib/NavBar.svelte'
+	import { Flip } from 'gsap/all'
 
 	$effect(animateLoungeElements)
+
+	let scrolledPastLoungeNav = $state(false)
+	let showLoungeNav = $state(false)
+
+	let nav = $state<Flip.FlipState>()
+
+	onMount(() => {
+		const handleScroll = () => {
+			scrolledPastLoungeNav = window.scrollY > window.innerHeight * 0.75 // 80vh
+		}
+
+		window.addEventListener('scroll', handleScroll)
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll)
+		}
+	})
 </script>
 
 <svelte:head>
@@ -27,7 +47,7 @@
 			{heading}
 		</div>
 
-		<h1 class="section__header section__header--3d" data-lag="0.1">
+		<h1 class="section__header section__header--3d" data-lag="0.1" style="--content: ''">
 			{heading}
 		</h1>
 	</div>
@@ -35,12 +55,21 @@
 
 <!-- Smooth Scroll Wrapper -->
 <div id="smooth-wrapper" class="landing base">
+	<div
+		id="nav"
+		style="visibility: {!scrolledPastLoungeNav ? 'hidden' : 'visible'};"
+		inert={!scrolledPastLoungeNav || undefined}
+	>
+		<NavBar />
+	</div>
 	<div id="smooth-content" class="landing__content" use:keyboardNav>
 		<!-- Hero Section -->
-		<section class="section section--hero">
+		<section class="section section--hero" inert={scrolledPastLoungeNav ?? undefined}>
 			<div class="hero__content">
 				<div class="hero__branding">
-					<span class="hero__title box">Y<span>or</span> Q<span>at</span></span>
+					<span class="hero__title box"
+						>Y<span class="span-collapse">or</span>Q<span class="span-collapse">at</span></span
+					>
 					<div class="hero__subtitle">
 						<span> ux dev </span>
 
@@ -125,17 +154,15 @@
 <style lang="scss">
 	@use '_index' as *;
 
-	.draw-me-container {
-		position: absolute;
-		width: 100vw;
-		height: auto;
+	#nav {
+		view-transition-name: backdrop-nav;
+		background: var(--color-surface);
+		box-shadow: $x-bs-sketch-falloff;
+		z-index: 999;
 
-		.draw-me {
-			stroke: var(--color-text);
-
-			width: 100%;
-			height: 100%;
-		}
+		position: sticky;
+		inset: 0;
+		bottom: unset;
 	}
 
 	.morpher-container {
@@ -195,6 +222,22 @@
 				opacity: 0.75;
 			}
 
+			&::after,
+			&::before {
+				position: fixed;
+
+				content: var(--content);
+				opacity: 0.75;
+			}
+
+			&::after {
+				color: var(--color-primary-accent);
+			}
+
+			&::before {
+				color: var(--color-secondary-accent);
+			}
+
 			> * {
 				position: absolute;
 			}
@@ -223,6 +266,8 @@
 
 		.hero__title {
 			font-family: 'Satoshi-Black', sans-serif;
+			display: inline-flex;
+			width: 6ch;
 
 			@include layout-respond-between('0', '2xl') {
 				font-size: $x-font-size-6xl;

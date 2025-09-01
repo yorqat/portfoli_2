@@ -1,11 +1,12 @@
 import gsap from 'gsap'
 import { SplitText, ScrollTrigger, ScrollSmoother } from 'gsap/all'
+import { writable, get, type Writable } from 'svelte/store'
 import DrawSVGPlugin from 'gsap/DrawSVGPlugin'
 import MorphSVGPlugin from 'gsap/MorphSVGPlugin'
 
-const duration = 0.5
-const smoothDesktop = 2
-const smoothTouch = 0.5
+const duration = writable(0.2)
+const smoothDesktop = writable(2)
+const smoothTouch = writable(0.5)
 
 export const animateLoungeElements = () => {
 	gsap.registerPlugin(SplitText)
@@ -15,26 +16,28 @@ export const animateLoungeElements = () => {
 
 	// create the smooth scroller FIRST!
 	let smoother = ScrollSmoother.create({
-		smooth: smoothDesktop,
-		smoothTouch: smoothTouch,
+		smooth: get(smoothDesktop),
+		smoothTouch: get(smoothTouch),
 		effects: true
 	})
 
 	let splitLinks = SplitText.create('.nav__link', {
 		type: 'chars,words',
-		mask: 'chars' // <-- this can be "lines" or "words" or "chars"
+		mask: 'words' // <-- this can be "lines" or "words" or "chars"
 	})
 
 	gsap.from(
 		splitLinks.chars,
 		{
-			duration,
-			y: 100,
-			stagger: 0.015,
+			opacity: 0.5,
+			duration: get(duration),
+			y: -100,
+			x: 50,
+			stagger: 0.05,
 			transformOrigin: '50% 50% -20',
 			ease: 'back.out(1.7)'
 		},
-		`<`
+		``
 	)
 
 	gsap.utils.toArray<HTMLElement>('.section--slide').forEach((section) => {
@@ -48,6 +51,8 @@ export const animateLoungeElements = () => {
 				toggleActions: 'restart none none reverse'
 			}
 		})
+
+		let splitHeader = SplitText.create(header, { type: 'chars,words', mask: 'chars' })
 
 		// Opacity first
 		tl.from(header, {
@@ -64,8 +69,17 @@ export const animateLoungeElements = () => {
 					ease: 'sine.out'
 				},
 				0.2
-			) // <-- offset from timeline start
-
+			)
+			.from(
+				splitHeader.lines,
+				{
+					x: 10,
+					duration: 0.8,
+					stagger: 0.5,
+					ease: 'sine.out'
+				},
+				0.2
+			)
 		const tlMorph = gsap.timeline({
 			repeat: -1,
 			yoyo: true,
