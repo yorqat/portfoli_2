@@ -123,9 +123,7 @@
 
 	.nav-toggle,
 	.material-symbols-outlined {
-		/*
 		@include default-theming.colored-svg-mask('/close.svg', var(--color-text), v.$font-size-4xl);
-    */
 	}
 
 	.nav-links {
@@ -214,13 +212,11 @@
 				grid-row-gap: v.$space-0;
 
 				.nav-toggle {
-					/*
 					@include default-theming.colored-svg-mask(
 						'/menu.svg',
 						var(--color-text),
 						v.$font-size-4xl
 					);
-          */
 				}
 
 				.nav-links {
