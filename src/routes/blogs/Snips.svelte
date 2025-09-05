@@ -11,60 +11,63 @@
 </script>
 
 {#snippet Seo(
-	title: string,
-	description: string,
-	url: string,
-	image: string,
-	publishedTime?: string,
-	modifiedTime?: string
+  title: string,
+  description: string,
+  url: string,
+  image: string,
+  publishedTime?: string,
+  modifiedTime?: string
 )}
-	<!-- Basic SEO -->
-	<title>{title}</title>
-	<meta name="description" content={description} />
-	<link rel="canonical" href={url} />
+  <!-- Basic SEO -->
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={url} />
 
-	<!-- Open Graph -->
-	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
-	<meta property="og:type" content={'article'} />
-	<meta property="og:url" content={url} />
-	<meta property="og:image" content={image} />
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content={image} />
 
-	<!-- Twitter -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={title} />
-	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image" content={image} />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
 
-	<!-- Structured Data (JSON-LD) -->
-	{@html `<script type="application/ld+json">
-    {JSON.stringify(
-			{
-				'@context': 'https://schema.org',
-				'@type': 'article',
-				headline: title,
-				description,
-				url,
-				image,
-				...{
-					datePublished: publishedTime,
-					dateModified: modifiedTime ?? publishedTime,
-					author: { '@type': 'Person', name: 'Your Name' },
-					publisher: {
-						'@type': 'Organization',
-						name: 'Your Site Name',
-						logo: { '@type': 'ImageObject', url: 'https://example.com/logo.png' }
-					}
-				}
-			},
-			null,
-			import.meta.env.DEV ? 2 : undefined
-		)}
-  </script>`}
+  <!-- Structured Data (JSON-LD) -->
+  {@html `
+    <script type="application/ld+json">
+      ${JSON.stringify(
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: title,
+          description,
+          url,
+          image,
+          datePublished: publishedTime,
+          dateModified: modifiedTime ?? publishedTime,
+          author: { '@type': 'Person', name: 'Yor Qat' },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Yor Qat',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://yorqat.com/favicon.svg'
+            }
+          }
+        },
+        null,
+        import.meta.env.DEV ? 2 : undefined
+      )}
+    </script>
+  `}
 {/snippet}
 
 {#snippet TableOfContents(chapters: Chapter[])}
-	<details class="table-of-contents card scroll-scheme" open>
+	<details class="table-of-contents card scroll-scheme">
 		<summary>
 			<h3>Table of Contents</h3>
 			<div class="menu"></div>

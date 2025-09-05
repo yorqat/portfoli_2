@@ -23,7 +23,6 @@
 			@include fonts-stack('Satoshi', 'sans-serif');
 			@include fonts-alternate-style();
 			background: var(--color-surface);
-			color: var(--color-text-muted);
 			line-height: 190%;
 			position: sticky;
 			box-shadow: $x-bs-sketch-falloff;
@@ -73,6 +72,7 @@
 				a {
 					padding-block: $x-space-xs;
 					padding-inline: $x-space-xs;
+			    color: var(--color-text-muted);
 				}
 			}
 
