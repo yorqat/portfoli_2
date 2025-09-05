@@ -8,7 +8,7 @@ export type Value = any
 export type Variable = {
 	description: string
 	value: Value
-	derived: IdentKey | () => Value | undefined
+	derived: IdentKey | (() => Value | undefined)
 }
 
 // Exports all variables as SCSS variables

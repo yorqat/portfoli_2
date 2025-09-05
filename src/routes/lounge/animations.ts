@@ -4,9 +4,9 @@ import { writable, get, type Writable } from 'svelte/store'
 import DrawSVGPlugin from 'gsap/DrawSVGPlugin'
 import MorphSVGPlugin from 'gsap/MorphSVGPlugin'
 
-const duration = writable(0.2)
-const smoothDesktop = writable(2)
-const smoothTouch = writable(0.5)
+export const duration = writable(0.2)
+export const smoothDesktop = writable(2)
+export const smoothTouch = writable(0.5)
 
 export const animateLoungeElements = () => {
 	gsap.registerPlugin(SplitText)
@@ -23,21 +23,28 @@ export const animateLoungeElements = () => {
 
 	let splitLinks = SplitText.create('.nav__link', {
 		type: 'chars,words',
-		mask: 'words' // <-- this can be "lines" or "words" or "chars"
+		autoSplit: true,
+		mask: 'lines' // <-- this can be "lines" or "words" or "chars"
 	})
 
-	gsap.from(
+	const tl = gsap.timeline()
+
+	tl.from(
 		splitLinks.chars,
 		{
-			opacity: 0.5,
 			duration: get(duration),
-			y: -100,
-			x: 50,
 			stagger: 0.05,
 			transformOrigin: '50% 50% -20',
 			ease: 'back.out(1.7)'
 		},
-		``
+		`<`
+	).from(
+		splitLinks.words,
+		{
+			duration: get(duration),
+			opacity: 0.5
+		},
+		`<`
 	)
 
 	gsap.utils.toArray<HTMLElement>('.section--slide').forEach((section) => {
@@ -52,34 +59,13 @@ export const animateLoungeElements = () => {
 			}
 		})
 
-		let splitHeader = SplitText.create(header, { type: 'chars,words', mask: 'chars' })
-
 		// Opacity first
 		tl.from(header, {
 			opacity: 0,
 			duration: 0.6,
 			ease: 'sine.in'
 		})
-			// Translation starts 0.2s after opacity started
-			.from(
-				header,
-				{
-					y: 50, // example translation
-					duration: 0.8,
-					ease: 'sine.out'
-				},
-				0.2
-			)
-			.from(
-				splitHeader.lines,
-				{
-					x: 10,
-					duration: 0.8,
-					stagger: 0.5,
-					ease: 'sine.out'
-				},
-				0.2
-			)
+
 		const tlMorph = gsap.timeline({
 			repeat: -1,
 			yoyo: true,

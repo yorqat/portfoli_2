@@ -53,6 +53,11 @@ a {
 	}
 }
 
+// view transitions
+.vt {
+	view-transition-name: var(--vt);
+}
+
 /*
 
 button,

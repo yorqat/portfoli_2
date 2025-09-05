@@ -47,6 +47,7 @@
 	);
 
 	@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
-	@include theming-impose-schemes-basic();
+	// @include theming-impose-schemes-basic();
+	@include theming-define-base();
 	@include animations-declare-motions-basic();
 </style>

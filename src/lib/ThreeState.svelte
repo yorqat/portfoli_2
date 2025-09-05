@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type AriaChecked } from '$lib/types/aria'
+	import { page } from '$app/state'
 
 	type ThreeStateProps = {
 		onTrue?: () => void
@@ -48,21 +49,23 @@
 	const disabledJavascriptNotice = 'Your Javascript may be disabled. Enable JS for functionality'
 </script>
 
-<button
-	tabindex="0"
-	class="three-state"
-	role="switch"
-	aria-label="label"
-	aria-disabled="false"
-	aria-checked={ariaChecked}
-	data-no-js={dataNoJs}
-	title={dataNoJs ? disabledJavascriptNotice : undefined}
-	{onclick}
->
-	<div class="toggle">
-		<div class="toggle__indicator"></div>
-	</div>
-</button>
+{#key page.url.pathname}
+	<button
+		tabindex="0"
+		class="three-state"
+		role="switch"
+		aria-label="label"
+		aria-disabled="false"
+		aria-checked={ariaChecked}
+		data-no-js={dataNoJs}
+		title={dataNoJs ? disabledJavascriptNotice : undefined}
+		{onclick}
+	>
+		<div class="toggle">
+			<div class="toggle__indicator"></div>
+		</div>
+	</button>
+{/key}
 
 <style lang="scss">
 	@use '_variables' as v;
@@ -113,7 +116,7 @@
 
 		&[aria-checked='mixed'] .toggle__indicator {
 			translate: 5% 0;
-			width: calc(v.$font-size-6xl - 0.45rem);
+			width: calc(v.$font-size-6xl - 0.4rem);
 		}
 	}
 

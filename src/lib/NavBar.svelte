@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { navLinks } from '$lib/navLinks'
 
 	import A11y from '$lib/A11y.svelte'
@@ -29,6 +29,12 @@
 
 	const duration = 0.8
 
+	type NavBarProps = {
+		tagViewTransition?: boolean
+	}
+
+	const { tagViewTransition = true }: NavBarProps = $props()
+
 	$effect(() => {
 		gsap.registerPlugin(SplitText)
 
@@ -36,7 +42,8 @@
 
 		let splitLinks = SplitText.create('.nav__link', {
 			type: 'chars,words',
-			mask: 'lines' // <-- this can be "lines" or "words" or "chars"
+			mask: 'lines', // <-- this can be "lines" or "words" or "chars"
+			autoSplit: true
 		})
 
 		tl.from(splitLinks.chars, {
@@ -52,7 +59,13 @@
 {#key page.url.pathname}
 	<header class="nav-bar no-default" use:onUnfocus={() => (toggle = false)}>
 		<div class="logo">
-			<a href="/lounge"> YQ </a>
+			<a href="/lounge">
+				{#snippet TransitionLetter(letter: string)}
+					<span style="--vt:{letter.toString()};" class:vt={tagViewTransition}>{letter}</span>
+				{/snippet}
+
+				{@render TransitionLetter('Y')}{@render TransitionLetter('Q')}
+			</a>
 
 			<A11y />
 		</div>
@@ -67,7 +80,10 @@
 			<ul class="nav-links">
 				{#each navLinks as { path, name }}
 					<li>
-						<a href={'/' + path} style={'view-transition-name: nav-link-' + name}>{name}</a>
+						<a
+							href={'/' + path}
+							style={tagViewTransition ? 'view-transition-name: nav-link-' + name : ''}>{name}</a
+						>
 					</li>
 				{/each}
 			</ul>
@@ -76,8 +92,10 @@
 		<ul class="nav-links desktop">
 			{#each navLinks as { path, name }}
 				<li>
-					<a class="nav__link" href={'/' + path} style={'view-transition-name: nav-link-' + name}
-						>{name}</a
+					<a
+						class="nav__link vt"
+						href={'/' + path}
+						style={tagViewTransition ? '--vt: nav-link-' + name : ''}>{name}</a
 					>
 				</li>
 			{/each}
@@ -141,6 +159,8 @@
 			align-items: center;
 			width: 100%;
 			height: 100%;
+
+			padding-inline: $x-space-2;
 		}
 	}
 
@@ -165,7 +185,7 @@
 			grid-template-rows 0.4s ease,
 			grid-row-gap 0.4s ease;
 
-		@include layouts.respond-between('0', 'md') {
+		@include layouts.respond-max('md') {
 			grid-row-gap: v.$space-6;
 			.desktop {
 				display: none;
@@ -191,7 +211,7 @@
 					}
 
 					&:hover::after {
-						content: '<--';
+						content: '⁌';
 						color: var(--color-success);
 						position: absolute;
 						right: calc($mobile-padding * 6);
@@ -241,7 +261,7 @@
 				display: flex !important;
 				height: 100%;
 				flex-direction: row;
-				gap: v.$space-8;
+				gap: v.$space-4;
 
 				> * {
 					text-align: right;

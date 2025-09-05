@@ -1,6 +1,7 @@
 <script>
 	import '$lib/normalize.css'
 	import '$lib/loungePallete.css'
+	import BlogLayout from '$lib/components/BlogLayout.svelte'
 	import { asset } from '$app/paths'
 
 	const links = [
@@ -31,31 +32,36 @@
 	/>
 </svelte:head>
 
-<div>
-	<div class="blogs">
-		{#each links as link}
-			<div class="card">
-				<div class="img-wrapper">
-					<img
-						style="view-transition-name: blog-thumbnail-transition-${link.path};"
-						alt="needs a caption"
-						src={asset(`/${link.path}.webp`)}
-					/>
-				</div>
+<BlogLayout>
+	{#snippet content()}
+		<div class="blogs-home">
+			<h1>Find the Blog</h1>
 
-				<a class="content" href={'/blogs/' + link.path}>
-					<h3>{link.title}</h3>
+			<div class="blogs">
+				{#each links as link}
+					<div class="blog card">
+						<a class="content" href={'/blogs/' + link.path}>
+							<div
+								class="img-wrapper"
+								style="view-transition-name: blog-thumbnail-transition-{link.path};"
+							>
+								<img alt="needs a caption" src={asset(`/${link.path}.webp`)} />
+							</div>
 
-					<p>{link.description}</p>
-				</a>
+							<h3 style="view-transition-name: blog-title-transition-{link.path};">{link.title}</h3>
 
-				{#if link.author}
-					<a href={'/blogs/' + link.path}>{link.author} - {link.date}</a>
-				{/if}
+							<p>{link.description}</p>
+						</a>
+
+						{#if link.author}
+							<a href={'/blogs/' + link.path}>{link.author} - {link.date}</a>
+						{/if}
+					</div>
+				{/each}
 			</div>
-		{/each}
-	</div>
-</div>
+		</div>
+	{/snippet}
+</BlogLayout>
 
 <style lang="scss">
 	@use '_layouts.scss' as layouts;
@@ -66,30 +72,38 @@
 		color: var(--color-text-muted);
 	}
 
-	.blogs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin: 1rem;
-
+	.blogs-home {
 		@include layouts.respond('2xl') {
 			max-width: v.$breakpoint-xl-content;
 			margin-inline: auto;
 		}
 	}
 
+	.blogs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin: 1rem;
+	}
+
 	.content {
-		padding-top: v.$space-8;
+		display: block;
+		font-feature-settings: 'salt' 1;
 
 		h3 {
 			font-size: v.$font-size-2xl;
 			line-height: 120%;
 			margin-bottom: v.$space-4;
+			padding-top: v.$space-8;
 		}
 
 		p {
 			color: var(--color-text);
 			margin-bottom: v.$space-6;
+		}
+
+		> :not(.img-wrapper) {
+			padding-inline: v.$space-4;
 		}
 	}
 
@@ -105,11 +119,6 @@
 		flex: 0 0 calc(33.333% - 10px);
 
 		overflow: hidden;
-
-		& > :not(.img-wrapper) {
-			padding-inline: v.$space-4;
-			padding-bottom: v.$space-4;
-		}
 
 		@include layouts.respond-between('0', 'md') {
 			h3 {
@@ -137,6 +146,7 @@
 		overflow: hidden;
 		max-height: 16rem;
 		position: relative;
+		width: 100%;
 
 		img {
 			width: 120%;

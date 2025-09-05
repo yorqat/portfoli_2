@@ -3,14 +3,15 @@
 	import { type Theme, theme, updateTheme } from '$lib/theming'
 	import { type ReducedMotion, reducedMotion, updateReducedMotion } from '$lib/reduced-motion'
 
-	import { type AriaChecked } from '$lib/types/aria'
+	import type { AriaChecked, AriaCheckedHandlers } from '$lib/types/aria'
+
 	import { onUnfocus } from '$lib/actions'
 
 	const themeHandler =
 		(theme: Theme = 'auto') =>
 		() => {
-			console.log(`set theme to ${theme}`)
 			updateTheme(theme)
+			console.log(`[A11y] Theme → ${theme}`)
 		}
 
 	function getAriaChecked(theme: string | null): AriaChecked {
@@ -39,8 +40,8 @@
 	const reducedMotionHandler =
 		(reducedMotion: ReducedMotion = 'auto') =>
 		() => {
-			console.log(`set reduced-motion to ${reducedMotion}`)
 			updateReducedMotion(reducedMotion)
+			console.log(`[A11y] Reduced motion → ${reducedMotion}`)
 		}
 
 	function getReducedMotionChecked(reducedMotion: string | null): AriaChecked {
@@ -66,32 +67,32 @@
 	}
 
 	let toggle = $state(false)
+
+	$effect(() => {
+		if (!toggle) {
+			console.log('[A11y] Unfocused')
+		}
+	})
 </script>
 
-<div
-	class="a11y no-default"
-	use:onUnfocus={() => {
-		console.log('I got unfocused. bye')
-		toggle = false
-	}}
->
+<div class="a11y no-default" use:onUnfocus={() => (toggle = false)}>
 	<details bind:open={toggle}>
-		<summary class="a11y-toggle"> Toggle Accessibility </summary>
+		<summary class="a11y-toggle"> Accessibility Preferences </summary>
 
 		<div class="a11y-menu">
 			<!-- Don't  forget label and input binding -->
 			<h3 class="no-default">Preferences</h3>
 
 			<div class="preferences">
-				<label class="a11y-menu__item">
-					{'Dark Mode'}
-					<ThreeState {...themeHandlers} ariaChecked={themeChecked} />
-				</label>
+				{#snippet A11yMenuItem(label: string, handlers: AriaCheckedHandlers, checked: AriaChecked)}
+					<label class="a11y-menu__item">
+						<span class="a11y-menu__item__label">{label}</span>
+						<ThreeState {...handlers} ariaChecked={checked} />
+					</label>
+				{/snippet}
 
-				<label class="a11y-menu__item">
-					{'Reduced Motion'}
-					<ThreeState {...reducedMotionHandlers} ariaChecked={reducedMotionChecked} />
-				</label>
+				{@render A11yMenuItem('Dark Mode', themeHandlers, themeChecked)}
+				{@render A11yMenuItem('Reduced Motion', reducedMotionHandlers, reducedMotionChecked)}
 			</div>
 
 			<div class="legal">
@@ -147,7 +148,7 @@
 	.a11y-menu__item {
 		display: flex;
 		justify-content: space-between;
-		gap: 2rem;
+		gap: $x-space-sm;
 		align-items: center;
 	}
 
@@ -155,9 +156,5 @@
 		@include theming-colored-svg-mask('/lightbulb.svg', var(--color-text), $x-font-size-2xl);
 
 		@include layout-grid-center();
-
-		input {
-			opacity: 0;
-		}
 	}
 </style>

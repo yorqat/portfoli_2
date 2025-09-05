@@ -17,6 +17,9 @@
 	/* Paragraph body font */
 	import '$fonts/Satoshi/Satoshi.css'
 
+	/* Heading font */
+	import '$fonts/Cantarell/Cantarell.css'
+
 	/* Based styling opinions */
 	// import '$styles/opinionated.scss'
 </script>

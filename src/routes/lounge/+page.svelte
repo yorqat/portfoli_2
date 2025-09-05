@@ -13,7 +13,6 @@
 	$effect(animateLoungeElements)
 
 	let scrolledPastLoungeNav = $state(false)
-	let showLoungeNav = $state(false)
 
 	let nav = $state<Flip.FlipState>()
 
@@ -60,15 +59,22 @@
 		style="visibility: {!scrolledPastLoungeNav ? 'hidden' : 'visible'};"
 		inert={!scrolledPastLoungeNav || undefined}
 	>
-		<NavBar />
+		<NavBar tagViewTransition={scrolledPastLoungeNav} />
 	</div>
 	<div id="smooth-content" class="landing__content" use:keyboardNav>
 		<!-- Hero Section -->
 		<section class="section section--hero" inert={scrolledPastLoungeNav ?? undefined}>
 			<div class="hero__content">
 				<div class="hero__branding">
-					<span class="hero__title box"
-						>Y<span class="span-collapse">or</span>Q<span class="span-collapse">at</span></span
+					<span class="hero__title box">
+						{#snippet TransitionLetter(letter: string)}
+							<span style="--vt:{letter.toString()};" class:vt={!scrolledPastLoungeNav}
+								>{letter}</span
+							>
+						{/snippet}
+
+						{@render TransitionLetter('Y')}<span class="span-collapse">or</span
+						>{@render TransitionLetter('Q')}<span class="span-collapse">at</span></span
 					>
 					<div class="hero__subtitle">
 						<span> ux dev </span>
@@ -82,7 +88,11 @@
 				<ul class="nav__list">
 					{#each loungeNav as { path, name }}
 						<li class="nav__item">
-							<a href={path} class="nav__link" style={'view-transition-name: nav-link-' + name}>
+							<a
+								href={path}
+								class="nav__link"
+								style={!scrolledPastLoungeNav ? 'view-transition-name: nav-link-' + name : ''}
+							>
 								{name}
 							</a>
 						</li>
@@ -248,26 +258,41 @@
 		display: flex;
 		$padding: $x-space-4 $x-space-6;
 		align-items: center;
+		height: 90vh;
 
 		@include layout-respond('lg') {
 			max-width: $x-breakpoint-lg-content;
 			margin-inline: auto;
 		}
 
-		> * {
-			flex-grow: 1;
-		}
+		translate: 0 -80px;
 
 		@include layout-respond-between('0', 'sm') {
 			flex-direction: column;
 			align-items: flex-start;
+
+			justify-content: space-between;
+		}
+
+		@include layout-respond-between('sm', '2xl') {
+			.hero__title {
+				flex-grow: 1;
+			}
+		}
+
+		.hero__content {
 			padding: $padding;
 		}
 
 		.hero__title {
 			font-family: 'Satoshi-Black', sans-serif;
 			display: inline-flex;
+
 			width: 6ch;
+
+			@include layout-respond-between('md', '2xl') {
+				flex-grow: 1;
+			}
 
 			@include layout-respond-between('0', '2xl') {
 				font-size: $x-font-size-6xl;
