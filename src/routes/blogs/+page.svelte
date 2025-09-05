@@ -1,7 +1,7 @@
 <script>
 	import '$lib/normalize.css'
 	import '$lib/loungePallete.css'
-	import BlogLayout from '$lib/components/BlogLayout.svelte'
+	import BlogLayout from './BlogLayout.svelte'
 	import { asset } from '$app/paths'
 
 	const links = [
