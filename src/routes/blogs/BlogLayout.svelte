@@ -23,6 +23,23 @@
 			})
 		})
 	})
+
+	$effect(() => {
+		const mq = window.matchMedia('(min-width: 768px)')
+
+		const openOnTablet = (e: MediaQueryList | MediaQueryListEvent) => {
+			document
+				.querySelectorAll<HTMLDetailsElement>('details[data-auto-open]')
+				.forEach((el) => (el.open = e.matches))
+		}
+
+		// Initial run
+		openOnTablet(mq)
+
+		// Watch for resize changes
+		mq.addEventListener('change', openOnTablet)
+		return () => mq.removeEventListener('change', openOnTablet)
+	})
 </script>
 
 <div
