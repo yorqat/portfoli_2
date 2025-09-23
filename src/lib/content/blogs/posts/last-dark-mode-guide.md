@@ -21,11 +21,6 @@ tags:
   - topic:accessibility
   - audience:for-developers
 ---
-
-<script lang="ts">
-  import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
-</script>
-
 Switching between light and dark mode shouldn’t feel like a visual assault.
 
 Yet, many sites still get this wrong; system preferences ignored, flashes of white before dark mode kicks in, and unpredictable theme changes across tabs.
@@ -62,7 +57,7 @@ From here on out, we will be assuming a svelte + kit project structure.
 1. Define themes and initialization logic
 
 ```ts
-// $lib / theming.ts
+// $lib/theming.ts
 
 import { type Writable, writable, get } from 'svelte/store'
 import { page } from '$app/state'
@@ -85,6 +80,8 @@ export const initializeTheme = (newTheme: Theme) => {
 2. Logic for layout DOM elements to grab theme from anywhere
 
 ```ts
+// $lib/theming.ts
+
 // --- Context aware theme source of truth CSR / SSR
 export const getTheme = (): Theme => {
 	return get(theme) ?? page.data.theme
@@ -94,6 +91,8 @@ export const getTheme = (): Theme => {
 3. Helper function for DOM updates for all `[data-compels-color-scheme]`
 
 ```ts
+// $lib/theming.ts
+
 // --- Immediate DOM updates ---
 export const applyCompelTheme = (newTheme: Theme) => {
 	document.querySelectorAll<HTMLElement>('[data-compel-color-scheme]').forEach((el) => {
@@ -112,15 +111,13 @@ Here, state.theme:
 
 ### Server-Side Rendering (SSR)
 
-Client-side solutions alone can’t prevent FOUC, because the first HTML payload may already flash light mode. The fix: SSR with **cookies**.
-
-On the server, read the user’s theme from a cookie.
-
-Apply it to `<html>` or a wrapper element:
+Client-side solutions alone can’t prevent FOUC, because the first HTML payload may already flash light mode. The fix is **cookies**.
 
 1. Helper function to set theme preference on a cookie
 
 ```ts
+// $lib/theming.ts
+
 // --- Cookie for SSR to prevent flicker on reloads or direct links ---
 export const setThemeCookie = (newTheme: Theme) => {
 	if (newTheme !== 'auto') {
@@ -132,10 +129,10 @@ export const setThemeCookie = (newTheme: Theme) => {
 }
 ```
 
-2. On the server side, read for cookie and pass that information to +layout.svelte
+2. On the server side (`+layout.server.ts`), read for cookie and pass that information to `+layout.svelte`
 
 ```ts
-// top-level layout.server.ts
+// src/routes/+layout.server.ts
 import type { LayoutServerLoad } from './$types'
 import { parse } from 'cookie'
 
@@ -158,6 +155,8 @@ export const load: LayoutServerLoad = async ({ request }): Promise<LayoutData> =
 1. Wrap it all up in one function where it's used by a toggle or a `<select>` for switching theme overrides.
 
 ```ts
+// $lib/theming.ts
+
 // --- All in together now ---
 export const updateTheme = (newTheme: Theme = 'auto') => {
 	// Immediately switches, consistent with CSR nav
@@ -174,6 +173,9 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 2. Find your top-level `+layout.svete` where we initialize theming.
 
 ```svelte
+// src/routes/+layout.svelte
+
+
 \<script lang='ts'\>
   import { initializeTheme } from '$lib/theming'
   import { page } from '$app/state'
@@ -209,7 +211,7 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 System Preference → (SSR first render via cookie) → Correct theme applied instantly
         ↓
 User toggles theme (CSR) → State updates + cookie set → Next SSR render consistently
-``` 
+```
 
 ## Bonus
 
