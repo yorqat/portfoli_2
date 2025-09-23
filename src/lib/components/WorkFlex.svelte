@@ -22,6 +22,7 @@
 			class="work-flex-panel"
 			name="work-flex-panel"
 			value="site"
+			checked
 		/>
 
 		<label for="work-flex-panel-brand-identity">Brand Identity</label>
@@ -32,7 +33,6 @@
 			class="work-flex-panel"
 			name="work-flex-panel"
 			value="brand-identity"
-			checked
 		/>
 
 		<label for="work-flex-panel-design-outline">Design Outline</label>
@@ -46,20 +46,20 @@
 		/>
 	</div>
 
-	<div class="content scroll-scheme" id="site">
+	<div class="work-flex-content scroll-scheme" id="site">
 		{@render site()}
 	</div>
 
-	<div class="content scroll-scheme" id="brand-identity">
+	<div class="work-flex-content scroll-scheme" id="brand-identity">
 		{@render brandIdentity()}
 	</div>
 
-	<div class="content scroll-scheme" id="design-outline">
+	<div class="work-flex-content scroll-scheme" id="design-outline">
 		{@render designOutline()}
 	</div>
 </div>
 
-<style lang="scss">
+<style lang="scss" global>
 	@use '_index' as *;
 
 	#radio {
@@ -68,9 +68,9 @@
 		flex-direction: column;
 
 		--top: 20vh;
-		--left: 20vw;
+		--left: 5vw;
 
-		top: var(--top);
+		bottom: var(--top);
 		left: var(--left);
 	}
 
@@ -85,20 +85,22 @@
 		position: fixed;
 
 		@include a11y-prefers-reduced-motion() {
-			--transition: translate 400ms ease-in-out;
+			--duration: 180ms;
+
+			--transition: translate var(--duration) ease-in-out;
 			transition: var(--transition);
 
 			#radio {
 				transition:
-					top 400ms ease-in-out,
-					left 400ms ease-in-out,
-					bottom 400ms ease-in-out,
-					right 400ms ease-in-out;
+					top var(--duration) ease-in-out,
+					left var(--duration) ease-in-out,
+					bottom var(--duration) ease-in-out,
+					right var(--duration) ease-in-out;
 			}
 		}
 
-		.content {
-			overflow-y: scroll;
+		.work-flex-content {
+			overflow-y: auto;
 			flex-basis: $vw-width;
 			flex-grow: 0;
 
