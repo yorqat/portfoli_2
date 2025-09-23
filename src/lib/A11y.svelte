@@ -118,7 +118,8 @@
 		@include layout-flex-column();
 		gap: $x-font-size-xl;
 
-		font-family: 'Inter', sans-serif;
+		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-alternate-style();
 
 		background: var(--color-surface);
 		border-radius: 0.5rem;
