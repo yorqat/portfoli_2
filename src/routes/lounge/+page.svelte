@@ -6,19 +6,42 @@
 	import '@material-symbols/font-400'
 
 	import { animateLoungeElements } from './animations'
-	import { onMount } from 'svelte'
+	import { onMount, type Snippet } from 'svelte'
 	import NavBar from '$lib/NavBar.svelte'
-	import { Flip } from 'gsap/all'
+	import Footer from '$lib/content/Footer.svelte'
+	import Marquee from '$lib/components/Marquee.svelte'
+
+	import pfp from '$lib/content/blogs/posts/cropped-pfp.png'
 
 	$effect(animateLoungeElements)
 
+	import { gsap } from 'gsap/all'
 	let scrolledPastLoungeNav = $state(false)
 
-	let nav = $state<Flip.FlipState>()
+	$effect(() => {
+		if (scrolledPastLoungeNav) {
+			gsap.from('#nav', {
+				y: -50,
+				opacity: 0
+			})
+
+			gsap.to('.section--hero', {
+				y: -400,
+				opacity: 0
+			})
+		} else {
+			gsap.to('.section--hero', {
+				y: 0,
+				opacity: 100,
+				ease: 'ease.in',
+				duration: 1
+			})
+		}
+	})
 
 	onMount(() => {
 		const handleScroll = () => {
-			scrolledPastLoungeNav = window.scrollY > window.innerHeight * 0.75 // 80vh
+			scrolledPastLoungeNav = window.scrollY > window.innerHeight * 0.65 // 80vh
 		}
 
 		window.addEventListener('scroll', handleScroll)
@@ -38,7 +61,7 @@
 </svelte:head>
 
 {#snippet Heading3D(heading: string)}
-	<div class="section__header--3d corsette">
+	<div class="section__header--3d corsette" aria-label={heading}>
 		<div class="section__header section__header--3d--blue" aria-hidden="true" data-lag="0.05">
 			{heading}
 		</div>
@@ -46,14 +69,29 @@
 			{heading}
 		</div>
 
-		<h1 class="section__header section__header--3d" data-lag="0.1" style="--content: ''">
+		<div
+			class="section__header section__header--3d"
+			aria-hidden="true"
+			data-lag="0.1"
+			style="--content: ''"
+		>
 			{heading}
-		</h1>
+		</div>
 	</div>
 {/snippet}
 
-<!-- Smooth Scroll Wrapper -->
-<div id="smooth-wrapper" class="landing base">
+{#snippet smoothScroll(content: Snippet, outside: Snippet)}
+	<!-- Smooth Scroll Wrapper -->
+	<div id="smooth-wrapper" class="landing base">
+		{@render outside()}
+
+		<div id="smooth-content" class="landing__content" use:keyboardNav>
+			{@render content()}
+		</div>
+	</div>
+{/snippet}
+
+{#snippet nav()}
 	<div
 		id="nav"
 		style="visibility: {!scrolledPastLoungeNav ? 'hidden' : 'visible'};"
@@ -61,26 +99,38 @@
 	>
 		<NavBar tagViewTransition={scrolledPastLoungeNav} />
 	</div>
-	<div id="smooth-content" class="landing__content" use:keyboardNav>
-		<!-- Hero Section -->
-		<section class="section section--hero" inert={scrolledPastLoungeNav ?? undefined}>
-			<div class="hero__content">
-				<div class="hero__branding">
-					<span class="hero__title box">
-						{#snippet TransitionLetter(letter: string)}
-							<span style="--vt:{letter.toString()};" class:vt={!scrolledPastLoungeNav}
-								>{letter}</span
-							>
-						{/snippet}
+{/snippet}
 
-						{@render TransitionLetter('Y')}<span class="span-collapse">or</span
-						>{@render TransitionLetter('Q')}<span class="span-collapse">at</span></span
-					>
-					<div class="hero__subtitle">
-						<span> ux dev </span>
+{#snippet content()}
+	<Marquee
+		text="Hi, I'm Yor Qat ◦ UX Designer ◦ Data-driven ◦ Multi-paradigm ◦ AI superpowered ◦ Human-Centered ◦ Post-Agile ◦ Systems-Level Design ◦ Accessibility-First ◦ Emergent Complexity Wrangler"
+		separator="◦ "
+		magnitude={1}
+		duration="200s"
+	/>
+	<section class="section section--hero" inert={scrolledPastLoungeNav ?? undefined}>
+		<div class="hero__content banner">
+			<div class="hero__branding">
+				<span class="hero__title box">
+					{#snippet TransitionLetter(letter: string)}
+						<span style="--vt:{letter.toString()};" class:vt={!scrolledPastLoungeNav}>{letter}</span
+						>
+					{/snippet}
 
-						<A11y />
-					</div>
+					{@render TransitionLetter('Y')}<span class="span-collapse">or</span>
+					{@render TransitionLetter('Q')}<span class="span-collapse">at</span></span
+				>
+				<div class="hero__subtitle">
+					<A11y />
+					<span> ux dev </span>
+				</div>
+			</div>
+
+			<div class="hero__showcase">
+				<h2 class="hero__intro">I design products that ship and scale for real people</h2>
+
+				<div class="profile-picture">
+					<img class="profile-picture__img" sizes="400px" src={pfp} alt="yor's profile" />
 				</div>
 			</div>
 
@@ -99,70 +149,116 @@
 					{/each}
 				</ul>
 			</nav>
-		</section>
+		</div>
+	</section>
 
-		<!-- Secondary Hero -->
-		<section class="section section--intro">
-			{@render Heading3D('I design products that ship, scale, and serve real users')}
+	<!-- Slides -->
+	<section class="section section--slide">
+		{@render Heading3D('I Design with Delivery in Mind')}
+		<p class="section__note">Scoped for tablet breakpoints</p>
+		<p class="section__note">Componentized for reuse</p>
+	</section>
 
-			<div class="morpher-container" aria-hidden="true">
-				<svg
-					width="400"
-					height="400"
-					viewBox="0 0 400 400"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						id="morpher"
-						d="M21.4998 227.5C-6.1161 176.145 -20.4999 32.5002 77.0001 4.00016C156.076 -19.1143 388 77 318 219C253.258 350.334 50 280.5 21.4998 227.5Z"
-						stroke="black"
-					/>
-				</svg>
-			</div>
-		</section>
+	<section class="section section--slide">
+		{@render Heading3D('Design That Moves Metrics')}
+		<p class="section__note">Reduced form fields</p>
+		<p class="section__note">Increased CTA visibility</p>
+		<p class="section__note">Tracking impact with funnel data</p>
+	</section>
 
-		<!-- Slides -->
-		<section class="section section--slide">
-			{@render Heading3D('I Design with Delivery in Mind')}
-			<p class="section__note">Scoped for tablet breakpoints</p>
-			<p class="section__note">Componentized for reuse</p>
-		</section>
+	<section class="section section--slide">
+		{@render Heading3D('Built with User Insight')}
+		<p class="section__note">Userflow from Miro or Figjam</p>
+		<p class="section__note">Persona Drafts</p>
+		<p class="section__note">Bug report from a usability session</p>
 
-		<section class="section section--slide">
-			{@render Heading3D('Design That Moves Metrics')}
-			<p class="section__note">Reduced form fields</p>
-			<p class="section__note">Increased CTA visibility</p>
-			<p class="section__note">Tracking impact with funnel data</p>
-		</section>
+		<div class="morpher-container" aria-hidden="true">
+			<svg
+				width="200"
+				height="200"
+				viewBox="0 0 200 200"
+				fill="none"
+				stroke-width="2.5"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					id="morpher"
+					stroke="none"
+					transform="translate(-10,-10)"
+					d="M73.8 139.715 60.932 100.11c5.542 8.148 10.38 14.17 14.597 18.04 2.856 2.621 5.548 4.37 8.093 5.043 2.642.698 5.07.214 7.138-1.477 1.981-1.619 3.528-4.256 4.773-7.668 1.255-3.436 2.26-7.815 3.06-13.09.59-3.9 1.074-8.32 1.46-13.252.507 5.305 1.102 10.038 1.798 14.192.902 5.381 1.982 9.84 3.285 13.331 1.292 3.464 2.859 6.132 4.832 7.759 2.068 1.705 4.483 2.179 7.094 1.416 2.5-.731 5.113-2.571 7.86-5.297 3.836-3.806 8.18-9.592 13.104-17.338l-12.329 37.946H73.8Z"
+				/><path
+					id="morpher__baby"
+					d="M73.8 139.715 60.932 100.11c5.542 8.148 10.38 14.17 14.597 18.04 2.856 2.621 5.548 4.37 8.093 5.043 2.642.698 5.07.214 7.138-1.477 1.981-1.619 3.528-4.256 4.773-7.668 1.255-3.436 2.26-7.815 3.06-13.09.59-3.9 1.074-8.32 1.46-13.252.507 5.305 1.102 10.038 1.798 14.192.902 5.381 1.982 9.84 3.285 13.331 1.292 3.464 2.859 6.132 4.832 7.759 2.068 1.705 4.483 2.179 7.094 1.416 2.5-.731 5.113-2.571 7.86-5.297 3.836-3.806 8.18-9.592 13.104-17.338l-12.329 37.946H73.8Z"
+				/>
+			</svg>
+		</div>
+	</section>
 
-		<section class="section section--slide">
-			{@render Heading3D('Built with User Insight')}
-			<p class="section__note">Userflow from Miro or Figjam</p>
-			<p class="section__note">Persona Drafts</p>
-			<p class="section__note">Bug report from a usability session</p>
-		</section>
+	<section class="section section--slide">
+		{@render Heading3D('Design is a Team Sport')}
+		<p class="section__note">Jira ticket with latest iteration design attached</p>
+		<p class="section__note">
+			Slack Handoff snippets: "Final assets uploaded", "Spec clarified here"
+		</p>
+		<p class="section__note">Userflow from Miro or Figjam</p>
+		<p class="section__note">Timeline or roadmap alignment doc</p>
+	</section>
 
-		<section class="section section--slide">
-			{@render Heading3D('Design is a Team Sport')}
-			<p class="section__note">Jira ticket with latest iteration design attached</p>
-			<p class="section__note">
-				Slack Handoff snippets: "Final assets uploaded", "Spec clarified here"
-			</p>
-			<p class="section__note">Userflow from Miro or Figjam</p>
-			<p class="section__note">Timeline or roadmap alignment doc</p>
-		</section>
+	<!-- Call to Action -->
+	<section class="section section--cta">
+		{@render Heading3D('Curious of what I bring to the table?')}
+		<button class="cta__button corsette">Review my work together?</button>
+	</section>
 
-		<!-- Call to Action -->
-		<section class="section section--cta">
-			{@render Heading3D('Curious of what I bring to the table?')}
-			<button class="cta__button corsette">Review my work together?</button>
-		</section>
-	</div>
-</div>
+	<section class="section">
+		<Footer />
+	</section>
+{/snippet}
+
+{@render smoothScroll(content, nav)}
 
 <style lang="scss">
 	@use '_index' as *;
+
+	.section__note {
+		display: none;
+	}
+
+	.span-collapse {
+		// display: none;
+
+		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-alternate-style();
+
+		color: var(--color-text-muted);
+	}
+
+	.profile-picture {
+		overflow: hidden;
+
+		aspect-ratio: 1;
+		position: relative;
+		border-radius: 50%;
+		margin-bottom: $x-space-md;
+
+		&__img {
+			position: absolute;
+		}
+
+		@include layout-respond-max('lg') {
+			width: 16rem;
+		}
+
+		@include layout-respond('lg') {
+			width: 22rem;
+		}
+
+		@include layout-respond('2xl') {
+			width: 28rem;
+		}
+	}
 
 	#nav {
 		view-transition-name: backdrop-nav;
@@ -179,14 +275,20 @@
 		width: 100%;
 		display: grid;
 		place-items: center;
+		z-index: 999;
 	}
 
 	#morpher {
-		stroke: var(--color-primary-accent);
-		fill: var(--color-primary-accent);
+		stroke: var(--color-text);
+		fill: var(--color-bg);
+		stroke-width: 3px;
 
-		position: fixed;
+		position: absolute;
 		margin-inline: auto;
+
+		&__baby {
+			fill: var(--color-secondary-accent);
+		}
 	}
 
 	#backdrop-nav {
@@ -195,39 +297,220 @@
 	}
 
 	.section {
-		height: 100vh;
-		font-family: 'Satoshi-Regular', sans-serif;
-		transition: font-size 0.2s ease-in;
+		@include fonts-stack('Satoshi', sans-serif);
+		@include fonts-alternate-style();
 
-		@include layout-respond-between('0', 'sm') {
-			padding-inline: $x-space-md;
+		min-height: 100vh;
+
+		@include layout-respond-max('sm') {
+			> *:not(.banner) {
+				padding-inline: $x-space-md;
+			}
+		}
+
+		@include layout-respond('sm') {
+			> *:not(.banner) {
+				padding-inline: $x-space-lg;
+			}
+		}
+
+		@include layout-respond('xl') {
+			> *:not(.banner) {
+				padding-inline: $x-space-xxl;
+			}
 		}
 	}
 
-	.section__note {
-		display: none;
+	.nav__list {
+		@include layout-flex-column();
+		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-alternate-style();
+		list-style-type: none;
+
+		@include layout-respond-max('md') {
+			gap: $x-space-md;
+
+			a {
+				font-size: $x-font-size-xl;
+				padding-inline: $x-space-md;
+			}
+		}
+
+		@include layout-respond('md') {
+			gap: $x-space-md;
+
+			a {
+				font-size: $x-font-size-2xl;
+				padding-inline: $x-space-xl;
+			}
+		}
+
+		@include layout-respond('lg') {
+			gap: $x-space-lg;
+
+			a {
+				font-size: $x-font-size-4xl;
+			}
+		}
+
+		@include layout-respond('xl') {
+			gap: $x-space-md;
+		}
+
+		@include layout-respond('2xl') {
+			a {
+				font-size: $x-font-size-6xl;
+			}
+		}
+	}
+
+	.hero__title {
+		@include fonts-stack('Satoshi-Black', sans-serif);
+		@include fonts-alternate-style();
+
+		@include layout-respond-max('lg') {
+			font-size: $x-font-size-4xl;
+		}
+
+		@include layout-respond('lg') {
+			font-size: $x-font-size-6xl;
+			letter-spacing: -4px;
+		}
+
+		@include layout-respond('2xl') {
+			font-size: $x-font-size-8xl;
+		}
+	}
+
+	.hero__subtitle {
+		display: flex;
+		align-items: center;
+
+		@include layout-respond-max('md') {
+			gap: $x-space-xs;
+		}
+
+		@include layout-respond('md') {
+			gap: $x-space-sm;
+		}
+
+		> * {
+			text-transform: uppercase;
+			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-alternate-style();
+
+			@include layout-respond-max('md') {
+				font-size: $x-font-size-lg;
+			}
+
+			@include layout-respond('md') {
+				font-size: $x-font-size-xl;
+			}
+
+			@include layout-respond('2xl') {
+				font-size: $x-font-size-2xl;
+			}
+		}
+	}
+
+	.hero__intro {
+		@include fonts-stack('Satoshi-Light', sans-serif);
+		@include fonts-alternate-style();
+
+		line-height: 110%;
+
+		max-width: 18ch;
+
+		@include layout-respond('lg') {
+			font-size: $x-font-size-xl;
+		}
+
+		@include layout-respond('xl') {
+			font-size: $x-font-size-2xl;
+		}
+
+		@include layout-respond('2xl') {
+			font-size: $x-font-size-4xl;
+		}
+	}
+
+	.hero__showcase {
+		@include layout-flex-column();
+		flex-direction: column-reverse;
+
+		align-items: center;
+	}
+
+	.hero__content {
+		display: flex;
+		min-height: 72vh;
+
+		@include layout-respond-max('md') {
+			flex-direction: column;
+			justify-content: space-between;
+
+			padding-inline: $x-space-sm;
+			gap: $x-space-lg;
+		}
+
+		@include layout-respond('md') {
+			> * {
+				flex-grow: 1;
+			}
+		}
+
+		@include layout-respond('md') {
+			flex-direction: row;
+			align-items: center;
+
+			// pad instead
+			// max-width: $x-breakpoint-md-content;
+			padding-inline: $x-space-md;
+			width: 100%;
+			margin-inline: auto;
+		}
+
+		@include layout-respond('lg') {
+			max-width: $x-breakpoint-lg-content;
+			width: 100%;
+			margin-inline: auto;
+		}
+
+		@include layout-respond('xl') {
+			max-width: $x-breakpoint-xl-content;
+			width: 100%;
+			margin-inline: auto;
+		}
+
+		@include layout-respond('2xl') {
+			max-width: $x-breakpoint-2xl-content;
+			width: 100%;
+			margin-inline: auto;
+		}
 	}
 
 	.section__header {
-		font-size: $x-font-size-6xl;
-		font-family: 'Satoshi-Bold', sans-serif;
+		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-alternate-style();
 		line-height: 115%;
 
-		@include layout-respond-between('0', 'sm') {
+		@include layout-respond-max('lg') {
 			font-size: $x-font-size-4xl;
+		}
+
+		@include layout-respond('2xl') {
+			font-size: $x-font-size-6xl;
 		}
 
 		&--3d {
 			position: relative;
 
 			&--red {
-				color: #ff0050;
 				color: var(--color-secondary-accent);
 				opacity: 0.75;
 			}
 
 			&--blue {
-				color: #00f2ea;
 				color: var(--color-primary-accent);
 				opacity: 0.75;
 			}
@@ -254,127 +537,7 @@
 		}
 	}
 
-	.section--hero {
-		display: flex;
-		$padding: $x-space-4 $x-space-6;
-		align-items: center;
-		height: 90vh;
-
-		@include layout-respond('lg') {
-			max-width: $x-breakpoint-lg-content;
-			margin-inline: auto;
-		}
-
-		translate: 0 -80px;
-
-		@include layout-respond-between('0', 'sm') {
-			flex-direction: column;
-			align-items: flex-start;
-
-			justify-content: space-between;
-		}
-
-		@include layout-respond-between('sm', '2xl') {
-			.hero__title {
-				flex-grow: 1;
-			}
-		}
-
-		.hero__content {
-			padding: $padding;
-		}
-
-		.hero__title {
-			font-family: 'Satoshi-Black', sans-serif;
-			display: inline-flex;
-
-			width: 6ch;
-
-			@include layout-respond-between('md', '2xl') {
-				flex-grow: 1;
-			}
-
-			@include layout-respond-between('0', '2xl') {
-				font-size: $x-font-size-6xl;
-			}
-
-			@include layout-respond('2xl') {
-				font-size: $x-font-size-8xl;
-			}
-		}
-
-		.hero__subtitle {
-			display: flex;
-			gap: $x-space-md;
-			align-items: center;
-
-			@include layout-respond-between('0', '2xl') {
-				font-size: $x-font-size-xl;
-			}
-
-			@include layout-respond('2xl') {
-				font-size: $x-font-size-2xl;
-			}
-		}
-
-		.nav__list {
-			@include layout-flex-column();
-			gap: $x-space-md;
-			list-style: none;
-
-			@include layout-respond-between('0', 'md') {
-				font-size: $x-font-size-2xl;
-			}
-
-			@include layout-respond-between('md', '2xl') {
-				font-size: $x-font-size-4xl;
-			}
-
-			@include layout-respond('2xl') {
-				gap: 3.25rem;
-				translate: 0 -3%;
-				font-size: $x-font-size-6xl;
-			}
-
-			.nav__item {
-				flex-grow: 1;
-			}
-
-			.nav__link {
-				padding: $x-space-4 $x-space-6;
-				display: inline-block;
-				width: 100%;
-				font-family: 'Satoshi-Light', sans-serif;
-			}
-		}
-	}
-
 	.corsette {
-		@include layout-respond('2xl') {
-			max-width: $x-breakpoint-xl-content;
-			margin-inline: auto;
-		}
-	}
-
-	#smooth-content-old {
-		overflow: visible;
-		width: 100%;
-		/* set a height because the contents are position: absolute, thus natively there's no height */
-		height: 4000px;
-		background-image:
-			linear-gradient(rgba(255, 255, 255, 0.07) 2px, transparent 2px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.07) 2px, transparent 2px),
-			linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-		background-size:
-			100px 100px,
-			100px 100px,
-			20px 20px,
-			20px 20px;
-		background-position:
-			-2px -2px,
-			-2px -2px,
-			-1px -1px,
-			-1px -1px;
+		@include layout-corsette();
 	}
 </style>

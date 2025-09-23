@@ -12,7 +12,7 @@
 	})
 
 	/* Normalize normalize */
-	import 'normalize.css'
+	// import 'normalize.css'
 
 	/* Paragraph body font */
 	import '$fonts/Satoshi/Satoshi.css'

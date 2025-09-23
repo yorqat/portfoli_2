@@ -2,8 +2,6 @@
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
 
-	// import "$lib/loungeFonts.css"
-
 	const { children } = $props()
 
 	import { onNavigate } from '$app/navigation'
