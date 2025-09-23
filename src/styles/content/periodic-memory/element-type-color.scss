@@ -1,0 +1,66 @@
+$element-colors: (
+	'alkali_metal': #893838,
+	'alkaline_earth_metal': #cf8b56,
+	'transition_metal': #8b624c,
+	'post-transition_metal': #5878a1,
+	'metalloid': #507850,
+	'non-metal': #cc4b4b,
+	'halogen': #ab5393,
+	'noble_gas': #884dff,
+	'lanthanide': #7f6caa,
+	'actinide': #b05266
+);
+
+// for parent container
+@mixin define-colors() {
+	@each $name, $color in $element-colors {
+		.#{$name} {
+			--bg: #{$color};
+		}
+	}
+}
+
+// for children
+@mixin bg() {
+	background: var(--bg);
+}
+
+.alkali_metal {
+	--bg: #893838;
+}
+
+.alkaline_earth_metal {
+	--bg: #cf8b56;
+}
+
+.transition_metal {
+	--bg: #8b624c;
+}
+
+.post-transition_metal {
+	--bg: #5878a1;
+}
+
+.metalloid {
+	--bg: #507850;
+}
+
+.non-metal {
+	--bg: #cc4b4b;
+}
+
+.halogen {
+	--bg: #ab5393;
+}
+
+.noble_gas {
+	--bg: #884dff;
+}
+
+.lanthanide {
+	--bg: #7f6caa;
+}
+
+.actinide {
+	--bg: #b05266;
+}

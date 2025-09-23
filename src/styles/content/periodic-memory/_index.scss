@@ -1,0 +1,24 @@
+@use '_index';
+
+$custom-light-theme: (
+	bg: $x-gray-100,
+
+	primary: #884dff,
+	secondary: #59308f
+);
+
+$custom-dark-theme: (
+	text: $x-gray-300,
+	primary: #5353fc,
+	primary: skyblue
+);
+
+#periodic-memory {
+	background: var(--color-bg);
+	@include layout-flex-column();
+	@include layout-viewport-full-height-lockdown();
+
+	@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
+	@include theming-impose-schemes-basic();
+	@include theming-impose-scroll-scheme();
+}

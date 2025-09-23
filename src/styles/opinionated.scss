@@ -58,40 +58,6 @@ a {
 	view-transition-name: var(--vt);
 }
 
-/*
-
-button,
-input,
-select,
-textarea {
-	font: inherit;
-}
-
-h1,
-h2,
-h3,
-h4 {
-	line-height: 150%;
-	font-weight: bold;
-	// margin-bottom: v.$space-1;
-}
-
-h1 {
-	font-size: v.$font-size-2xl;
-}
-
-h2 {
-	font-size: v.$font-size-xl;
-}
-
-h3 {
-	font-size: v.$font-size-lg;
-}
-
-h4 {
-	font-size: v.$font-size-md;
-}
-*/
 @mixin no-default($selector...) {
 	// variadic
 	// Loop through each selector

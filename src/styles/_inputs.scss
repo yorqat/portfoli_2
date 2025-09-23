@@ -4,7 +4,7 @@
 $btn-padding: v.$space-5;
 $btn-radius: v.$space-1;
 
-@mixin button(
+@mixin _button(
 	$bg: var(--color-primary),
 	$color: var(--color-surface),
 	$padding: $btn-padding,
@@ -28,5 +28,54 @@ $btn-radius: v.$space-1;
 	&:focus {
 		outline: 2px solid var(--color-focus-ring);
 		outline-offset: 2px;
+	}
+}
+
+// Assume you have a $tokens map (colors, spacings, radii, etc.)
+@mixin button-kit($name, $hierarchy, $tone: brand, $size: md, $shape: rounded, $content: text) {
+	$selector: '.btn-#{$name}';
+
+	#{$selector} {
+		@include button-reset(); // normalize base styles
+
+		// === Hierarchy & Style resolution ===
+		@if $hierarchy == primary {
+			@include button-filled($tone);
+		} @else if $hierarchy == secondary {
+			@include button-outlined($tone);
+		} @else if $hierarchy == tertiary {
+			@include button-text($tone);
+		} @else if $hierarchy == link {
+			@include button-link($tone);
+		} @else {
+			@error "Unknown hierarchy: #{$hierarchy}";
+		}
+
+		// === Size ===
+		@include button-size($size);
+
+		// === Shape ===
+		@include button-shape($shape);
+
+		// === Content type (text vs icon-only) ===
+		@include button-content($content);
+
+		// === States ===
+		&:hover {
+			@include button-hover($hierarchy, $tone);
+		}
+		&:focus {
+			@include button-focus($hierarchy, $tone);
+		}
+		&:focus-visible {
+			@include button-focus-visible($hierarchy, $tone);
+		}
+		&:active {
+			@include button-active($hierarchy, $tone);
+		}
+		&:disabled,
+		&[aria-disabled='true'] {
+			@include button-disabled($hierarchy);
+		}
 	}
 }

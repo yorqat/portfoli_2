@@ -128,6 +128,17 @@ $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 	}
 }
 
+@mixin corsette() {
+	@each $ident, $bp in v.$breakpoints {
+		$content: map-get(v.$breakpoints-content, $ident);
+
+		@include respond($ident) {
+			max-width: $content;
+			margin-inline: auto;
+		}
+	}
+}
+
 /*  // Mobile-first Usage
 		@include layouts.respond-between('0', 'sm') {}
 		@include layouts.respond-between('sm', 'md') {}
