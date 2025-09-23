@@ -6,90 +6,40 @@
 @use 'sass:map';
 
 $light-theme: (
-	// 🎨 Brand Colors
 	primary: #{v.$blue-500},
-	// Main buttons, links
 	primary-hover: #{v.$blue-700},
-	// Hover state
 	accent: #{v.$pink-500},
-
-	// Highlights, callouts
-	// 🪵 Surfaces
-	// bg: #{v.$gray-50},               // App/page background
 	bg: #{v.$gray-100},
-	// App/page background
 	surface: #{v.$white},
-	// Cards, modals
-	// surface-alt: #{v.$gray-200},
 	surface-alt: #{v.$gray-100},
-
-	// Subtle UI, inputs
-	// 📝 Text
 	text: #{v.$gray-900},
-	// Primary text
 	text-muted: #{v.$gray-600},
-	// Placeholder, caption
 	heading: #{v.$gray-950},
-
-	// Large headers
-	// 🧱 Borders & Dividers
 	border: #{v.$gray-200},
-	// Input borders, lines
 	divider: #{v.$gray-300},
-
-	// Section dividers
-	// 🚦 State / Feedback
 	success: #{v.$green-600},
 	warning: #{v.$amber-500},
 	danger: #{v.$red-600},
-
-	// 🧠 Focus Rings
 	focus-ring: #{v.$blue-300},
-
-	// Outline for accessibility
 	button-text: #{v.$black}
 );
 
 $dark-theme: (
-	// 🎨 Brand Colors
 	primary: #{v.$blue-300},
-	// Main buttons, links
 	primary-hover: #{v.$blue-200},
-	// Hover state
 	accent: #{v.$pink-300},
-
-	// Highlights, callouts
-	// 🪵 Surfaces
 	bg: #{v.$gray-950},
-	// App/page background
 	surface: #{v.$gray-900},
-	// Cards, modals
 	surface-alt: #{v.$gray-800},
-
-	// Subtle UI, inputs
-	// 📝 Text
 	text: #{v.$gray-100},
-	// Primary text
 	text-muted: #{v.$gray-400},
-	// Placeholder, caption
 	heading: #{v.$gray-50},
-
-	// Large headers
-	// 🧱 Borders & Dividers
 	border: #{v.$gray-700},
-	// Input borders, lines
 	divider: #{v.$gray-800},
-
-	// Section dividers
-	// 🚦 State / Feedback
 	success: #{v.$green-400},
 	warning: #{v.$amber-300},
 	danger: #{v.$red-400},
-
-	// 🧠 Focus Rings
 	focus-ring: #{v.$blue-600},
-
-	// Outline for accessibility
 	button-text: #{v.$black}
 );
 
@@ -176,28 +126,54 @@ $dark-theme: (
 	}
 
 	// Surface elements: cards, panels, modals, etc.
-	.surface,
-	.card,
-	.panel,
-	.modal {
-		background-color: var(#{$color-prefix}-surface);
-		color: var(#{$color-prefix}-text);
-		border: 1px solid var(#{$color-prefix}-border);
-	}
+	// .surface,
+	// .card,
+	// .panel,
+	// .modal {
+	// 	background-color: var(#{$color-prefix}-surface);
+	// 	color: var(#{$color-prefix}-text);
+	// 	border: 1px solid var(#{$color-prefix}-border);
+	// }
 
 	// Alternate surface for highlights or nested panels
-	.surface-alt,
-	.panel-alt {
-		background-color: var(#{$color-prefix}-surface-alt);
-		color: var(#{$color-prefix}-text-muted);
-		border: 1px solid var(#{$color-prefix}-divider);
-	}
+	// .surface-alt,
+	// .panel-alt {
+	// 	background-color: var(#{$color-prefix}-surface-alt);
+	// 	color: var(#{$color-prefix}-text-muted);
+	// 	border: 1px solid var(#{$color-prefix}-divider);
+	// }
 
 	// Headings with their own color variable
-	@include opinionated.no-default(h1, h2, h3, h4, h5, h6) {
-		color: var(#{$color-prefix}-heading);
-	}
+	// @include opinionated.no-default(h1, h2, h3, h4, h5, h6) {
+	// 	color: var(#{$color-prefix}-heading);
+	// }
 
+	// Muted text (less important info)
+	// .text-muted {
+	// 	color: var(#{$color-prefix}-text-muted);
+	// }
+	//
+	// // Success, warning, danger helpers
+	// .text-success {
+	// 	color: var(#{$color-prefix}-success);
+	// }
+	//
+	// .text-warning {
+	// 	color: var(#{$color-prefix}-warning);
+	// }
+	//
+	// .text-danger {
+	// 	color: var(#{$color-prefix}-danger);
+	// }
+
+	// Borders and dividers (horizontal rules, etc.)
+	// hr,
+	// .divider {
+	// 	border-color: var(#{$color-prefix}-divider);
+	// }
+}
+
+@mixin impose-interactive() {
 	// Links and interactive elements
 	a,
 	button,
@@ -227,35 +203,12 @@ $dark-theme: (
 			}
 		}
 	}
-
-	// Muted text (less important info)
-	.text-muted {
-		color: var(#{$color-prefix}-text-muted);
-	}
-
-	// Success, warning, danger helpers
-	.text-success {
-		color: var(#{$color-prefix}-success);
-	}
-
-	.text-warning {
-		color: var(#{$color-prefix}-warning);
-	}
-
-	.text-danger {
-		color: var(#{$color-prefix}-danger);
-	}
-
-	// Borders and dividers (horizontal rules, etc.)
-	hr,
-	.divider {
-		border-color: var(#{$color-prefix}-divider);
-	}
 }
 
 @mixin impose-scroll-scheme() {
 	.scroll-scheme {
-		// overflow: auto;
+		overflow: auto;
+		scroll-behavior: smooth;
 
 		&::-webkit-scrollbar {
 			width: 12px;

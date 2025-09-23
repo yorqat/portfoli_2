@@ -5,6 +5,7 @@
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
 	import type { Snippet } from 'svelte'
+	import Footer from '$lib/content/Footer.svelte'
 
 	interface BlogLayoutProps {
 		chapters?: Snippet
@@ -50,7 +51,7 @@
 	data-compel-reduced-motion={getReducedMotion()}
 >
 	<div id="nav">
-		<NavBar />
+		<NavBar extraChapters={chapters} />
 	</div>
 
 	<div class="scroll-scheme base" id="content">
@@ -63,4 +64,12 @@
 	@use '_index' as *;
 
 	@use 'blogs' as *;
+
+	#content {
+		@include layout-respond-max('md') {
+			aside {
+				display: none;
+			}
+		}
+	}
 </style>

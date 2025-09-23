@@ -1,6 +1,4 @@
 <script module lang="ts">
-	import { asset } from '$app/paths'
-
 	export { Seo, Quote, Thumbnail, TableOfContents, Heading }
 
 	export type Chapter = {
@@ -42,7 +40,7 @@
       ${JSON.stringify(
 				{
 					'@context': 'https://schema.org',
-					'@type': 'Article',
+					'@type': 'BlogPosting',
 					headline: title,
 					description,
 					url,
@@ -66,12 +64,16 @@
   `}
 {/snippet}
 
-{#snippet TableOfContents(chapters: Chapter[])}
-	<details class="table-of-contents card scroll-scheme" data-auto-open>
-		<summary>
-			<h3>Table of Contents</h3>
-			<div class="menu"></div>
-		</summary>
+{#snippet TableOfContents(uri: string, title: string, chapters: Chapter[])}
+	<div
+		class="table-of-contents card scroll-scheme"
+		data-auto-open
+		style="view-transition-name: blog-card-transition-{uri};"
+	>
+		<h3>
+			<span class="material-symbols-outlined">menu_book</span>
+			{title}
+		</h3>
 
 		{#snippet Chapter(chapters: Chapter[], prefix: string = '', id: string)}
 			{#each chapters as chapter}
@@ -79,7 +81,7 @@
 					<a href={'#' + chapter.id}>{prefix} {chapter.name}</a>
 
 					{#if chapter.subChapter && chapter.subChapter.length > 0}
-						{@render Chapter(chapter.subChapter, '└─' + '‣', id + '__' + chapter.id)}
+						{@render Chapter(chapter.subChapter, '└─', id + '__' + chapter.id)}
 					{/if}
 				</div>
 			{/each}
@@ -88,13 +90,24 @@
 		<div class="content">
 			{@render Chapter(chapters, '', 'top')}
 		</div>
-	</details>
+	</div>
 {/snippet}
 
 {#snippet Heading(uri: string, title: string, author: string, publication: string)}
-	<h1 style:view-transition-name={`blog-title-transition-${uri}`}>
-		{title}<sub>{author}. Last updated: {publication}</sub>
-	</h1>
+	<header class="heading">
+		<h1>
+			{#each title.split(' ') as word, i}
+				<span class="vt" style="--vt: {uri}-{i};">{word}</span>{' '}
+			{/each}
+		</h1>
+		<p class="heading_author">
+			<span class="author">by {author}</span>
+			<span class="last-updated">
+				Last updated:
+				<time datetime={publication}>{publication}</time>
+			</span>
+		</p>
+	</header>
 {/snippet}
 
 {#snippet Quote(quote: string, author: string = 'Anonymous')}
@@ -105,8 +118,8 @@
 {/snippet}
 
 <!-- TODO: upgrade to <picture> -->
-{#snippet Thumbnail(uri: string, alt: string = 'TODO: Provide alt text')}
-	<div class="img-container" style:view-transition-name={`blog-thumbnail-transition-${uri}`}>
-		<img src={asset(`/${uri}.webp`)} {alt} />
+{#snippet Thumbnail(src: string, alt: string = 'TODO: Provide alt text')}
+	<div class="img-container" style:view-transition-name={`blog-thumbnail-transition-${src}`}>
+		<enhanced:img {src} {alt} />
 	</div>
 {/snippet}

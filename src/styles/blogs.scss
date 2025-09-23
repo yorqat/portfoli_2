@@ -1,5 +1,89 @@
 @use '_index' as *;
 
+$custom-light-theme: (
+	comment: #6a737d,
+	prolog: #6a737d,
+	doctype: #6a737d,
+	cdata: #6a737d,
+	punctuation: #24292e,
+	keyword: #d73a49,
+	property: #005cc5,
+	tag: #22863a,
+	boolean: #d73a49,
+	number: #005cc5,
+	constant: #005cc5,
+	symbol: #005cc5,
+	function: #6f42c1,
+	class-name: #6f42c1,
+	string: #032f62,
+	char: #032f62,
+	attr-value: #032f62,
+	regex: #032f62,
+	url: #032f62,
+	operator: #d73a49,
+	entity: #d73a49,
+	inserted: #22863a,
+	deleted: #b31d28,
+	important: #b31d28,
+	bold: null,
+	italic: null
+);
+
+$custom-dark-theme: (
+	comment: #5c6370,
+	prolog: #5c6370,
+	doctype: #5c6370,
+	cdata: #5c6370,
+	punctuation: #abb2bf,
+	keyword: #c678dd,
+	property: #c678dd,
+	tag: #c678dd,
+	boolean: #c678dd,
+	number: #c678dd,
+	constant: #c678dd,
+	symbol: #c678dd,
+	function: #61afef,
+	class-name: #61afef,
+	string: #98c379,
+	char: #98c379,
+	attr-value: #98c379,
+	regex: #98c379,
+	url: #98c379,
+	operator: #56b6c2,
+	entity: #56b6c2,
+	inserted: #56b6c2,
+	deleted: #e06c75,
+	important: #e06c75,
+	bold: null,
+	italic: null
+);
+
+@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
+@include theming-impose-schemes-basic();
+@include theming-impose-scroll-scheme();
+
+@mixin code-token-colors($prefix: 'color') {
+	$tokens: comment prolog doctype cdata punctuation keyword property tag boolean number constant
+		symbol function class-name string char attr-value regex url operator entity inserted deleted
+		important bold italic;
+
+	@each $token in $tokens {
+		@if $token == bold {
+			.token.bold {
+				font-weight: bold;
+			}
+		} @else if $token == italic {
+			.token.italic {
+				font-style: italic;
+			}
+		} @else {
+			.token.#{$token} {
+				color: var(--#{$prefix}-#{$token});
+			}
+		}
+	}
+}
+
 .banner {
 	width: 100vw;
 }
@@ -7,83 +91,80 @@
 #content {
 	overflow-y: scroll;
 	position: sticky;
+	padding-bottom: $x-space-xxl;
 
-	&:has(.blogs-home) main {
-		grid-area: 1 / 1 / 2 / 4;
+	.heading-anchor {
+		display: inline-block;
+		color: var(--color-text-muted);
+		position: relative;
+		right: -$x-space-md;
+	}
+
+	pre {
+		display: block;
+		overflow-x: auto; /* horizontal scroll inside pre */
+		max-width: 100%; /* never exceed parent width */
+		margin: 1em 0;
+		border-radius: 0.5em;
+		white-space: pre; /* preserve spacing */
+		word-wrap: normal; /* don’t wrap lines unless necessary */
+
+		&:has(code) {
+			background-color: var(--color-surface);
+			@include code-token-colors();
+			margin-bottom: $x-space-lg;
+			padding-block: $x-space-md;
+			padding-inline: $x-space-lg;
+		}
+	}
+
+	/* Important: make code a block to contain long lines */
+	pre code {
+		display: block;
+		width: 10ch;
+		tab-size: $x-space-sm;
+		font-size: $x-font-size-lg;
 	}
 
 	aside {
-		@include layout-respond-max('lg') {
-			position: sticky;
-			top: 0;
-			z-index: 999;
-		}
-
 		.table-of-contents {
-			@include fonts-stack('Satoshi', 'sans-serif');
+			@include fonts-stack('Satoshi', sans-serif);
 			@include fonts-alternate-style();
 			background: var(--color-surface);
-			line-height: 190%;
+			line-height: 180%;
 			position: sticky;
-			box-shadow: $x-bs-sketch-falloff;
 
 			@include layout-flex-column();
-			gap: 2px;
-
-			overflow-y: hidden;
-			max-height: 200px;
-
-			transition: max-height 2s ease;
-
-			&:not([open]) {
-				.menu {
-					rotate: 360deg;
-				}
-			}
-
-			&[open] {
-				max-height: 800px;
-				.menu {
-					rotate: 180deg;
-				}
-			}
-
-			summary {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-
-				.menu {
-					@include theming-colored-svg-mask('/drop_down.svg', var(--color-text), $x-font-size-4xl);
-					margin-inline: $x-space-sm;
-					transition: 0.4s ease-out;
-				}
-			}
 
 			h3 {
-				margin-block: $x-space-md;
+				display: flex;
+				gap: $x-space-xs;
+				align-items: center;
 			}
 
 			.chapter {
 				@include layout-flex-column();
-
 				margin-inline: $x-space-xs;
 
 				a {
 					padding-block: $x-space-xs;
 					padding-inline: $x-space-xs;
 					color: var(--color-text-muted);
+
+					&:hover {
+						color: var(--color-text);
+					}
 				}
 			}
 
-			@include layout-respond-max('lg') {
-				top: 0;
+			@include layout-respond-max('md') {
+				display: none;
 			}
 
 			@include layout-respond('lg') {
 				top: $x-space-md;
 				padding: $x-space-sm;
-				margin-inline: $x-space-lg;
+				margin-inline: $x-space-md;
 				border-radius: $x-space-xs;
 			}
 		}
@@ -93,10 +174,10 @@
 		}
 	}
 
-	@include layout-respond('md') {
+	@include layout-respond('lg') {
 		display: grid;
 		grid-template-columns: 3.5fr 2fr;
-		grid-template-rows: 1fr;
+		grid-template-rows: 1fr 1fr;
 
 		main {
 			grid-area: 1 / 1 / 2 / 1;
@@ -119,11 +200,11 @@
 
 	section {
 		@include layout-respond-max('md') {
-			margin-bottom: $x-space-xxl;
+			margin-bottom: $x-space-md;
 		}
 
 		@include layout-respond('md') {
-			margin-bottom: $x-space-xl;
+			margin-bottom: $x-space-lg;
 		}
 	}
 
@@ -133,7 +214,8 @@
 	h4 {
 		color: var(--color-heading);
 
-		@include fonts-stack('Satoshi', 'sans-serif');
+		padding-top: $x-space-md;
+		@include fonts-stack('Satoshi-Bold', sans-serif);
 		@include fonts-alternate-style();
 		padding-inline: $x-font-size-md;
 	}
@@ -155,7 +237,7 @@
 
 	h2 {
 		@include layout-respond-max('md') {
-			font-size: $x-font-size-lg;
+			font-size: $x-font-size-xl;
 			margin-bottom: $x-space-sm;
 			margin-bottom: $x-space-md;
 		}
@@ -166,13 +248,27 @@
 		}
 	}
 
+	h3 {
+		@include fonts-stack('Satoshi-Light', sans-serif);
+		@include fonts-alternate-style();
+		margin-bottom: $x-space-md;
+
+		@include layout-respond-max('md') {
+			font-size: $x-font-size-lg;
+		}
+
+		@include layout-respond('md') {
+			font-size: $x-font-size-xl;
+		}
+	}
+
 	ul {
 		list-style-type: disc;
 	}
 
 	p,
 	li {
-		@include fonts-stack('Satoshi', 'sans-serif');
+		@include fonts-stack('Satoshi', sans-serif);
 		@include fonts-alternate-style();
 
 		letter-spacing: 0.6px;
@@ -197,16 +293,16 @@
 
 	.img-container {
 		overflow: hidden;
-		position: relative;
+		aspect-ratio: 16 / 9;
 
 		@include layout-respond-max('md') {
-			max-height: $x-space-xl;
-			margin-bottom: $x-space-lg;
+			min-height: $x-space-xxl;
+			margin-bottom: $x-space-sm;
 		}
 
 		@include layout-respond('md') {
-			max-height: $x-space-xxl;
-			margin-bottom: $x-space-xl;
+			min-height: $x-space-xxxl;
+			margin-bottom: $x-space-md;
 		}
 	}
 
@@ -226,20 +322,21 @@
 		}
 
 		@include layout-respond('md') {
-			// margin: $x-space-md;
 			padding-block: $x-space-md;
 		}
 
 		// actual quote
 		> :not(footer) {
+			font-size: $x-font-size-md;
+			color: var(--color-text);
+
 			@include layout-respond-max('md') {
-				font-size: $x-font-size-md;
 				max-width: unset;
 			}
 
-			@include layout-respond('md') {
+			@include layout-respond('lg') {
+				font-size: $x-font-size-lg;
 				max-width: 45ch;
-				font-size: $x-font-size-xl;
 			}
 		}
 
@@ -253,17 +350,6 @@
 		}
 	}
 }
-
-$custom-light-theme: (
-	bg: $x-gray-100
-);
-$custom-dark-theme: (
-	text: $x-gray-300
-);
-
-@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
-@include theming-impose-schemes-basic();
-@include theming-impose-scroll-scheme();
 
 #blogs {
 	background: var(--color-bg);
