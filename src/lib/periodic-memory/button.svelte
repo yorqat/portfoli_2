@@ -32,8 +32,6 @@
 		font-size: 1.2rem;
 		text-align: center;
 
-		@include i.button();
-
 		background: var(--primary);
 		color: white;
 
