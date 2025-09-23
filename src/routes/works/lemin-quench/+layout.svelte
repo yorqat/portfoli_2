@@ -2,13 +2,20 @@
 	import WorkFlex from '$lib/components/WorkFlex.svelte'
 
 	import { getTheme } from '$lib/theming'
+	import { getReducedMotion } from '$lib/reduced-motion'
 
 	const { children } = $props()
 
 	const colours: string[] = ['#346653', '#663453', '#533466']
 </script>
 
-<div style="display: contents;" data-prefers-color-scheme data-compels-color-scheme={getTheme()}>
+<div
+	style="display: contents;"
+	data-prefers-color-scheme
+	data-compels-color-scheme={getTheme()}
+	data-prefers-reduced-motion
+	data-compels-reduced-motion={getReducedMotion()}
+>
 	<WorkFlex>
 		{#snippet site()}
 			{@render children()}

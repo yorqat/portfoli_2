@@ -5,6 +5,9 @@
 </script>
 
 <div style="display: contents">
-	<WorkMenu />
 	{@render children()}
 </div>
+
+<style lang="scss">
+	@use '_index' as *;
+</style>

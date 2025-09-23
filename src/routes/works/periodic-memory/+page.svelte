@@ -1,20 +1,4 @@
-<script>
-	/* view transition */
-	import { onNavigate } from '$app/navigation'
-
-	onNavigate((navigation) => {
-		if (!document.startViewTransition) return
-
-		return new Promise((resolve) => {
-			document.startViewTransition(async () => {
-				resolve()
-				await navigation.complete
-			})
-		})
-	})
-
-	import '$lib/periodic-memory/colors.css'
-
+<script lang="ts">
 	import Papa from 'papaparse'
 	import raw from '$lib/periodic-table.csv?raw'
 
@@ -47,14 +31,14 @@
 	let displayElement = $state(0)
 	let lockedElement = $state(0)
 
-	function onHover(e, atomicNumber) {
+	function onHover(e, atomicNumber: number) {
 		let index = atomicNumber - 1
 		displayElement = index
 
 		console.log(`display element set to ${index}`)
 	}
 
-	function onClick(e, atomicNumber) {}
+	// function onClick(e, atomicNumber) {}
 </script>
 
 <div class="periodic-reviewer">
@@ -64,6 +48,7 @@
 
 	<aside class="periodic-table-container">
 		<PeriodicTable {elements} elementEvent={onHover} />
+
 		<div class="legend">
 			{#each legendItems as item}
 				<div class="legend-item {item.class}">
@@ -73,6 +58,7 @@
 				</div>
 			{/each}
 		</div>
+
 		{#key elements[displayElement].AtomicNumber}
 			<div
 				class="element-display {elements[displayElement].Symbol.toLowerCase()} {elements[
@@ -90,33 +76,7 @@
 	</aside>
 </div>
 
-<style>
-	:global(::view-transition-old(root), ::view-transition-new(root)) {
-		animation: none !important;
-		display: none !important;
-	}
-
-	:global(html, body) {
-		margin: 0.5rem;
-		height: 100vh;
-		height: 100svh;
-	}
-
-	@keyframes slideDown {
-		0% {
-			top: -0.25rem;
-			opacity: 0.9;
-		}
-		100% {
-			top: 0rem;
-			opacity: 1;
-		}
-	}
-
-	.element-display .atomic-number.three-digit {
-		/* font-size: 3rem; */
-	}
-
+<style lang="scss">
 	.element-display .atomic-number {
 		font-size: 3rem;
 		padding: 0.5rem;
@@ -168,7 +128,6 @@
 		place-items: center;
 		position: relative;
 		transition: background 5s;
-		animation: slideDown 0.2s ease-in;
 
 		box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 		border-radius: 1rem;
@@ -179,6 +138,8 @@
 		flex-direction: column;
 		justify-content: space-between;
 		gap: 1rem;
+
+		background-color: var(--color-primary);
 	}
 
 	.periodic-table-container {
@@ -223,7 +184,7 @@
 		letter-spacing: 0.08rem;
 		padding: 1rem 1.6rem;
 
-		background: #5353fc;
+		background: var(--color-primary);
 		color: white;
 
 		box-shadow: 0 16px 5px 0px navy;
@@ -237,23 +198,6 @@
 		background: #7740e8;
 	}
 
-	.button-toggle:has(input:checked) {
-		top: 1rem;
-		box-shadow: 0 10px 5px 0px navy;
-	}
-
-	div {
-		font-family: sans-serif;
-	}
-
-	.element:hover {
-		background: #f6f6f6;
-	}
-
-	.element:focus {
-		border: 4px solid #ddd;
-	}
-
 	.element {
 		all: unset;
 		border: 1px solid #eee;
@@ -262,6 +206,14 @@
 		place-items: center;
 
 		position: relative;
+
+		&:hover {
+			background: #f6f6f6;
+		}
+
+		&:focus {
+			border: 4px solid #ddd;
+		}
 	}
 
 	.atomic-element {

@@ -1,0 +1,76 @@
+@use '_index' as *;
+
+:global(body) {
+	margin: 0;
+}
+
+h1,
+h2,
+h3 {
+	padding-top: $x-space-sm;
+
+	@include fonts-stack('Satoshi-Regular', sans-serif);
+	@include fonts-alternate-style();
+}
+
+h1 {
+	margin-bottom: $x-space-lg;
+}
+
+h2,
+p {
+	margin-bottom: $x-space-sm;
+}
+
+h3 {
+	margin-bottom: $x-space-xs;
+}
+
+.dark-mode {
+	position: fixed;
+	top: $x-space-md;
+	left: 75%;
+}
+
+main,
+header {
+	@include layout-respond-max('sm') {
+		padding-inline: $x-space-sm;
+	}
+
+	@include layout-respond-max('md') {
+		padding-inline: $x-space-md;
+	}
+
+	@include layout-respond('md') {
+		padding-inline: $x-space-8;
+		max-width: $x-breakpoint-md-content;
+		margin-inline: auto;
+	}
+}
+
+#legal {
+	@include fonts-stack('Cantarell', sans-serif);
+	@include fonts-alternate-style();
+
+	font-size: $x-font-size-lg;
+	letter-spacing: 1px;
+
+	@include layout-respond-max('md') {
+		padding-block: $x-space-4;
+	}
+
+	@include layout-respond-between('md', 'lg') {
+		padding-block: $x-space-6;
+	}
+
+	@include layout-respond('md') {
+		padding-block: $x-space-10;
+	}
+}
+
+$custom-light-theme: ();
+$custom-dark-theme: ();
+
+@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
+@include theming-impose-schemes-basic();

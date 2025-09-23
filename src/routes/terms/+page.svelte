@@ -1,14 +1,19 @@
 <script>
 	import { page } from '$app/state'
+	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { theme } from '$lib/theming'
 </script>
 
 <div
 	class="base"
-	id="terms-of-use"
+	id="legal"
 	data-prefers-color-scheme
 	data-compel-color-scheme={$theme ?? page.data.theme}
 >
+	<div class="dark-mode">
+		<DarkModeToggle />
+	</div>
+
 	<header>
 		<h1>Terms of Use</h1>
 		<p>Last Updated: August 15, 2025</p>
@@ -78,7 +83,7 @@
 			<h2>5. Contact Information</h2>
 			<p>
 				If you have any questions about these Terms of Use, please contact us at: <a
-					href="mailto:feedback@mail.yorqat.com">feedback@mail.yorqat.com</a
+					href="mailto:feedback+dev.yorqat@gmail.com">feedback+dev.yorqat@gmail.com</a
 				>
 			</p>
 		</section>
@@ -86,42 +91,5 @@
 </div>
 
 <style lang="scss">
-	@use '_index' as *;
-
-	main,
-	header {
-		@include layout-respond-between('0', 'md') {
-			padding-inline: $x-space-2;
-		}
-
-		@include layout-respond-between('md', 'lg') {
-			padding-inline: $x-space-4;
-		}
-
-		@include layout-respond('md') {
-			padding-inline: $x-space-8;
-			max-width: $x-breakpoint-md-content;
-			margin-inline: auto;
-		}
-	}
-
-	#terms-of-use {
-		@include layout-respond-between('0', 'md') {
-			padding-block: $x-space-4;
-		}
-
-		@include layout-respond-between('md', 'lg') {
-			padding-block: $x-space-6;
-		}
-
-		@include layout-respond('md') {
-			padding-block: $x-space-10;
-		}
-	}
-
-	$custom-light-theme: ();
-	$custom-dark-theme: ();
-
-	@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
-	@include theming-impose-schemes-basic();
+	@use 'legal' as *;
 </style>
