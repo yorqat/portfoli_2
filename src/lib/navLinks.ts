@@ -1,5 +1,5 @@
 export const navLinks = [
-	{ path: 'blogs', name: 'Blogs', hotkey: 'b' },
+	{ path: 'blog', name: 'Blogs', hotkey: 'b' },
 	{ path: 'works', name: 'Works', hotkey: 'w' },
 	// { path: 'reach', name: 'Reach', hotkey: 'r' },
 	{ path: 'content', name: 'Content', hotkey: 'c' }
