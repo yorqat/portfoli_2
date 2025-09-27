@@ -62,7 +62,10 @@
 	</div>
 
 	<div id="projects">
-		<h1>Recruiters spend only about <span class="super-text">6</span> seconds on a portfolio</h1>
+		<h1>
+			Recruiters spend <span class="quiet-text"> only about </span>
+			<span class="super-text">6</span> <span class="quiet-text"> seconds on </span> a portfolio
+		</h1>
 
 		<div class="">
 			{#each links as link}
@@ -119,15 +122,56 @@
 	}
 
 	h1 {
-		font-size: $x-font-size-6xl;
-		line-height: 120%;
 		margin-top: $x-space-lg;
-		margin-bottom: $x-space-xxl;
+		margin-bottom: $x-space-lg;
 		padding-inline: $x-space-sm;
 
+		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-alternate-style();
+
+		.quiet-text {
+			color: var(--color-text-muted);
+
+			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-alternate-style();
+		}
+
+		@include layout-respond-max('md') {
+			font-size: $x-font-size-2xl;
+			line-height: 140%;
+
+			.super-text {
+				font-size: $x-font-size-4xl;
+			}
+		}
+
+		@include layout-respond('md') {
+			font-size: $x-font-size-4xl;
+			line-height: 125%;
+
+			.super-text {
+				font-size: $x-font-size-6xl;
+			}
+		}
+
+		@include layout-respond('lg') {
+			font-size: $x-font-size-6xl;
+			line-height: 115%;
+
+			.super-text {
+				font-size: $x-font-size-8xl;
+			}
+		}
+
+		@include layout-respond('xl') {
+			line-height: 125%;
+			max-width: 20ch;
+		}
+
 		.super-text {
-			font-size: $x-font-size-8xl;
 			vertical-align: middle;
+			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-alternate-style();
 		}
 	}
 

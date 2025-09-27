@@ -141,7 +141,8 @@
 							<a
 								href={path}
 								class="nav__link"
-								style={!scrolledPastLoungeNav ? 'view-transition-name: nav-link-' + name : ''}
+								class:vt={!scrolledPastLoungeNav}
+								style={'--vt: nav-link-' + name}
 							>
 								{name}
 							</a>
@@ -245,6 +246,7 @@
 
 		&__img {
 			position: absolute;
+			width: 100%;
 		}
 
 		@include layout-respond-max('lg') {
@@ -294,6 +296,9 @@
 	#backdrop-nav {
 		background: var(--color-bg);
 		view-transition-name: backdrop-nav;
+	}
+	.vt {
+		@include animations-declare-view-transition();
 	}
 
 	.section {
@@ -374,7 +379,7 @@
 
 		@include layout-respond('lg') {
 			font-size: $x-font-size-6xl;
-			letter-spacing: -4px;
+			letter-spacing: -2px;
 		}
 
 		@include layout-respond('2xl') {
