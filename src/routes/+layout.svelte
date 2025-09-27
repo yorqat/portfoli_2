@@ -27,3 +27,12 @@
 {#key page.url.pathname}
 	{@render children()}
 {/key}
+
+<style lang="scss" global>
+	@use 'opinionated' as op;
+	@use '_index' as i;
+
+	@include op.html-body();
+
+	@include i.input-links();
+</style>
