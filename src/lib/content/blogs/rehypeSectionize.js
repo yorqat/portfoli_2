@@ -56,7 +56,7 @@ export function rehypeSectionize(options = {}) {
 
 		// debug log
 		const filename = file.history?.[0] || 'unknown file'
-		console.log('Chapters for', filename, JSON.stringify(chapters, null, 2))
+		// console.log('Chapters for', filename, JSON.stringify(chapters, null, 2))
 	}
 }
 

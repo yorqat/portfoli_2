@@ -56,20 +56,14 @@
 
 	<div class="scroll-scheme base" id="content">
 		<aside>{@render chapters?.()}</aside>
-		<main>{@render content?.()}</main>
+		<main>
+			{@render content?.()}
+			<!-- <Footer /> -->
+		</main>
 	</div>
 </div>
 
 <style lang="scss" global>
-	@use '_index' as *;
-
-	@use 'blogs' as *;
-
-	#content {
-		@include layout-respond-max('md') {
-			aside {
-				display: none;
-			}
-		}
-	}
+	@use 'content/blog/layout' as *;
+	@use 'content/blog/article' as *;
 </style>

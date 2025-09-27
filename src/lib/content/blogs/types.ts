@@ -7,14 +7,14 @@ export type Post = {
 }
 
 export type PostModule = {
-	metadata: PostFrontmatter extends PostIndexEntry
+	metadata: PostIndexEntry
 	thumbnail?: string
 }
 
 export interface PostFrontmatter {
 	title: string
 	date: string // ISO string
-  readTimeMinutes: string // ISO string
+	readTimeMinutes: string // number
 
 	seoTitle: string // keyword optimized title
 	seoDescription: string // keyword optimized description
@@ -46,7 +46,7 @@ type BlogType =
 	| 'trend'
 
 type Technology =
-  | 'scss'
+	| 'scss'
 	| 'svelte'
 	| 'sveltekit'
 	| 'react'

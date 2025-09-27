@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export { Seo, Quote, Thumbnail, TableOfContents, Heading }
+	export { SeoBlogIndex, Seo, Quote, Thumbnail, TableOfContents, Heading }
 
 	export type Chapter = {
 		name: string
@@ -7,6 +7,62 @@
 		subChapter: Chapter[]
 	}
 </script>
+
+{#snippet SeoBlogIndex(
+	title: string,
+	description: string,
+	url: string,
+	image: string,
+	posts: {
+		title: string
+		url: string
+		publishedTime: string
+		modifiedTime?: string
+	}[]
+)}
+	<title>{title}</title>
+	<meta name="description" content={description} />
+	<link rel="canonical" href={url} />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={url} />
+	<meta property="og:image" content={image} />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
+	<meta name="twitter:image" content={image} />
+
+	<!-- Structured Data -->
+	{@html `
+    <script type="application/ld+json">
+      ${JSON.stringify(
+				{
+					'@context': 'https://schema.org',
+					'@type': 'Blog',
+					name: title,
+					description,
+					url,
+					publisher: {
+						'@type': 'Organization',
+						name: 'Yor Qat',
+						logo: {
+							'@type': 'ImageObject',
+							url: 'https://yorqat.com/favicon.svg'
+						}
+					},
+					blogPost: posts
+				},
+				null,
+				import.meta.env.DEV ? 2 : undefined
+			)}
+    </script>
+  `}
+{/snippet}
 
 {#snippet Seo(
 	title: string,

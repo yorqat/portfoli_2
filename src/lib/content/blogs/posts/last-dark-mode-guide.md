@@ -21,6 +21,7 @@ tags:
   - topic:accessibility
   - audience:for-developers
 ---
+
 Switching between light and dark mode shouldn’t feel like a visual assault.
 
 Yet, many sites still get this wrong; system preferences ignored, flashes of white before dark mode kicks in, and unpredictable theme changes across tabs.
@@ -218,4 +219,3 @@ User toggles theme (CSR) → State updates + cookie set → Next SSR render cons
 SCSS is known as CSS but on steroids and that couldn't be closer to the truth.
 
 I'll show you how well SCSS features play ball with our theming solution.
-

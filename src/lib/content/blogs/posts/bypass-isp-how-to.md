@@ -1,9 +1,9 @@
 ---
-title: How to Bypass ISP Port Blocking
-seoTitle: The Ultimate Dark Mode Guide for Web Designers & Developers
+title: Bypass ISP Blocks with WireGuard
+seoTitle: How to Bypass ISP Port Blocking Using WireGuard and a Free VPS for Self-Hosting
 
-description: An intro to the hybrid setup with TS.
-seoDescription: A complete guide to dark mode design, accessibility, and performance. Learn how to implement dark mode that works across browsers and devices
+description: Run servers at home even when your ISP blocks ports.
+seoDescription: Learn step-by-step how to bypass ISP port blocking by setting up a WireGuard tunnel to a low-cost or free VPS. This guide covers configuring WireGuard, routing inbound traffic, and enabling reliable self-hosting from your home network.
 
 author: Yor Qat
 date: 2024-04-05
