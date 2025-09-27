@@ -1,66 +1,8 @@
 @use '_index' as *;
 
-$custom-light-theme: (
-	comment: #6a737d,
-	prolog: #6a737d,
-	doctype: #6a737d,
-	cdata: #6a737d,
-	punctuation: #24292e,
-	keyword: #d73a49,
-	property: #005cc5,
-	tag: #22863a,
-	boolean: #d73a49,
-	number: #005cc5,
-	constant: #005cc5,
-	symbol: #005cc5,
-	function: #6f42c1,
-	class-name: #6f42c1,
-	string: #032f62,
-	char: #032f62,
-	attr-value: #032f62,
-	regex: #032f62,
-	url: #032f62,
-	operator: #d73a49,
-	entity: #d73a49,
-	inserted: #22863a,
-	deleted: #b31d28,
-	important: #b31d28,
-	bold: null,
-	italic: null
-);
-
-$custom-dark-theme: (
-	comment: #5c6370,
-	prolog: #5c6370,
-	doctype: #5c6370,
-	cdata: #5c6370,
-	punctuation: #abb2bf,
-	keyword: #c678dd,
-	property: #c678dd,
-	tag: #c678dd,
-	boolean: #c678dd,
-	number: #c678dd,
-	constant: #c678dd,
-	symbol: #c678dd,
-	function: #61afef,
-	class-name: #61afef,
-	string: #98c379,
-	char: #98c379,
-	attr-value: #98c379,
-	regex: #98c379,
-	url: #98c379,
-	operator: #56b6c2,
-	entity: #56b6c2,
-	inserted: #56b6c2,
-	deleted: #e06c75,
-	important: #e06c75,
-	bold: null,
-	italic: null
-);
-
-@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
-@include theming-impose-schemes-basic();
-@include theming-impose-scroll-scheme();
+.banner {
+	width: 100vw;
+}
 
 @mixin code-token-colors($prefix: 'color') {
 	$tokens: comment prolog doctype cdata punctuation keyword property tag boolean number constant
@@ -82,10 +24,6 @@ $custom-dark-theme: (
 			}
 		}
 	}
-}
-
-.banner {
-	width: 100vw;
 }
 
 #content {
@@ -295,6 +233,10 @@ $custom-dark-theme: (
 		overflow: hidden;
 		aspect-ratio: 16 / 9;
 
+		img {
+			width: 100%;
+		}
+
 		@include layout-respond-max('md') {
 			min-height: $x-space-xxl;
 			margin-bottom: $x-space-sm;
@@ -349,23 +291,4 @@ $custom-dark-theme: (
 			color: var(--color-text-muted);
 		}
 	}
-}
-
-#blogs {
-	background: var(--color-bg);
-	@include layout-flex-column();
-	@include layout-viewport-full-height-lockdown();
-}
-
-#nav {
-	view-transition-name: backdrop-nav;
-	background: var(--color-surface);
-	box-shadow: $x-bs-sketch-falloff;
-	position: sticky;
-	top: 0;
-	z-index: 999;
-}
-
-div > :last-of-type(p) {
-	margin: $x-space-xxl;
 }

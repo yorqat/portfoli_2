@@ -1,7 +1,4 @@
 <script>
-	import { getTheme } from '$lib/theming'
-	import { getReducedMotion } from '$lib/reduced-motion'
-
 	const { children } = $props()
 
 	import { onNavigate } from '$app/navigation'
@@ -20,5 +17,5 @@
 {@render children()}
 
 <style lang="scss" global>
-	@use 'blogs' as *;
+	@use 'content/blog/layout' as *;
 </style>
