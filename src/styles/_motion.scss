@@ -5,6 +5,11 @@
 @use './opinionated' as opinionated;
 @use 'sass:map';
 
+@mixin declare-view-transition() {
+	// view transitions
+	view-transition-name: var(--vt);
+}
+
 @mixin declare-motions-basic() {
 	// Media-query-based automatic color scheme
 	@media (prefers-reduced-motion: no-preference) {

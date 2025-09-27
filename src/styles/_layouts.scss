@@ -6,7 +6,9 @@ $full-viewport-height-dynamic: 100dvh; // Dynamic, adapts as UI shows/hides
 $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 
 @mixin viewport-full-height {
-	min-height: $full-viewport-height-compatibility;
+	& {
+		min-height: $full-viewport-height-compatibility;
+	}
 
 	@supports (height: #{$full-viewport-height-dynamic}) {
 		& {
@@ -22,7 +24,9 @@ $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 }
 
 @mixin viewport-full-height-capped {
-	max-height: $full-viewport-height-compatibility;
+	& {
+		max-height: $full-viewport-height-compatibility;
+	}
 
 	@supports (height: #{$full-viewport-height-dynamic}) {
 		& {
@@ -38,9 +42,11 @@ $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 }
 
 @mixin viewport-full-height-lockdown {
-	height: $full-viewport-height-compatibility;
-	min-height: $full-viewport-height-compatibility;
-	max-height: $full-viewport-height-compatibility;
+	& {
+		height: $full-viewport-height-compatibility;
+		min-height: $full-viewport-height-compatibility;
+		max-height: $full-viewport-height-compatibility;
+	}
 
 	@supports (height: #{$full-viewport-height-dynamic}) {
 		& {

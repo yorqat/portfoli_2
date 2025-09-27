@@ -31,6 +31,17 @@ $btn-radius: v.$space-1;
 	}
 }
 
+@mixin links() {
+	a {
+		text-decoration: none;
+		color: inherit;
+
+		&:hover {
+			color: var(--color-success);
+		}
+	}
+}
+
 // Assume you have a $tokens map (colors, spacings, radii, etc.)
 @mixin button-kit($name, $hierarchy, $tone: brand, $size: md, $shape: rounded, $content: text) {
 	$selector: '.btn-#{$name}';
