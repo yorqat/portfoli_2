@@ -87,9 +87,8 @@
 			<ul class="nav-links">
 				{#each navLinks as { path, name }}
 					<li>
-						<a
-							href={'/' + path}
-							style={tagViewTransition ? 'view-transition-name: nav-link-' + name : ''}>{name}</a
+						<a href={'/' + path} class:vt={tagViewTransition} style={'--vt: nav-link-' + name}
+							>{name}</a
 						>
 					</li>
 				{/each}
@@ -104,9 +103,10 @@
 			{#each navLinks as { path, name }}
 				<li>
 					<a
-						class="nav__link vt"
+						class="nav__link"
+						class:vt={tagViewTransition}
 						href={'/' + path}
-						style={tagViewTransition ? '--vt: nav-link-' + name : ''}>{name}</a
+						style={'--vt: nav-link-' + name}>{name}</a
 					>
 				</li>
 			{/each}
@@ -115,14 +115,13 @@
 {/key}
 
 <style lang="scss" global>
-	@use '_layouts.scss' as layouts;
-	@use '_semantics.scss' as semantics;
-	@use '_theming.scss' as default-theming;
-	@use '_variables.scss' as v;
-
 	@use '_index' as *;
 
 	$mobile-padding: $x-space-2;
+
+	.vt {
+		@include animations-declare-view-transition();
+	}
 
 	summary {
 		position: relative;
@@ -146,13 +145,13 @@
 		&__icon {
 			padding: $mobile-padding;
 			font-size: $x-font-size-2xl;
-			@include fonts-stack('Satoshi-Bold', 'sans-serif');
+			@include fonts-stack('Satoshi-Bold', sans-serif);
 			@include fonts-alternate-style();
 		}
 	}
 
 	.nav-toggle {
-		@include default-theming.colored-svg-mask('/close.svg', var(--color-text), v.$font-size-4xl);
+		@include theming-colored-svg-mask('/close.svg', var(--color-text), $x-font-size-4xl);
 	}
 
 	$nav-link-height: 20vh;
@@ -217,7 +216,7 @@
 
 	.nav-bar {
 		color: var(--color-text);
-		padding-block: v.$space-3;
+		padding-block: $x-space-3;
 
 		@include fonts-stack('Satoshi-Regular', sans-serif);
 		@include fonts-alternate-style();
@@ -227,18 +226,18 @@
 
 		display: grid;
 
-		$cell-unit: v.$space-16;
+		$cell-unit: $x-space-16;
 
 		grid-template-columns: minmax($cell-unit, 1fr) 1fr $cell-unit;
-		grid-column-gap: v.$space-0;
-		grid-row-gap: v.$space-0;
+		grid-column-gap: $x-space-0;
+		grid-row-gap: $x-space-0;
 
 		transition:
 			grid-template-rows 0.4s ease,
 			grid-row-gap 0.4s ease;
 
-		@include layouts.respond-max('md') {
-			grid-row-gap: v.$space-6;
+		@include layout-respond-max('md') {
+			grid-row-gap: $x-space-6;
 			.desktop {
 				display: none;
 			}
@@ -266,7 +265,7 @@
 					position: relative;
 
 					a {
-						padding-left: v.$space-6;
+						padding-left: $x-space-6;
 					}
 
 					&:hover::after {
@@ -281,29 +280,25 @@
 			}
 
 			&:has(.nav-toggle-container[open]) {
-				grid-template-rows: v.$space-12 $nav-link-height $nav-chapter-height;
-				grid-row-gap: v.$space-4;
+				grid-template-rows: $x-space-12 $nav-link-height $nav-chapter-height;
+				grid-row-gap: $x-space-4;
 
 				&[data-extra-chapters='false'] {
-					grid-template-rows: v.$space-12 $nav-link-height 0;
+					grid-template-rows: $x-space-12 $nav-link-height 0;
 				}
 			}
 
 			/* closed toggle */
 			&:has(.nav-toggle-container:not([open])) {
-				grid-template-rows: v.$space-12 0 0;
-				grid-row-gap: v.$space-0;
+				grid-template-rows: $x-space-12 0 0;
+				grid-row-gap: $x-space-0;
 
 				.nav-toggle {
-					@include default-theming.colored-svg-mask(
-						'/menu.svg',
-						var(--color-text),
-						v.$font-size-4xl
-					);
+					@include theming-colored-svg-mask('/menu.svg', var(--color-text), $x-font-size-4xl);
 				}
 
 				.nav-links {
-					@include semantics.hide-animatable();
+					@include a11y-hide-animatable();
 
 					gap: 0.2rem;
 				}
@@ -311,7 +306,7 @@
 		}
 
 		/* Wide desktop */
-		@include layouts.respond('lg') {
+		@include layout-respond('lg') {
 			grid-template-rows: 1fr 0;
 
 			.nav-toggle {
@@ -325,7 +320,7 @@
 				align-items: center;
 				height: 100%;
 				flex-direction: row;
-				gap: v.$space-4;
+				gap: $x-space-4;
 				padding-right: $x-space-lg;
 
 				> * {
@@ -344,7 +339,7 @@
 		}
 
 		/* Extra wide desktops*/
-		@include layouts.respond('2xl') {
+		@include layout-respond('2xl') {
 			max-width: $x-breakpoint-xl-content;
 			margin-inline: auto;
 		}
