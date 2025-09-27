@@ -6,6 +6,8 @@
 		id: string
 		subChapter: Chapter[]
 	}
+
+	import type { BlogPosting } from './types'
 </script>
 
 {#snippet SeoBlogIndex(
@@ -13,12 +15,7 @@
 	description: string,
 	url: string,
 	image: string,
-	posts: {
-		title: string
-		url: string
-		publishedTime: string
-		modifiedTime?: string
-	}[]
+	posts: BlogPosting[]
 )}
 	<title>{title}</title>
 	<meta name="description" content={description} />

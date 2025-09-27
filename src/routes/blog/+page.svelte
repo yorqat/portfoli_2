@@ -2,7 +2,7 @@
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
 
-	import type { Post } from '$lib/content/blogs/types'
+	import type { Post, BlogPosting } from '$lib/content/blogs/types'
 	import { SeoBlogIndex } from '$lib/content/blogs/Snips.svelte'
 
 	import NavBar from '$lib/NavBar.svelte'
@@ -14,12 +14,12 @@
 		posts: Post[]
 	}
 
-	const blogPosts = posts.map((p) => ({
+	const blogPosts: BlogPosting[] = posts.map((p) => ({
 		'@type': 'BlogPosting',
 		headline: p.metadata.seoTitle || p.metadata.title,
 		description: p.metadata.seoDescription || p.metadata.description,
 		url: `https://www.yorqat.com/blog/${p.slug}`,
-		image: `https://www.yorqat.com/${p.metadata.thumbnail ?? p.slug + '.webp'}`,
+		image: `https://www.yorqat.com/${p.slug + '.webp'}`,
 		datePublished: p.metadata.date,
 		dateModified: p.metadata.date,
 		author: {
@@ -30,13 +30,13 @@
 </script>
 
 <svelte:head>
-	<!-- {@render SeoBlogIndex( -->
-	<!-- 	'Yor Qat Blog', -->
-	<!-- 	'Insights, guides, and tutorials on design, development, and technology.', -->
-	<!-- 	'https://www.yorqat.com/blog', -->
-	<!-- 	'https://www.yorqat.com/cover.webp', -->
-	<!-- 	blogPosts -->
-	<!-- )} -->
+	{@render SeoBlogIndex(
+		'Yor Qat Blog',
+		'Insights, guides, and tutorials on design, development, and technology.',
+		'https://www.yorqat.com/blog',
+		'https://www.yorqat.com/cover.webp',
+		blogPosts
+	)}
 </svelte:head>
 
 <div

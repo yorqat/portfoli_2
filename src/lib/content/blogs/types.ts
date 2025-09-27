@@ -11,6 +11,20 @@ export type PostModule = {
 	thumbnail?: string
 }
 
+export type BlogPosting = {
+	'@type': 'BlogPosting'
+	headline: string
+	description: string
+	url: string
+	image: string
+	datePublished: string // or Date if you convert it
+	dateModified: string // or Date
+	author: {
+		'@type': 'Person'
+		name: string
+	}
+}
+
 export interface PostFrontmatter {
 	title: string
 	date: string // ISO string
