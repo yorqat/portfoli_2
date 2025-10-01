@@ -154,10 +154,10 @@
 			{/each}
 		</h1>
 		<p class="heading_author">
-			<span class="author">by {author}</span>
+			<span class="author"><strong>by {author} </strong></span> —
 			<span class="last-updated">
-				Last updated:
-				<time datetime={publication}>{publication}</time>
+				last updated:
+				<time datetime={publication}>{new Date(publication).toLocaleDateString()}</time>
 			</span>
 		</p>
 	</header>
