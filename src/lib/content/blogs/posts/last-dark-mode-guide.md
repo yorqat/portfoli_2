@@ -22,6 +22,8 @@ tags:
   - audience:for-developers
 ---
 
+[FOUC]: https://en.wikipedia.org/wiki/Flash_of_unstyled_content
+
 Switching between light and dark mode shouldn’t feel like a visual assault.
 
 Yet, many sites still get this wrong; system preferences ignored, flashes of white before dark mode kicks in, and unpredictable theme changes across tabs.
@@ -35,19 +37,20 @@ Here’s how to implement dark mode correctly, taking advantage of Svelte + Kit'
 Most sites today:
 
 - Ignores system preference `prefers-color-scheme`.
-- Apply dark mode only after JavaScript loads causing a flash of white screen (FOUC) before switching to dark.
+- Apply dark mode only after JavaScript loads causing a flash of white screen ([FOUC][FOUC]) before switching to dark.
 - Don’t persist the user’s theme preference across tabs or sessions.
 
-The result: a jarring, unpredictable experience.
+The result: a **jarring** and unpredictable experience.
 
 ## Solution Overview
 
-The right approach is a **two-pronged system**:
+The right approach is a **triad of solutions**:
 
 1. **Client-side (CSR)** – Let the user override system preferences and maintain state as they navigate.
 2. **Server-side (SSR)** – Use cookies to render the correct theme from the first HTML response to prevent FOUC.
+3. **Parameterized Styling (SCSS)** – With SCSS mixins to define css variables and theming declaratively.
 
-Together, these approaches respect **system defaults**, **user preference**, and **improve accessibility** playing on both CSR and SSR's strengths.
+Together, these approaches respect **system defaults** and **user preference**, improving **accessibility** playing on both CSR and SSR's strengths.
 
 ### Client-Side Control (CSR)
 
@@ -158,7 +161,7 @@ export const load: LayoutServerLoad = async ({ request }): Promise<LayoutData> =
 ```ts
 // $lib/theming.ts
 
-// --- All in together now ---
+// All together now
 export const updateTheme = (newTheme: Theme = 'auto') => {
 	// Immediately switches, consistent with CSR nav
 	theme.set(newTheme)
@@ -175,7 +178,6 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 
 ```svelte
 // src/routes/+layout.svelte
-
 
 \<script lang='ts'\>
   import { initializeTheme } from '$lib/theming'
@@ -214,8 +216,149 @@ System Preference → (SSR first render via cookie) → Correct theme applied in
 User toggles theme (CSR) → State updates + cookie set → Next SSR render consistently
 ```
 
-## Bonus
+## Bonus with SCSS!
 
-SCSS is known as CSS but on steroids and that couldn't be closer to the truth.
+SCSS is a superset of CSS that adds variables, nesting, mixins, functions etc. I'll show you how well SCSS features play ball with our theming solution.
 
-I'll show you how well SCSS features play ball with our theming solution.
+1. Souped up Variable Definitions
+
+```scss
+// Generates the --key: values;
+// pair for each entry in your theme map
+@mixin declare-vars($map, $prefix: '--') {
+	@each $key, $value in $map {
+		#{$prefix}-#{$key}: #{$value};
+	}
+}
+```
+
+```scss
+// Usage:
+$light-theme: (
+	// light gray bg; easy on the eyes
+	bg: '#F5F5F5',
+	// pure white for modals, surfaces cards
+	surface: '#FFFFFF',
+	// nice blue accent for buttons, links, highlights
+	accent: '#4A90E2'
+);
+
+@include declare-vars($light-theme, '--light');
+// Generates:
+--light-bg: #f5f5f5;
+--light-surface: #ffffff;
+--light-accent: #4a90e2;
+```
+
+2. Be able to declare scopes
+
+```scss
+@mixin declare-scoped-vars($selector, $map, $prefix: '--') {
+	#{$selector} {
+		@include declare-vars($map, $prefix);
+	}
+}
+```
+
+```scss
+// Usage:
+@include declare-scoped-vars(.light, $light-theme, '--color');
+// Generates:
+.light {
+	--color-bg: #f5f5f5;
+	--color-surface: #ffffff;
+	--color-accent: #4a90e2;
+}
+```
+
+3. Work your magic by defining the ultimate dark mode support
+
+```scss
+@mixin declare-schemes-basic($light-theme: (), $dark-theme: (), $color-prefix: '--color') {
+	// Respect user system preferences first
+	// scoped in a [data-prefers-color-scheme] data attribute
+	@media (prefers-color-scheme: light) {
+		@include declare-scoped-vars('[data-prefers-color-scheme]', $light-theme, $color-prefix);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		@include declare-scoped-vars('[data-prefers-color-scheme]', $dark-theme, $color-prefix);
+	}
+
+	// This ensures that manual overrides take
+	// precedence over system preference
+	@include declare-scoped-vars(
+		"[data-prefers-color-scheme][data-compel-color-scheme='light']",
+		$light-theme,
+		$color-prefix
+	);
+
+	@include declare-scoped-vars(
+		"[data-prefers-color-scheme][data-compel-color-scheme='dark']",
+		$dark-theme,
+		$color-prefix
+	);
+}
+```
+
+```scss
+// Usage
+$light-theme: (
+	bg: '#F5F5F5',
+	surface: '#FFFFFF',
+	accent: '#4A90E2',
+	text: '#000000'
+);
+
+$dark-theme: (
+	bg: '#1E1E1E',
+	surface: '#2C2C2C',
+	accent: '#3A9AD9',
+	text: '#FFFFFF'
+);
+
+@include declare-schemes-basic($light-theme, $dark-theme, '--color');
+
+// Generates:
+@media (prefers-color-scheme: light) {
+	[data-prefers-color-scheme] {
+		--color-bg: #f5f5f5;
+		--color-surface: #ffffff;
+		--color-accent: #4a90e2;
+		--color-text: #000000;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	[data-prefers-color-scheme] {
+		--color-bg: #1e1e1e;
+		--color-surface: #2c2c2c;
+		--color-accent: #3a9ad9;
+		--color-text: #ffffff;
+	}
+}
+
+[data-prefers-color-scheme][data-compel-color-scheme='light'] {
+	--color-bg: #f5f5f5;
+	--color-surface: #ffffff;
+	--color-accent: #4a90e2;
+	--color-text: #000000;
+}
+
+[data-prefers-color-scheme][data-compel-color-scheme='dark'] {
+	--color-bg: #1e1e1e;
+	--color-surface: #2c2c2c;
+	--color-accent: #3a9ad9;
+	--color-text: #ffffff;
+```
+
+4. Now colour theming is a no-brainer
+
+```scss
+p {
+	color: var(--color-text);
+	background-color: var(--color-bg);
+}
+```
+
+Thank you so much for reading. \<3

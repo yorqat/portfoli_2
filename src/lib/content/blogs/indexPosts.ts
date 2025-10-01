@@ -7,6 +7,7 @@ const modules = import.meta.glob('./posts/*.md', { eager: true })
 const thumbs = import.meta.glob('./posts/*.{avif,webp,png,jpg}', {
 	eager: true,
 	query: {
+		w: '1200;800;400',
 		enhanced: true
 	}
 }) as Record<string, { default: string }>
