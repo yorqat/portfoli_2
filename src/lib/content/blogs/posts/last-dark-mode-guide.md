@@ -23,6 +23,9 @@ tags:
 ---
 
 [FOUC]: https://en.wikipedia.org/wiki/Flash_of_unstyled_content
+[CSR]: https://developer.mozilla.org/en-US/docs/Glossary/CSR
+[SSR]: https://developer.mozilla.org/en-US/docs/Glossary/SSR
+[SCSS]: https://sass-lang.com
 
 Switching between light and dark mode shouldn’t feel like a visual assault.
 
@@ -46,9 +49,9 @@ The result: a **jarring** and unpredictable experience.
 
 The right approach is a **triad of solutions**:
 
-1. **Client-side (CSR)** – Let the user override system preferences and maintain state as they navigate.
-2. **Server-side (SSR)** – Use cookies to render the correct theme from the first HTML response to prevent FOUC.
-3. **Parameterized Styling (SCSS)** – With SCSS mixins to define css variables and theming declaratively.
+1. **Client-side ([CSR][CSR])** – Let the user override system preferences and maintain state as they navigate.
+2. **Server-side ([SSR][SSR])** – Use cookies to render the correct theme from the first HTML response to prevent FOUC.
+3. **Parameterized Styling ([SCSS][SCSS])** – With SCSS mixins to define css variables and theming declaratively.
 
 Together, these approaches respect **system defaults** and **user preference**, improving **accessibility** playing on both CSR and SSR's strengths.
 
@@ -92,7 +95,7 @@ export const getTheme = (): Theme => {
 }
 ```
 
-3. Helper function for DOM updates for all `[data-compels-color-scheme]`
+3. Helper function for DOM updates for all `[data-compel-color-scheme]`
 
 ```ts
 // $lib/theming.ts
@@ -105,11 +108,11 @@ export const applyCompelTheme = (newTheme: Theme) => {
 }
 ```
 
-Here, state.theme:
+Here our **theme** writable:
 
 - Tracks the current theme reactively.
 
-- Updates `<div data-compels-color-scheme>` dynamically.
+- Updates `<element data-compel-color-scheme>` dynamically.
 
 - Ensures theme preference survives client-side navigation.
 
@@ -180,7 +183,7 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 // src/routes/+layout.svelte
 
 \<script lang='ts'\>
-  import { initializeTheme } from '$lib/theming'
+  import { initializeTheme, getTheme } from '$lib/theming'
   import { page } from '$app/state'
 
   let { children } = $props()
@@ -191,7 +194,12 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 \</script\>
 
 {#key page.url.pathname}
-  {@render children()}
+  <div
+    data-prefers-color-scheme // respect system preference
+    data-compels-color-scheme={getTheme()}
+  >
+    {@render children()}
+  </div>
 {/key}
 ```
 
@@ -203,18 +211,19 @@ export const updateTheme = (newTheme: Theme = 'auto') => {
 
 3. Use system preference as the default, but always let users override it.
 
-### Benefits
+### Intended Benefits
 
 - Predictable behavior across tabs and sessions.
 - No jarring flashes when navigating.
-- User autonomy without sacrificing UX.
+- User autonomy without technical debt.
 - Cleaner developer experience.
 
-```
-System Preference → (SSR first render via cookie) → Correct theme applied instantly
-        ↓
-User toggles theme (CSR) → State updates + cookie set → Next SSR render consistently
-```
+<!-- TODO: Leverage proper graphs -->
+<!-- ``` -->
+<!-- System Preference → (SSR first render via cookie) → Correct theme applied instantly -->
+<!--         ↓ -->
+<!-- User toggles theme (CSR) → State updates + cookie set → Next SSR render consistently -->
+<!-- ``` -->
 
 ## Bonus with SCSS!
 
@@ -360,5 +369,3 @@ p {
 	background-color: var(--color-bg);
 }
 ```
-
-Thank you so much for reading. \<3
