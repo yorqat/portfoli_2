@@ -97,6 +97,9 @@
 				margin-inline: $x-space-xs;
 
 				a {
+					@include fonts-stack('Satoshi-Italic', sans-serif);
+					@include fonts-alternate-style();
+					font-size: $x-font-size-lg;
 					padding-block: $x-space-xs;
 					padding-inline: $x-space-xs;
 					color: var(--color-text-muted);
