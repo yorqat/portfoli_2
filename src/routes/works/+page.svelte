@@ -47,6 +47,12 @@
 	import { getReducedMotion } from '$lib/reduced-motion'
 
 	import NavBar from '$lib/NavBar.svelte'
+
+	const { data }: { data: { projects: Project[] } } = $props()
+	const projects = data.projects
+
+	import { page } from '$app/state'
+	import type { Project } from '$lib/content/works/types'
 </script>
 
 <div
@@ -55,7 +61,7 @@
 	data-prefers-reduced-motion
 	data-compel-reduced-motion={getReducedMotion()}
 	class="base scroll-scheme"
-	id="works"
+	id="work-home"
 >
 	<div id="nav" class="glass-card">
 		<NavBar />
@@ -67,58 +73,70 @@
 			<span class="super-text">6</span> <span class="quiet-text"> seconds on </span> a portfolio
 		</h1>
 
-		<div class="">
-			{#each links as link}
-				<a href={'/works/' + link.path}>
-					<h2>{link.title}</h2>
-				</a>
+		<!-- <div class=""> -->
+		<!-- 	{#each links as link} -->
+		<!-- 		<a href={'/works/' + link.path}> -->
+		<!-- 			<h2>{link.title}</h2> -->
+		<!-- 		</a> -->
+		<!-- 	{/each} -->
+		<!-- </div> -->
+
+		<ul class="projects">
+			{#each projects as project}
+				<li>
+					<h2 class="project">
+						<a class="title" href={page.url.pathname + '/describe/' + project.site.path}>
+							{project.site.title}
+							<div class="describe"></div>
+						</a>
+
+						<a class="live" href={page.url.pathname + '/live/' + project.site.path}>live</a>
+					</h2>
+				</li>
 			{/each}
-		</div>
+		</ul>
 	</div>
 </div>
 
 <style lang="scss">
 	@use '_index' as *;
-
-	$custom-light-theme: (
-		bg: $x-gray-50
-	);
-
-	$custom-dark-theme: (
-		bg: #0f0f0f,
-		surface: #0b0b0b,
-		surface-alt: #212121,
-		text: #eaeaea
-	);
-
-	@include theming-declare-schemes-basic($custom-light-theme, $custom-dark-theme);
-	@include theming-impose-schemes-basic();
-	@include theming-impose-scroll-scheme();
-
-	#works {
-		background: var(--color-bg);
-		@include layout-flex-column();
-		@include layout-viewport-full-height-lockdown();
-
-		min-height: 200vh;
-
-		@include fonts-stack('Satoshi', 'sans-serif');
-		@include fonts-alternate-style();
-	}
-
-	#nav {
-		view-transition-name: backdrop-nav;
-		box-shadow: $x-bs-sketch-falloff;
-		position: sticky;
-		top: 0;
-		z-index: 999;
-	}
+	@use 'content/work/layout' as *;
 
 	#projects {
-		@include layout-respond('2xl') {
+		background-color: var(--color-bg);
+
+		@include layout-respond('xl') {
 			max-width: $x-breakpoint-xl-content;
 			margin-inline: auto;
 		}
+	}
+
+	.project {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-inline: $x-space-sm;
+		letter-spacing: 1px;
+
+		.title {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-grow: 1;
+		}
+	}
+
+	.describe,
+	.live {
+		background-color: var(--color-surface);
+	}
+
+	.describe {
+		@include theming-colored-svg-mask('/read_more.svg', var(--color-text), $x-font-size-4xl);
+	}
+
+	.live {
+		@include theming-colored-svg-mask('/play_arrow.svg', var(--color-text), $x-font-size-4xl);
 	}
 
 	h1 {
@@ -176,6 +194,22 @@
 	}
 
 	h2 {
-		font-size: $x-font-size-4xl;
+		@include fonts-stack('Satoshi-Light', sans-serif);
+
+		@include layout-respond-max('sm') {
+			font-size: $x-font-size-xl;
+		}
+
+		@include layout-respond('md') {
+			font-size: $x-font-size-2xl;
+		}
+
+		@include layout-respond('xl') {
+			font-size: $x-font-size-4xl;
+		}
+	}
+
+	ul {
+		list-style: none;
 	}
 </style>

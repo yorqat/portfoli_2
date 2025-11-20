@@ -114,11 +114,6 @@ $tags-border: 1px dashed var(--color-bg);
 
 	font-feature-settings: 'salt' 1;
 
-	&:hover h2 {
-		color: var(--color-text);
-		text-decoration: none;
-	}
-
 	h2 {
 		@include fonts-stack('Satoshi-Light', sans-serif);
 		@include fonts-alternate-style();

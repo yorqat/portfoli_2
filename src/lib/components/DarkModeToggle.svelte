@@ -87,18 +87,18 @@
 	@use '_index' as *;
 
 	.darkmode {
-		height: $x-space-xl;
+		// height: $x-space-xl;
 		aspect-ratio: 1;
 		background: var(--color-surface);
 
 		&[aria-checked='mixed'] {
-			@include theming-colored-svg-mask('/auto.svg', var(--color-text), $x-font-size-4xl);
+			@include theming-colored-svg-mask('/auto.svg', var(--color-text), $x-font-size-2xl);
 		}
 		&[aria-checked='true'] {
-			@include theming-colored-svg-mask('/dark_mode.svg', var(--color-text), $x-font-size-4xl);
+			@include theming-colored-svg-mask('/dark_mode.svg', var(--color-text), $x-font-size-2xl);
 		}
 		&[aria-checked='false'] {
-			@include theming-colored-svg-mask('/bright.svg', var(--color-text), $x-font-size-4xl);
+			@include theming-colored-svg-mask('/bright.svg', var(--color-text), $x-font-size-2xl);
 		}
 	}
 </style>

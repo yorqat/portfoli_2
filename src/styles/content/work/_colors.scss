@@ -1,0 +1,12 @@
+@use '_index' as *;
+
+$work-light-theme: (
+	bg: $x-gray-50
+);
+
+$work-dark-theme: (
+	bg: #111,
+	surface: #0b0b0b,
+	surface-alt: #212121,
+	text: #eaeaea
+);

@@ -3,7 +3,7 @@ export type Post = {
 	chapters: string[]
 	metadata: PostFrontmatter
 	component: unknown
-	thumbnail?: string
+	thumbnail: string
 }
 
 export type PostModule = {

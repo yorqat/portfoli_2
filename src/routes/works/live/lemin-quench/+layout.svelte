@@ -1,5 +1,6 @@
 <script lang="ts">
 	import WorkFlex from '$lib/components/WorkFlex.svelte'
+	import { type Site } from '$lib/content/works/types'
 
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
@@ -7,6 +8,13 @@
 	const { children } = $props()
 
 	const colours: string[] = ['#346653', '#663453', '#533466']
+
+	export const site: Site = {
+		class: 'product-concept',
+		tags: ['responsive-layout'], // adapts smoothly between sizes
+		title: 'Lemin Quench and Exotic fruities product line',
+		path: 'lemin-quench'
+	}
 </script>
 
 <div

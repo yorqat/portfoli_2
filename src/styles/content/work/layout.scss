@@ -1,0 +1,21 @@
+@use '_index' as *;
+@use './_colors' as clr;
+
+#work-home {
+	background: var(--color-bg);
+	@include layout-flex-column();
+	@include layout-viewport-full-height-lockdown();
+}
+
+#nav {
+	view-transition-name: backdrop-nav;
+	background: var(--color-surface);
+	box-shadow: $x-bs-sketch-falloff;
+	position: sticky;
+	top: 0;
+	z-index: 999;
+}
+
+@include theming-declare-schemes-basic(clr.$work-light-theme, clr.$work-dark-theme);
+@include theming-impose-schemes-basic();
+@include theming-impose-scroll-scheme();
