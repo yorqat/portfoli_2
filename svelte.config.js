@@ -13,7 +13,10 @@ const config = {
 	preprocess: [
 		sveltePreprocess({
 			scss: {
-				includePaths: [path.resolve('src/styles')]
+				includePaths: [
+          path.resolve('src/styles'),
+          path.resolve('.kit10/live'),
+        ]
 			}
 		}),
 

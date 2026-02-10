@@ -77,8 +77,6 @@
 </div>
 
 <style lang="scss">
-  @use 'style' as *;
-
 	.element-display .atomic-number {
 		font-size: 3rem;
 		padding: 0.5rem;
