@@ -4,6 +4,12 @@
 	import { contextMenu } from './contextMenu'
 	import { type ContextMenuContent } from './contextMenuStore'
 
+	type PanelSection = {
+		title: string
+		content: Snippet
+		icon?: string
+	}
+
 	type PanelProps = {
 		name: string
 		tooltip: string
@@ -19,7 +25,6 @@
 		<button use:contextMenu={contextMenuContent} aria-label="Add" class="add"
 			><i class="fa-solid fa-plus"></i></button
 		>
-
 		<h2 title={tooltip}>
 			{name}
 		</h2>
@@ -36,16 +41,19 @@
 
 	.panel {
 		padding-bottom: $x-space-xs;
-		margin-bottom: $x-space-sm;
 		position: relative;
 
 		outline-offset: $x-space-xs;
-		outline-offset: 2px;
+		outline-offset: 1px;
 
 		border-radius: $x-space-xs;
+		background-color: var(--color-surface);
 
-		@include layout-respond('lg') {
-			border: 2px solid var(--color-panel-border);
+		padding-inline: $x-space-sm;
+
+		@include layout-respond('2xl') {
+			// border: 1px solid var(--color-panel-border);
+			padding-inline: $x-space-xs;
 		}
 
 		&:has(.drag:hover) {
@@ -58,18 +66,23 @@
 
 		&__header {
 			display: flex;
-			padding-right: $x-space-sm;
-			padding-left: $x-space-xs;
+			align-items: center;
+
 			padding-top: $x-space-xs;
 			padding-bottom: $x-space-xs;
 			border-radius: $x-space-xs $x-space-xs 0 0;
 			user-select: none;
+
+			@include layout-respond('lg') {
+				padding-right: $x-space-sm;
+				padding-left: $x-space-xs;
+			}
 		}
 
 		.add {
 			border: unset;
 			background-color: inherit;
-			padding-inline: $x-space-xs;
+			padding-right: $x-space-sm;
 			padding-block: 2px;
 			color: var(--color-text);
 			font-size: $x-font-size-md;
@@ -99,7 +112,6 @@
 			@include fonts-stack('Satoshi-Light', sans);
 			letter-spacing: 1.5px;
 			text-transform: uppercase;
-			padding-left: $x-space-xs;
 			color: var(--color-text);
 			flex-grow: 1;
 
@@ -109,18 +121,19 @@
 
 			@include layout-respond('lg') {
 				font-size: $x-font-size-lg;
+				padding-left: $x-space-xs;
 			}
 		}
 
 		&__content {
-			margin-inline: $x-space-xs;
-
 			@include layout-respond('lg') {
+				margin-inline: $x-space-xs;
 				font-size: $x-font-size-md;
 			}
 
 			@include layout-respond-max('lg') {
 				font-size: $x-font-size-xs;
+				scrollbar-width: none;
 			}
 		}
 	}

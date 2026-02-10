@@ -5,11 +5,12 @@
 	import type { ContextMenuContent } from '../contextMenuStore'
 
 	type KitsPanel = {
+		selectedKit?: ComponentView
 		kits: ComponentFlat[]
 		kitViews: ComponentView[]
 	}
 
-	const { kits = $bindable(), kitViews = $bindable() }: KitsPanel = $props()
+	const { selectedKit, kits = $bindable(), kitViews = $bindable() }: KitsPanel = $props()
 
 	function selectKit(target: ComponentView) {
 		// deselect everything
@@ -31,7 +32,21 @@
 			name: 'add',
 			displayText: 'Kit',
 			icon: 'fa-regular fa-window-maximize',
-			onClick: () => console.log('Add')
+			onClick: () => {
+				let index = kits.push({
+					name: 'Unnamed',
+					discriminator: 0,
+					sets: {
+						layers: [],
+						axisRank: []
+					}
+				})
+
+				kitViews.push({
+					source_index: index - 1,
+					params: {}
+				})
+			}
 		},
 		'hr',
 		{
@@ -80,23 +95,41 @@
 			name: 'add',
 			displayText: 'New View',
 			icon: 'fa-solid fa-diamond',
-			onClick: () => console.log('Add')
+			onClick: () => {
+				if (selectedKit) {
+					kitViews.push({
+						source_index: selectedKit.source_index,
+						params: selectedKit.params,
+						discriminator: 5,
+						name: selectedKit.name,
+						rootPosition: { x: 0, y: 0 }
+					})
+				}
+			}
 		},
 
 		{
 			name: 'trash',
 			displayText: 'Clone Kit',
 			icon: 'fa-solid fa-clone',
-			onClick: () => console.log('Remove')
+			onClick: () => {
+				if (selectedKit) {
+				}
+			}
 		},
 		'hr',
 		{
 			name: 'trash',
 			displayText: 'Delete View',
 			icon: 'fa-solid fa-trash-can',
-			onClick: () => console.log('Remove')
+			onClick: () => {
+				if (selectedKit) {
+				}
+			}
 		}
 	]
+
+	const newKit: { name: string } | undefined = $state()
 </script>
 
 <Panel contextMenuContent={kitsContextMenu} name="Kits" tooltip="Kits">
@@ -154,13 +187,13 @@
 
 		background-color: inherit;
 		border: unset;
+		border-radius: $x-space-md;
 
 		display: flex;
 		width: 100%;
-		letter-spacing: 1px;
 		cursor: pointer;
 		position: relative;
-		border-left: 2px solid var(--color-surface);
+		// border-left: 2px solid var(--color-surface);
 		font-size: $x-font-size-md;
 
 		&__icon {
@@ -169,7 +202,7 @@
 		}
 
 		&__name {
-			@include fonts-stack('Satoshi-Regular', sans);
+			@include fonts-stack('Satoshi-Bold', sans);
 			color: var(--color-text);
 			font-weight: 600;
 		}
@@ -183,7 +216,7 @@
 
 		&--selected {
 			background-color: var(--color-surface-alt);
-			border-left: 2px solid var(--color-primary);
+			// border-left: 2px solid var(--color-primary);
 
 			> * {
 				color: var(--color-primary);

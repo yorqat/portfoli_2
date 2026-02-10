@@ -1,29 +1,48 @@
 <script lang="ts" module>
+	/*
 	export type TokenLibrary = {
 		[namespace: string]: Token[] | TokenLibrary
-	}
+	}*/
 
 	export type TokenValue = string
 
 	export type Token = {
 		name: string
 		displayName: string
-		semantic?: false
 		value:
 			| TokenValue
 			| {
 					resolve: string
 			  }
+			| {
+					alias: string
+			  }
+
+		semantic?: false
+		description?: string
 	}
+
+	export type TokenLibraryNode = {
+		tokens?: Token[]
+		children?: { [namespace: string]: TokenLibraryNode }
+	}
+
+	export type TokenLibrary = { [namespace: string]: TokenLibraryNode }
 
 	export type TokenResolution = {
 		evaluation?: string
 		trace: (Token | 'failed resolution')[]
 	}
 
+	import type { ComponentFlat, ComponentView } from '../Component.svelte'
+
 	export type TokenPanelProps = {
 		tokens: Token[]
 		tokenLibraries: TokenLibrary
+
+		selectedKit?: ComponentView
+		kitViews: ComponentView[]
+		kits: ComponentFlat[]
 	}
 </script>
 
@@ -32,31 +51,26 @@
 	import type { ContextMenuContent } from '../contextMenuStore'
 	import Panel from '../Panel.svelte'
 
-	function findTokenByPath(tokenLibraries: TokenLibrary, path: string): Token | undefined {
+	function findTokenByPath(library: TokenLibrary, path: string): Token | undefined {
 		const segments = path.split('/')
+		let current: TokenLibraryNode | undefined = library[segments[0]]
 
-		let current: any = tokenLibraries
+		if (!current) return undefined
 
-		for (let i = 0; i < segments.length; i++) {
-			const segment = segments[i]
-
-			if (Array.isArray(current)) {
-				// last segment should match a token name in the array
-				return current.find((t: Token) => t.name === segment)
-			}
-
-			if (typeof current === 'object' && current !== null) {
-				current = current[segment]
-				if (!current) return undefined
-			} else {
-				return undefined
-			}
+		// walk down children except last segment
+		for (let i = 1; i < segments.length - 1; i++) {
+			const seg = segments[i]
+			current = current.children?.[seg]
+			if (!current) return undefined
 		}
 
-		// if we exit loop and current is array or token
-		if (Array.isArray(current)) return undefined
+		// final segment: look inside tokens[]
+		const final = segments[segments.length - 1]
+		const tokens = current.tokens
 
-		return current as Token | undefined
+		if (!tokens) return undefined
+
+		return tokens.find((t) => t.name === final)
 	}
 
 	function trace(token: Token, tokenLibraries: TokenLibrary): (Token | 'failed resolution')[] {
@@ -94,7 +108,13 @@
 		}
 	}
 
-	const { tokens = $bindable(), tokenLibraries = $bindable() }: TokenPanelProps = $props()
+	const {
+		tokens = $bindable(),
+		tokenLibraries = $bindable(),
+		selectedKit,
+		kits = $bindable(),
+		kitViews = $bindable()
+	}: TokenPanelProps = $props()
 
 	let tokenPanelContextMenu: ContextMenuContent = [
 		{
@@ -141,7 +161,7 @@
 		{
 			name: 'add',
 			displayText: 'Library',
-			icon: 'fa-solid fa-network-wired',
+			icon: 'fa-solid fa-book',
 			onClick: () => console.log('Add')
 		},
 		{
@@ -203,23 +223,24 @@
 	tooltip="Design tokens in use and Libraries"
 >
 	{#snippet content()}
+		{#if selectedKit}
+			<h3 class="token-heading">{kits[selectedKit.source_index].name}</h3>
+			<button class="token token--top token--bottom">+</button>
+		{/if}
+
 		<h3 class="token-heading">Project</h3>
 		<ul class="tokens-used">
 			{#each tokens as token}
 				<li class="tokens-used__item">
-					<!-- <button use:contextMenu={tokenContextMenu} class="token token--top" title={resolveValue(token, tokenLibraries).evaluation ?? 'Unresolved'}> -->
-					<!-- 	<i class="fa-solid fa-palette"></i> {token.displayName}</button -->
-					<!-- > -->
-
 					{#each resolveValue(token, tokenLibraries).trace as t, i}
 						<button class:token--top={i === 0} class:token--pathing={i !== 0} class="token">
 							{#if i === 0}
-								<i class="fa-solid fa-palette"></i>
+								<!-- <i class="fa-solid fa-palette"></i> -->
+								<i class="fa-solid fa-arrows-left-right-to-line"></i>
 							{/if}
 							{t?.displayName ?? t?.name ?? 'Not Found'}
 						</button>
 						<i class="fa-solid fa-angle-left"></i>
-						<!-- <i class="fa-solid fa-equals"></i> -->
 					{/each}
 					<button class="token token--resolved"
 						>{resolveValue(token, tokenLibraries).evaluation ?? '??'}</button
@@ -227,23 +248,48 @@
 				</li>
 			{/each}
 		</ul>
+
 		<h3 class="token-heading">Libraries</h3>
 		<ul class="tokens-library">
-			{#snippet nestedtokens(tokenLibraries: TokenLibrary, level: number)}
-				{#each Object.keys(tokenLibraries) as item}
-					<button
-						style="--level: {level};"
-						use:contextMenu={tokenContextMenu}
-						class="token"
-						title={'2rem'}
-					>
-						<i class="fa-solid fa-network-wired"></i>
-						{item}
-					</button>
+			{#snippet renderLibrary(lib: TokenLibrary, level: number)}
+				{#each Object.entries(lib) as [namespace, node]}
+					<details open>
+						<summary
+							class="token token--resolved token--namespace"
+							style="--level: {level};"
+							use:contextMenu={tokenContextMenu}
+						>
+							<i class="fa-solid fa-book"></i>
+							{namespace}
+						</summary>
+
+						<div class="token--module">
+							<!-- Render tokens inside this namespace -->
+							{#if node.tokens}
+								{#each node.tokens as t}
+									<button
+										class="token token--resolved token-leaf"
+										style="--level: {level + 1}; --color-icon: {t.value}"
+										use:contextMenu={tokenContextMenu}
+										title={t.value}
+									>
+										<!-- <i class="fa-solid fa-palette"></i> -->
+										<i class="fa-solid fa-arrows-left-right-to-line"></i>
+										{t.displayName}
+									</button>
+								{/each}
+							{/if}
+
+							<!-- Render nested children -->
+							{#if node.children}
+								{@render renderLibrary(node.children, level + 1)}
+							{/if}
+						</div>
+					</details>
 				{/each}
 			{/snippet}
 
-			{@render nestedtokens(tokenLibraries, 0)}
+			{@render renderLibrary(tokenLibraries, 0)}
 		</ul>
 	{/snippet}
 </Panel>
@@ -264,11 +310,20 @@
 		background: inherit;
 	}
 
+	.token--module {
+		@include layout-flex-column();
+		gap: calc($x-space-xs / 2);
+		overflow-y: auto;
+		max-height: 16vh;
+		scrollbar-width: thin;
+		margin-top: $x-space-xs;
+	}
+
 	.tokens-used {
 		@include layout-flex-column();
-		gap: $x-space-xs;
-		padding-block: $x-space-xs;
-		margin-left: $x-space-xs;
+		gap: calc($x-space-xs / 2);
+		padding-bottom: $x-space-sm;
+		margin-bottom: $x-space-sm;
 		overflow-x: auto;
 		scrollbar-width: thin;
 
@@ -276,22 +331,27 @@
 			display: flex;
 			align-items: center;
 			width: max-content;
-			gap: $x-space-sm;
 
 			position: sticky;
-			left: 0;
+
+			> i {
+				font-size: $x-font-size-sm;
+				color: var(--color-icon, --color-text-muted);
+			}
 		}
 	}
 
 	.token {
 		background: var(--color-bg);
-		width: max-content;
 		color: var(--color-text);
 		border: unset;
 		padding-block: calc($x-space-xs * 0.5);
 		padding-inline: $x-space-xs;
 		border: 1px solid var(--color-bg);
+		border-radius: $x-space-xs;
 		text-align: left;
+		margin-left: calc(var(--level) * $x-space-xs);
+		width: max-content;
 
 		&--top {
 			position: sticky;
@@ -320,7 +380,8 @@
 		cursor: pointer;
 
 		i {
-			color: var(--color-text-muted);
+			color: var(--color-icon, --color-text-muted);
+			font-size: $x-font-size-md;
 			padding-right: calc($x-space-xs * 0.5);
 		}
 

@@ -18,7 +18,7 @@
 <Panel name="Project" tooltip="Project Settings" contextMenuContent={projectContextMenu}>
 	{#snippet content()}
 		<div class="title" bind:innerHTML={name} contenteditable="true">{name}</div>
-		<div class="description">{description}</div>
+		<div class="description" bind:innerHTML={description} contenteditable="true">{description}</div>
 		<div class="license">
 			<i class="fa-solid fa-triangle-exclamation"></i> Project is not Licensed
 		</div>

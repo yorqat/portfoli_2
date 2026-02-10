@@ -11,21 +11,31 @@
 /** A single axis can contain one or multiple variant values */
 export type Axis = string | string[]
 
-/** An AxesSet represents the active combination of axis states */
-export type AxesSet = {
-	[axisName: string]: Axis
+/** A dictionary of layer (Axes Set) resolution for each Axis variant */
+export type AxisVariantLayerTrace = {
+	[axisVariantId: Axis]: AxesSet[]
 }
 
+/** An AxesSet represents the active combination of axis states */
+export type AxesSet = Partial<{
+	[axisName: string]: Axis
+}>
+
 /** Basic CSS-style rule dictionary */
-export type Style = {
-	[property: string]: string | number
-}
+export type Style = Partial<{
+	[property: string]: string
+}>
 
 /** Debugging info for a single style entry */
 export type StyleSource = {
 	axesSignature: string
 	axes: AxesSet
 	style: Style
+	specificity: number
+}
+
+export interface StyleSourceRuntime extends StyleSource {
+	axesSignature: string
 	specificity: number
 }
 
@@ -82,7 +92,7 @@ export function getAxesRelationship(a: AxesSet, b: AxesSet): 'coincide' | 'overl
 	return 'orthogonal'
 }
 
-export type AxesManager = {
+export interface AxesManager {
 	layers: StyleSource[]
 	axisRank: AxisDefinition[]
 }
@@ -371,45 +381,45 @@ export class AxesCascade {
 	}
 }
 
-// ------------------------------------------
-// 🧪 Example usage
-// ------------------------------------------
-
-const cascade = new AxesCascade(['theme', 'highContrast', 'density'])
-
-cascade.add({}, { border: '1px solid gray', background: 'white' })
-cascade.add({ theme: 'dark' }, { background: 'black', color: 'white' })
-cascade.add({ theme: 'dark', highContrast: 'true' }, { border: '2px solid lime' })
-
-const result = cascade.resolve({ theme: 'dark', highContrast: 'true' })
-
-console.log('✅ Final style:', result.finalStyle)
-cascade.debugTrace(result)
-
-const cascade_ = new AxesCascade(['theme', 'density', 'highContrast'])
-
-// Add a few rules
-cascade_.add({ theme: 'dark', highContrast: 'true' }, { color: 'white' })
-cascade_.add({ theme: 'dark', highContrast: 'true' }, { border: '2px solid lime' })
-cascade_.add({ theme: 'light', highContrast: 'true' }, { color: 'black' })
-cascade_.add({ theme: 'light', highContrast: 'false' }, { color: 'grey' })
-cascade_.add({ theme: 'dark', density: 'compact' }, { padding: 4 })
-
-// Now group layers that belong to the same "axes space"
-const groups: AxesSet[][] = []
-
-for (const layer of (cascade_ as any).layers) {
-	let found = false
-
-	for (const group of groups) {
-		if (cascade_.areAxesSetsEquivalent(group[0], layer.axes)) {
-			group.push(layer.axes)
-			found = true
-			break
-		}
-	}
-
-	if (!found) groups.push([layer.axes])
-}
-
-console.log('🧭 Axes equivalence groups:', groups)
+// // ------------------------------------------
+// // 🧪 Example usage
+// // ------------------------------------------
+//
+// const cascade = new AxesCascade(['theme', 'highContrast', 'density'])
+//
+// cascade.add({}, { border: '1px solid gray', background: 'white' })
+// cascade.add({ theme: 'dark' }, { background: 'black', color: 'white' })
+// cascade.add({ theme: 'dark', highContrast: 'true' }, { border: '2px solid lime' })
+//
+// const result = cascade.resolve({ theme: 'dark', highContrast: 'true' })
+//
+// console.log('✅ Final style:', result.finalStyle)
+// cascade.debugTrace(result)
+//
+// const cascade_ = new AxesCascade(['theme', 'density', 'highContrast'])
+//
+// // Add a few rules
+// cascade_.add({ theme: 'dark', highContrast: 'true' }, { color: 'white' })
+// cascade_.add({ theme: 'dark', highContrast: 'true' }, { border: '2px solid lime' })
+// cascade_.add({ theme: 'light', highContrast: 'true' }, { color: 'black' })
+// cascade_.add({ theme: 'light', highContrast: 'false' }, { color: 'grey' })
+// cascade_.add({ theme: 'dark', density: 'compact' }, { padding: 4 })
+//
+// // Now group layers that belong to the same "axes space"
+// const groups: AxesSet[][] = []
+//
+// for (const layer of (cascade_ as any).layers) {
+// 	let found = false
+//
+// 	for (const group of groups) {
+// 		if (cascade_.areAxesSetsEquivalent(group[0], layer.axes)) {
+// 			group.push(layer.axes)
+// 			found = true
+// 			break
+// 		}
+// 	}
+//
+// 	if (!found) groups.push([layer.axes])
+// }
+//
+// console.log('🧭 Axes equivalence groups:', groups)

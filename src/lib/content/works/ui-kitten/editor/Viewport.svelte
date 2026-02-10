@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { type Writable, writable } from 'svelte/store'
-	import type { ComponentFlat, ComponentView } from './Component.svelte'
+	import type { ComponentFlat, ComponentView, ComponentViewRoot } from './Component.svelte'
 	import KitView from './Component.svelte'
 
 	type ViewportProps = {
 		offsetX: Writable<number>
 		offsetY: Writable<number>
 		kits: ComponentFlat[]
-		kitViews: ComponentView[]
+		kitViews: ComponentViewRoot[]
 	}
 
 	const { offsetX, offsetY, kits = $bindable(), kitViews = $bindable() }: ViewportProps = $props()
@@ -78,7 +78,7 @@
 				const ratio = dist / lastTouchDist
 				let next = initialScale * ratio
 
-				if (next < 0.5) next = 0.5
+				if (next < 0.2) next = 0.2
 				if (next > 3.0) next = 3.0
 
 				scale.set(next)
@@ -122,7 +122,7 @@
 				let next = e.deltaY < 0 ? s * factor : s / factor
 
 				// Hard clamp: do nothing if outside range
-				if (next < 0.5 || next > 3.0) return s
+				if (next < 0.2 || next > 3.0) return s
 
 				return next
 			})
@@ -279,21 +279,31 @@
 >
 	<div id="canvas" class="canvas">
 		{#each kitViews as view}
-			<!-- onclick={() => selectComponent(view)} -->
-			<div class="select" use:contextMenu={menu} onclick={() => selectComponent(view)}>
+			<div
+				class="select"
+				onclick={() => {
+					selectComponent(view)
+				}}
+				use:contextMenu={menu}
+			>
 				<KitView
-					newPositionX={view.rootPosition?.x ?? 0}
-					newPositionY={view.rootPosition?.y ?? 0}
 					name={view.name ?? kits[view.source_index].name ?? 'Source missing'}
-					sets={{ layers: [], axisRank: [] }}
+					sets={kits[view.source_index].sets ?? { layers: [], axisRank: [] }}
 					selected={view.selected}
-					params={{
-						theme: 'light',
-						rounded: 'true',
-						negative: 'true',
-						hierarchy: 'primary'
-					}}
-				/>
+					params={view.params}
+					rootPosition={view.rootPosition}
+				>
+					{#if view.children}
+						{#each view.children as viewChild}
+							<KitView
+								name={viewChild.name ?? kits[viewChild.source_index].name ?? 'Source missing'}
+								sets={kits[viewChild.source_index].sets ?? { layers: [], axisRank: [] }}
+								selected={viewChild.selected}
+								params={viewChild.params}
+							></KitView>
+						{/each}
+					{/if}
+				</KitView>
 			</div>
 		{/each}
 	</div>
@@ -307,6 +317,30 @@
 		overflow: hidden;
 		position: relative;
 		background-color: var(--color-bg);
+
+		/*
+		background-image:
+			repeating-linear-gradient(
+				45deg,
+				var(--color-bg) 25%,
+				transparent 25%,
+				transparent 75%,
+				var(--color-bg) 75%,
+				var(--color-bg)
+			),
+			repeating-linear-gradient(
+				45deg,
+				var(--color-bg) 25%,
+				var(--color-bg) 25%,
+				var(--color-surface) 75%,
+				var(--color-bg) 75%,
+				var(--color-bg)
+			);
+		background-position:
+			0 0,
+			10px 10px;
+		background-size: 1.2rem 1.2rem;
+    */
 
 		&::after {
 			position: absolute;

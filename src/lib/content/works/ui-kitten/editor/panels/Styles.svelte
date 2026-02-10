@@ -1,14 +1,18 @@
 <script lang="ts">
-	import type { ComponentView } from '../Component.svelte'
+	import type { ComponentFlat, ComponentView } from '../Component.svelte'
 	import Panel from '../Panel.svelte'
 	import { type Snippet } from 'svelte'
+	import StyleField from './StyleField.svelte'
+	import { resolve, type CascadeResult, type AxesSet, type TraceEntry } from '../../cascadeAxesMap'
+	import { stringSetToHSV } from './AxisTracker.svelte'
 
 	type StylesPanel = {
 		selectedKit?: ComponentView
 		kitViews: ComponentView[]
+		kits: ComponentFlat[]
 	}
 
-	const { selectedKit, kitViews = $bindable() }: StylesPanel = $props()
+	const { selectedKit, kitViews = $bindable(), kits = $bindable() }: StylesPanel = $props()
 
 	const stylesContextMenu = [
 		{
@@ -18,131 +22,143 @@
 			icon: 'fa-solid fa-plus'
 		}
 	]
+
+	const { finalStyle, trace } = $derived.by((): CascadeResult => {
+		if (selectedKit) {
+			return resolve(kits[selectedKit.source_index].sets, selectedKit.params)
+		}
+		return { finalStyle: {}, trace: [] }
+	})
+
+	// backtracks trace to find source layer then transform to color
+	const colorTrack = (key: string) => {
+		// guarantees css key `t` exists somewhere
+		if (finalStyle[key]) {
+			let t: TraceEntry | undefined
+
+			// reverse find()
+			for (let i = trace.length - 1; i >= 0; i--) {
+				const entry = trace[i]
+
+				if (Object.keys(entry.applied).includes(key)) {
+					t = entry
+					break // stop at the first match from the end
+				}
+			}
+
+			if (Object.keys(t.source).length === 0) {
+				// on tracked no axes set
+				return 'var(--color-diamond-color-tracked--empty)'
+			}
+			if (t) {
+				const hsv = stringSetToHSV(Object.keys(t.source))
+				return `hsl(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`
+			}
+		}
+
+		// does not have an entry
+		return 'var(--color-bg)'
+	}
+
+	// backtracks trace to find source layer then transform to color
+	const track = (key: string): { set?: AxesSet; color: string } => {
+		// guarantees css key `t` exists somewhere
+		if (finalStyle[key]) {
+			let t: TraceEntry | undefined
+
+			// reverse find()
+			for (let i = trace.length - 1; i >= 0; i--) {
+				const entry = trace[i]
+
+				if (Object.keys(entry.applied).includes(key)) {
+					t = entry
+					break // stop at the first match from the end
+				}
+			}
+
+			console.log(`Found Source: ${JSON.stringify(t.source)}`)
+			if (Object.keys(t.source).length === 0) {
+				// tracked on no axes set
+				return { set: {}, color: 'var(--color-diamond-color-tracked--empty)' }
+			}
+			if (t) {
+				const hsv = stringSetToHSV(Object.keys(t.source))
+				console.log(`HSV: ${JSON.stringify(hsv)}`)
+				return { set: t.source, color: `hsl(${hsv.h}, ${hsv.s}%, ${hsv.v}%)` }
+			}
+		}
+
+		// does not have an entry
+		return { color: 'var(--color-bg)' }
+	}
 </script>
 
 <Panel
 	contextMenuContent={stylesContextMenu}
-	name="Styles"
+	name="Render"
 	tooltip="Applied styles on the current Axes set"
 >
 	{#snippet content()}
-		<div style="display:contents" data-selected-kit={selectedKit}>
-			{@render layout()}
-			{@render boxModel()}
-			<!-- {@render typography()} -->
+		<!-- <pre>{JSON.stringify(trace, null, 2)}</pre> -->
+		<div style="display:contents">
+			{#snippet styleSection(
+				category: string,
+				fields: { key: string; displayText?: string }[],
+				kits: ComponentFlat[]
+			)}
+				<details class="style-section">
+					<summary class="style-section__heading">
+						<h3>{category}</h3>
+						<i class="fa-solid fa-angle-down style-section__collapse-icon"></i>
+					</summary>
+
+					<div class="style-section__content">
+						{#each fields as field, i}
+							<StyleField
+								{kits}
+								{selectedKit}
+								displayText={field.displayText ?? field.key}
+								{...track(field.key)}
+								key={field.key}
+								value={finalStyle[field.key]}
+								position={i === 0 ? 'top' : i === fields.length - 1 ? 'bottom' : 'mid'}
+							/>
+						{/each}
+					</div>
+				</details>
+			{/snippet}
+
+			{@render styleSection(
+				'layout',
+				[{ key: 'padding', displayText: 'Pad' }, { key: 'width' }, { key: 'height' }],
+				kits
+			)}
+
+			{@render styleSection(
+				'box',
+				[
+					{ key: 'background', displayText: 'Fill' },
+					{ key: 'border' },
+					{ key: 'border-radius', displayText: 'Radius' },
+					{ key: 'outline' }
+				],
+				kits
+			)}
+
+			{@render styleSection(
+				'text',
+				[
+					{ key: 'color', displayText: 'Fill' },
+					{ key: 'font-size', displayText: 'Size' },
+					{ key: 'font-weight', displayText: 'Weight' },
+					{ key: 'text-align', displayText: 'Align' },
+					{ key: 'text-decoration', displayText: 'Decor' }
+				],
+				kits
+			)}
 		</div>
 	{/snippet}
 </Panel>
-
-{#snippet layout()}
-	{#snippet content()}
-		{@render margin()}
-		{@render padding()}
-		{@render dimensions()}
-		<br />
-		{@render flow()}
-	{/snippet}
-
-	{@render styleSection('Layout', content)}
-{/snippet}
-
-{#snippet typography()}
-	{#snippet content()}
-		{@render fontFamily()}
-		{@render fontSize()}
-		{@render fontWeight()}
-		{@render fill()}
-		<br />
-		{@render textAlignment()}
-	{/snippet}
-
-	{@render styleSection('Typography', content)}
-{/snippet}
-
-{#snippet boxModel()}
-	{#snippet content()}
-		{@render borderRadius()}
-		{@render border()}
-		<!-- {@render outline()} -->
-		{@render fill()}
-	{/snippet}
-
-	{@render styleSection('Box Model', content)}
-{/snippet}
-
-{#snippet styleSection(name: string, content: Snippet)}
-	<details class="style-section">
-		<summary class="style-section__heading">
-			<h3>
-				{name}
-			</h3>
-		</summary>
-		<div class="style-section__content">
-			{@render content()}
-		</div>
-	</details>
-{/snippet}
-
-{#snippet borderRadius()}
-	{@render option124('Border Radius', undefined, {
-		scalar1: 'Top Left',
-		scalar2: 'Top Right',
-		scalar3: 'Bottom Left',
-		scalar4: 'Bottom Right'
-	})}
-{/snippet}
-
-{#snippet border()}
-	{@render option124('Border', undefined, undefined)}
-{/snippet}
-
-{#snippet outline()}
-	{@render option124('Outline', undefined, undefined)}
-{/snippet}
-
-{#snippet fontFamily()}
-	{@render option124('Family', undefined, undefined)}
-{/snippet}
-
-{#snippet fontSize()}
-	{@render option124('Size', undefined, undefined)}
-{/snippet}
-
-{#snippet fontWeight()}
-	{@render option124('Weight', undefined, undefined)}
-{/snippet}
-
-{#snippet textAlignment()}
-	{@render option124('Text Alignment', undefined, undefined)}
-{/snippet}
-
-{#snippet fill()}
-	{@render option124('Fill', undefined, undefined)}
-{/snippet}
-
-{#snippet flow()}
-	{@render option124('Content Flow', undefined, undefined)}
-{/snippet}
-
-{#snippet margin()}
-	{@render option124(
-		'Margin',
-		{ scalar1: 'Inline', scalar2: 'Block' },
-		{ scalar1: 'Top', scalar2: 'Right', scalar3: 'Bottom', scalar4: 'Left' }
-	)}
-{/snippet}
-
-{#snippet dimensions()}
-	{@render option124('Dimensions', { scalar1: 'Width', scalar2: 'Height' }, undefined)}
-{/snippet}
-
-{#snippet padding()}
-	{@render option124(
-		'Padding',
-		{ scalar1: 'Inline', scalar2: 'Block' },
-		{ scalar1: 'Top', scalar2: 'Right', scalar3: 'Bottom', scalar4: 'Left' }
-	)}
-{/snippet}
 
 <!-- For style fields that may require 1 | 2 | 4 values -->
 {#snippet option124(
@@ -176,7 +192,7 @@
 					console.log('Tried token to style')
 				}}
 			/>
-			<input class="option124__input--expand" type="button" value="›" />
+			<!-- <input class="option124__input--expand" type="button" value="›" /> -->
 		</span>
 	</label>
 {/snippet}
@@ -198,11 +214,12 @@
 			margin-bottom: $x-space-xs;
 		}
 
-		&[open] {
-			::after {
-				rotate: 180deg;
-				translate: 0 $x-space-xs;
-			}
+		&__collapse-icon {
+			transition: rotate 200ms ease-out;
+		}
+
+		&[open] .style-section__collapse-icon {
+			rotate: 180deg;
 		}
 
 		&__heading {
@@ -212,118 +229,30 @@
 			padding-block: $x-space-xs;
 			position: relative;
 			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			i {
+				position: relative;
+				right: $x-space-sm;
+			}
 
 			font-size: $x-font-size-xs;
 			text-transform: uppercase;
 			@include fonts-stack('Satoshi-Bold', sans-serif);
 			letter-spacing: 1px;
 			color: var(--color-text);
-
-			&::after {
-				content: '⌄';
-				right: $x-space-md;
-				position: absolute;
-				transition: rotate 200ms ease-out;
-			}
 		}
 
 		&__content {
-			padding-left: $x-space-xs;
-			margin-bottom: $x-space-sm;
+			@include layout-respond('xl') {
+				padding-left: $x-space-xs;
+			}
 
 			hr {
 				margin-top: $x-space-md;
 				margin-inline: $x-space-sm;
 				border: 1px solid var(--color-bg);
-			}
-		}
-	}
-
-	.option124 {
-		display: flex;
-		justify-content: space-between;
-		padding-left: $x-space-xs;
-		align-items: center;
-
-		&__label {
-			user-select: none;
-			letter-spacing: 1px;
-			font-weight: 600;
-			padding-block: calc($x-space-xs / 2);
-			display: flex;
-			gap: $x-space-sm;
-
-			@include layout-respond-max('md') {
-				font-size: $x-font-size-md;
-			}
-
-			&::after {
-				aspect-ratio: 1;
-				background: var(--color-bg);
-				width: $x-space-xs;
-			}
-		}
-
-		&__input {
-			> * {
-				color: var(--color-primary);
-				color: var(--color-text);
-			}
-
-			&--track {
-				color: black;
-				font-size: $x-font-size-lg;
-				color: var(--color-surface);
-				-webkit-text-stroke-width: 2px;
-				-webkit-text-stroke-color: var(--color-text);
-
-				&:focus {
-					color: var(--color-text);
-				}
-			}
-
-			&--text {
-				width: $x-space-xxl;
-				font-size: $x-font-size-md;
-				@include fonts-stack('Satoshi-Bold', sans-serif);
-				border: unset;
-				border: var(--color-add-var-border);
-				background: var(--color-add-var-bg);
-
-				padding: 2px;
-				cursor: pointer;
-				border-radius: 1px;
-				color: var(--color-add-var-text);
-
-				&:hover {
-					background: var(--color-surface-alt);
-					color: var(--color-text);
-				}
-
-				@include layout-respond('2xl') {
-					width: $x-space-xxl;
-					font-size: $x-font-size-md;
-				}
-			}
-
-			&--track,
-			&--expand {
-				cursor: pointer;
-				border: unset;
-				background: unset;
-			}
-
-			&--track {
-			}
-
-			&--expand {
-				width: $x-space-md;
-				font-size: $x-font-size-md;
-
-				@include layout-respond('2xl') {
-					width: $x-space-lg;
-					// font-size: $x-font-size-xl;
-				}
 			}
 		}
 	}

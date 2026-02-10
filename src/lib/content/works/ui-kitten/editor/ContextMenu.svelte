@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { contextMenuState, closeContextMenu } from './contextMenuStore'
 
+	type Link = { link: string; tab?: '_blank' }
+
 	type MenuItem = {
 		name: string
 		displayText?: string
 		icon?: string
-		onClick?: (target: HTMLElement | null) => void
+		onClick?: (target: HTMLElement | null) => void | Link
 	}
 
 	let menuRef: HTMLElement | undefined = $state()
@@ -18,7 +20,12 @@
 	}
 
 	function handleAction(item: MenuItem) {
-		item.onClick?.($contextMenuState.target)
+		const result = item.onClick?.($contextMenuState.target)
+
+		if (result && 'link' in result) {
+			window.open(result.link, result.tab ?? '_self')
+		}
+
 		closeContextMenu()
 	}
 </script>
@@ -40,6 +47,7 @@
 							title={item.description}
 							class="menu-btn"
 							class:menu-btn--disabled={item.disabled}
+							disabled={item.disabled}
 							class:menu-btn--destructive={item.tone === 'destructive'}
 							onclick={() => handleAction(item)}
 						>
@@ -62,6 +70,7 @@
 		position: absolute;
 		background: var(--color-surface);
 		border: 1px solid var(--color-bg);
+		border-radius: 0 $x-space-xs $x-space-xs $x-space-xs;
 		box-shadow: 0px 0px $x-space-xs var(--color-bg);
 		z-index: 999;
 		padding: 2px;
@@ -101,11 +110,11 @@
 			flex-basis: $x-space-md;
 		}
 
-		&--disabled {
+		&:disabled {
 			cursor: not-allowed;
 		}
 
-		&:hover:not(&--disabled) {
+		&:hover:not(&:disabled) {
 			color: var(--color-primary);
 		}
 		&--destructive {
@@ -117,7 +126,7 @@
 			}
 		}
 
-		&:not(&--disabled):active {
+		&:not(&:disabled):active {
 			background: var(--color-surface-alt);
 			border-left: 2px solid var(--color-primary);
 		}
@@ -126,14 +135,14 @@
 			border-left: 2px solid var(--color-danger);
 		}
 
-		&--disabled {
+		&:disabled {
 			color: var(--color-text-muted);
 		}
 	}
 
 	hr {
 		border: none;
-		border-bottom: 2px solid var(--color-bg);
+		border-bottom: 1px solid var(--color-bg);
 		margin: calc($x-space-xs / 2) 0;
 	}
 </style>

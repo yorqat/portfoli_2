@@ -1,23 +1,40 @@
 <script lang="ts" module>
+	export type ComponentPrimitive =
+		| { kind: 'text'; text: string }
+		| { kind: 'image'; src: string; alt?: string; resolutions?: string[] }
+		| { kind: 'svg'; content: Snippet } // or however you represent SVGs
+		| { kind: 'container'; children: ComponentView[] }
+
 	// Component definition
-	export type ComponentFlat = {
+	export interface ComponentFlat {
 		name: string
-		discriminator?: number
+		discriminator: number
 		sets: AxesManager
 	}
 
-	// Instance of a Component / Kit
-	export type ComponentView = {
-		source_index: number
-		params: AxesSet
-		// Alias of Component
-		name?: string
+	export interface ComponentRoot {
 		rootPosition?: { x: number; y: number }
-		selected?: 'primary' | 'secondary'
-		children?: ComponentView[]
 	}
 
-	export type { ComponentFlat, ComponentView }
+	// Instance of a Component / Kit
+	export interface ComponentView {
+		source_index: number
+		params: AxesSet
+		discriminator: number
+		// Alias of Component
+		name: string
+		selected?: 'primary' | 'secondary'
+		children?: ComponentView[]
+		// primitive: ComponentPrimitive
+	}
+
+	export interface ComponentViewExport {
+		result: string
+		platform: string
+	}
+
+	// A View on the Project Root
+	export interface ComponentViewRoot extends ComponentView, ComponentRoot {}
 </script>
 
 <script lang="ts">
@@ -26,158 +43,92 @@
 		type AxesManager,
 		type AxesSet
 	} from '$lib/content/works/ui-kitten/cascadeAxesMap'
+	import { type Snippet } from 'svelte'
 
 	type KitProps = {
-		offsetX: number
-		offsetY: number
-		newPositionX: number
-		newPositionY: number
 		name: string
 		sets: AxesManager
 		params: AxesSet
+		rootPosition?: { x: number; y: number }
 		selected?: 'primary' | 'secondary'
+		children?: Snippet
 	}
 
-	const { newPositionX, newPositionY, name, sets, selected }: KitProps = $props()
-
-	import { add } from '$lib/content/works/ui-kitten/cascadeAxesMap'
-
-	/*
-	add(
-		sets,
-		{ theme: 'dark' },
-		{
-			backgroundColor: '#222',
-			color: '#eee'
-		}
-	)
-
-	add(
-		sets,
-		{},
-		{
-			backgroundColor: '#eee',
-			color: '#222',
-			borderRadius: '0rem',
-			padding: '1.15rem 3rem'
-		}
-	)
-
-	add(
-		sets,
-		{ theme: 'light', hierarchy: 'primary' },
-		{
-			backgroundColor: 'green',
-			color: '#eee'
-		}
-	)
-
-	add(
-		sets,
-		{ theme: 'light', hierarchy: 'secondary' },
-		{
-			backgroundColor: 'rgba(255,255,255, 0.85)',
-			border: '2px solid green',
-			color: '#111'
-		}
-	)
-
-	add(
-		sets,
-		{ theme: 'light', hierarchy: 'primary', negative: 'true' },
-		{
-			backgroundColor: 'rgb(185, 10, 20)'
-		}
-	)
-
-	add(
-		sets,
-		{ theme: 'light', hierarchy: 'secondary', negative: 'true' },
-		{
-			backgroundColor: 'rgba(255,255,255, 0.85)',
-			border: '2px solid red',
-			color: '#111'
-		}
-	)
-
-	add(
-		sets,
-		{ rounded: 'false' },
-		{
-			borderRadius: '0rem'
-		}
-	)
-
-	add(
-		sets,
-		{ rounded: 'true' },
-		{
-			borderRadius: '0.45rem'
-		}
-	)
-  */
-
-	let offsetX = $state()
-	let offsetY = $state()
-
-	let params: AxesSet = $state({})
+	const { name, sets, params, rootPosition, selected, children }: KitProps = $props()
 
 	const { finalStyle, trace } = $derived.by(() => {
 		return resolve(sets, params)
 	})
 
+	const rootVariables = $derived.by(() => {
+		if (rootPosition) {
+			return `--root-position-x: ${rootPosition.x}px; --root-position-y: ${rootPosition.y}px`
+		}
+	})
+
 	const cssVariables: string = $derived.by(() => {
-		const entries = [
+		const styles = [
+			['--width', finalStyle.width],
+			['--height', finalStyle.height],
 			['--border', finalStyle.border],
-			['--background-color', finalStyle.backgroundColor],
-			['--border-radius', finalStyle.borderRadius],
+			['--background', finalStyle.background],
+			['--border-radius', finalStyle['border-radius']],
 			['--color', finalStyle.color],
 			['--padding', finalStyle.padding],
-			['--margin', finalStyle.margin]
+			// ['--margin', finalStyle.margin],
+			['--font-size', finalStyle['font-size']],
+			['--text-decoration', finalStyle['text-decoration']],
+			['--overflow-y', finalStyle['overflow-y'] ?? 'initial'],
+			['--overflow-x', finalStyle['overflow-x'] ?? 'initial'],
+
+			['--position', finalStyle['position']],
+			['--top', finalStyle['top']]
 		]
 
-		return entries
+		return styles
 			.filter(([, value]) => value !== undefined)
 			.map(([key, value]) => `${key}: ${value};`)
 			.join('')
 	})
+
+	let dragging = $state(false)
 </script>
 
+<!-- style="--calculated-width: '{offsetX}px ↔'; --calculated-height: '{offsetY}px ↕'; --x: {newPositionX}px; --y: {newPositionY}px;" -->
 <div
+	style="{rootVariables}; {cssVariables}"
 	class="canvas__component"
 	class:canvas__component--selected={selected !== undefined}
-	style="--calculated-width: '{offsetX}px ↔'; --calculated-height: '{offsetY}px ↕'; --x: {newPositionX}px; --y: {newPositionY}px;"
+	class:canvas__component--root={!!rootPosition}
 >
 	<div class="canvas__component__meta name">
 		{name}
 	</div>
-	<button class="canvas__component__meta width" aria-label="Always display width"
-		>{offsetX}px ↔</button
-	>
-	<button class="canvas__component__meta height" aria-label="Always display height"
-		>{offsetY}px ↕</button
-	>
-	<button class="canvas__component__drag top left" aria-label="Resize top and left"></button>
-	<button class="canvas__component__drag top right" aria-label="Resize top and right"></button>
-	<button class="canvas__component__drag bottom left" aria-label="Resize bottom and left"></button>
-	<button class="canvas__component__drag bottom right" aria-label="Resize bottom and right"
-	></button>
+	<!-- <button class="canvas__component__meta width" aria-label="Always display width" -->
+	<!-- 	>{offsetX}px ↔</button -->
+	<!-- > -->
+	<!-- <button class="canvas__component__meta height" aria-label="Always display height" -->
+	<!-- 	>{offsetY}px ↕</button -->
+	<!-- > -->
+
+	<!-- <button class="canvas__component__drag top left" aria-label="Resize top and left"></button> -->
+	<!-- <button class="canvas__component__drag top right" aria-label="Resize top and right"></button> -->
+	<!-- <button class="canvas__component__drag bottom left" aria-label="Resize bottom and left"></button> -->
+	<!-- <button class="canvas__component__drag bottom right" aria-label="Resize bottom and right" -->
+	<!-- ></button> -->
+
 	<button class="canvas__component__move" aria-label="Resize bottom and right"
 		><i class="fa-solid fa-grip-lines"></i></button
 	>
 
-	<div
-		style={cssVariables}
-		bind:offsetWidth={offsetX}
-		bind:offsetHeight={offsetY}
-		class="canvas__component__raw"
-	>
-		<!-- <div -->
-		<!-- 	contenteditable="true" -->
-		<!-- 	style="--text-length: {textLength};" -->
-		<!-- 	class="canvas__component__raw__text" -->
-		<!-- 	bind:innerHTML={textContent} -->
-		<!-- ></div> -->
+	<div style={cssVariables} class="canvas__component__raw">
+		<!-- spellcheck is disabled so squiggly lines disappear -->
+		<!-- <div contenteditable="true" spellcheck="false" class="canvas__component__raw__text"> -->
+		<!-- 	Sample Text -->
+		<!-- </div> -->
+		{#if children}
+			{@render children()}
+		{/if}
 	</div>
 </div>
 
@@ -185,17 +136,33 @@
 	@use '_index' as *;
 
 	.canvas__component {
-		position: absolute;
-		translate: calc(var(--x) + var(--offsetX)) calc(var(--y) + var(--offsetY));
-		transition: translate 150ms ease-out;
-		padding: calc($x-space-sm / var(--scale-factor));
 		cursor: pointer;
+		width: var(--width);
+		height: var(--height);
+		// margin: var(--margin);
+
+		// Necessary for labels
+		position: relative;
+
+		position: var(--position);
+		top: var(--top);
+
+		// grid-area: 1 / 1 / 2 / 2;
+
+		&--root {
+			translate: calc(var(--root-position-x) + var(--offsetX))
+				calc(var(--root-position-y) + var(--offsetY));
+			transition: translate 150ms ease-out;
+			position: absolute;
+		}
 
 		&__meta {
-			font-size: calc($x-font-size-sm / var(--scale-factor));
-			letter-spacing: 1px;
+			$f-size: $x-font-size-sm;
+
+			font-size: calc($f-size * var(--scale-factor));
 			@include fonts-stack('Satoshi-Bold', sans);
 			color: var(--color-text);
+			color: white;
 			mix-blend-mode: exclusion;
 			border: unset;
 			padding: 2px;
@@ -204,10 +171,11 @@
 			position: absolute;
 			background: inherit;
 			display: none;
+			min-width: 200%;
 
 			&.name {
 				content: var(--name);
-				bottom: calc(115%);
+				top: calc($f-size * -2.5 / var(--scale-factor));
 				left: 0;
 				color: var(--color-primary);
 
@@ -215,6 +183,7 @@
 				font-size: calc($x-font-size-md / var(--scale-factor));
 			}
 
+			/*
 			&.width {
 				top: 120%;
 				left: calc(40% * var(--scale-factor) * 0.8);
@@ -224,6 +193,7 @@
 				top: calc(40% * var(--scale-factor) * 0.8);
 				left: calc(-65% * 1 / var(--scale-factor));
 			}
+      */
 		}
 
 		&__drag {
@@ -233,6 +203,7 @@
 		&:hover {
 			box-shadow: 0 0 0 calc(2px / var(--scale-factor)) var(--color-text-muted);
 
+			/*
 			.canvas__component__drag {
 				box-shadow: 0 0 0 calc(2px / var(--scale-factor)) var(--color-text-muted);
 				background: var(--color-bg);
@@ -244,10 +215,11 @@
 			&::before {
 				display: block;
 			}
+      */
 		}
 
 		&--selected {
-			box-shadow: 0 0 0 calc(2px / var(--scale-factor)) var(--color-primary);
+			// box-shadow: 1 0 0 calc(2px / var(--scale-factor)) var(--color-primary);
 
 			.canvas__component__drag {
 				box-shadow: 0 0 0 calc(2px / var(--scale-factor)) var(--color-primary);
@@ -281,14 +253,14 @@
 
 		&__move {
 			i {
-				font-size: calc($x-font-size-lg / var(--scale-factor));
+				font-size: calc($x-font-size-md / var(--scale-factor));
 			}
 
-			padding: $x-space-xs;
 			width: max-content;
 			height: max-content;
-			left: 88%;
-			bottom: 110%;
+			top: calc($x-font-size-sm * -1.8 / var(--scale-factor));
+			right: 0;
+
 			cursor: grab;
 			background: unset;
 			outline: unset;
@@ -347,11 +319,24 @@
 		}
 
 		&__raw {
-			background-color: var(--background-color, green);
+			background-color: var(--background);
 			border: var(--border);
 			border-radius: var(--border-radius);
 			color: var(--color);
 			padding: var(--padding);
+
+			width: 100%;
+			height: 100%;
+
+			overflow-y: var(--overflow-y, initial);
+			overflow-x: var(--overflow-x, hidden);
+
+			/*
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      place-items: center;
+      */
 
 			&__text {
 				// display: inline;
@@ -361,7 +346,9 @@
 
 				@include fonts-stack('Satoshi-Regular', sans);
 				@include fonts-alternate-style();
+				font-size: var(--font-size);
 				cursor: text;
+				text-decoration: var(--text-decoration);
 
 				font-weight: 800;
 

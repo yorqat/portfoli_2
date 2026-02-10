@@ -1,156 +1,336 @@
 <script lang="ts">
-	import { type ComponentView } from '../Component.svelte'
+	import { type ComponentView, type ComponentFlat } from '../Component.svelte'
+	import { tick } from 'svelte'
 
-	type StyleFieldValue124 =
-		| string
-		| {
-				scalar1: string
-				scalar2: string
-		  }
-		| {
-				scalar1: string
-				scalar2: string
-				scalar3: string
-				scalar4: string
-		  }
-		| {
-				[name: string]: string
-		  }
+	type StyleFieldValue124 = string
 
 	type StyleFieldProps = {
-		name: string
+		key: string
+		displayText: string
+		kits: ComponentFlat[]
+		set?: AxesSet
+		color?: string
 		selectedKit?: ComponentView
 		value?: StyleFieldValue124
+		highlighted?: boolean
+
+		// Styling
+		position?: 'top' | 'bottom' | 'mid'
 	}
 
-	const { name, selectedKit, value = $bindable() }: StyleFieldProps = $props()
+	let {
+		key,
+		displayText,
+		kits = $bindable(),
+		color,
+		set,
+		selectedKit,
+		value,
+		highlighted = $bindable(false),
+		position = 'mid'
+	}: StyleFieldProps = $props()
+
 	import { contextMenu } from '../contextMenu'
+	import type { AxesSet } from '../../cascadeAxesMap'
 
 	const menu = [
 		{
 			name: 'custom axis',
+			description: 'Save as Token',
+			displayText: 'Tokenize',
+			icon: 'fa-solid fa-square-binary'
+		},
+		{
+			name: 'custom axis',
+			description: '',
+			displayText: 'Unwrap',
+			icon: 'fa-solid fa-box-open',
+			disabled: true
+		},
+
+		'hr',
+		{
+			name: 'custom axis',
 			description: 'Add custom axis',
-			displayText: 'Custom Axis',
-			icon: 'fa-solid fa-plus'
+			displayText: 'Remove',
+			icon: 'fa-solid fa-trash',
+			destructive: true
 		}
 	]
+
+	const styleOptions = [
+		{
+			name: 'cut selected styles',
+			description: '',
+			displayText: 'Cut Selected',
+			icon: 'fa-solid fa-scissors'
+		},
+		{
+			name: 'copy selected styles',
+			description: '',
+			displayText: 'Copy Selected',
+			icon: 'fa-solid fa-copy'
+		},
+		'hr',
+		{
+			name: 'remove style tracking',
+			description: '',
+			displayText: 'Remove Track',
+			icon: 'fa-solid fa-delete-left'
+		},
+		{
+			name: 'delete style value',
+			description: '',
+			displayText: 'Delete Value',
+			icon: 'fa-solid fa-trash'
+		}
+	]
+
+	const editValue = $state({
+		now: false,
+		content: ''
+	})
+
+	let inputRef: HTMLInputElement | undefined = $state()
+
+	async function startEditing() {
+		editValue.now = true
+		editValue.content = ''
+
+		await tick()
+
+		if (inputRef) {
+			// focus the input
+			inputRef.focus()
+
+			// optional: select all text
+			inputRef.select()
+		}
+	}
+
+	function shallowEqual(obj1: Record<string, any>, obj2: Record<string, any>) {
+		const keys1 = Object.keys(obj1)
+		const keys2 = Object.keys(obj2)
+		if (keys1.length !== keys2.length) return false
+		return keys1.every((key) => obj1[key] === obj2[key])
+	}
 </script>
 
-<label class="option124">
-	<span class="option124__label">
-		<button
-			class="option124__input--track"
-			aria-label="Adds the style into the axes set"
-			title="Track {name} on Axes set"
-			type="button"
-			onclick={() => {
-				console.log('Tried to add style to set')
-			}}
-		>
-			<i class="fa-solid fa-diamond"></i>
-		</button>
-		{name}</span
+<div
+	class="option124"
+	class:option124--top={position === 'top'}
+	class:option124--bottom={position === 'bottom'}
+	class:option124--mid={position !== 'top' && position !== 'bottom'}
+>
+	<button
+		style="--color-tracker: {color}"
+		class="option124__track"
+		class:option124__track--tracked--empty={true}
+		aria-label="Adds the style into the axes set"
+		title="track '{displayText ?? key}' on Axes set"
+		type="button"
+		onclick={() => {
+			console.log('Tried to add style to set')
+		}}
 	>
+		<i class="fa-solid fa-diamond"></i>
+	</button>
 
-	<span class="option124__input">
-		<button
-			title="Attach Variable"
-			class="option124__input--text"
+	{#if selectedKit}
+		<!-- {JSON.stringify(kits[selectedKit.source_index].sets.layers.map((s) => { return Object.keys(s.axes) }), null, 2)} -->
+	{/if}
+
+	<button
+		class="option124__style-name"
+		class:option124__style-name--highlighted={highlighted}
+		use:contextMenu={styleOptions}
+		onclick={() => {
+			highlighted = !highlighted
+		}}
+	>
+		{displayText ?? key}
+	</button>
+
+	{#if editValue.now}
+		<input
+			type="text"
+			title="Edit Value"
+			bind:this={inputRef}
+			bind:value={editValue.content}
+			placeholder={value}
+			class="option124__value"
 			onclick={() => {
 				console.log('Tried token to style')
 			}}
+			onblur={() => {
+				editValue.now = false
+				editValue.content = ''
+			}}
+			onkeydown={(e) => {
+				if (e.key === 'Enter') {
+					editValue.now = false
+
+					if (selectedKit) {
+						let layer = kits[selectedKit.source_index].sets.layers.find((l) => {
+							console.log(`Comparing ${JSON.stringify(l.axes)} to ${JSON.stringify(set)}`)
+							if (set) {
+								return shallowEqual(l.axes, set)
+							}
+							return false
+						})
+
+						console.log(`Tried to edit ${JSON.stringify(layer)}, with ${key}:${editValue.content}`)
+
+						if (layer) {
+							layer.style[key] = editValue.content
+						}
+
+						editValue.content = ''
+					}
+				}
+				if (e.key === 'Escape') {
+					editValue.now = false
+					editValue.content = ''
+				}
+			}}
 			use:contextMenu={menu}
-			disabled={selectedKit}
+		/>
+	{:else}
+		<button
+			title="Attach Variable"
+			class="option124__value"
+			class:option124__value--new={!value}
+			onclick={() => {
+				console.log('Tryna start editing')
+				startEditing()
+			}}
+			use:contextMenu={menu}
+			disabled={!!!selectedKit}
 		>
-			value?.toString() ?? '+'
+			{#if value}
+				{value}
+			{:else if !!!selectedKit}
+				<em>
+					<i class="fa-solid fa-minus"></i>
+					Select a Kit
+					<i class="fa-solid fa-minus"></i>
+				</em>
+			{:else}
+				<!-- <i class="fa-solid fa-plus"></i> -->
+				+
+			{/if}
 		</button>
-		<input disabled={selectedKit} class="option124__input--expand" type="button" value="›" />
-	</span>
-</label>
+	{/if}
+</div>
 
 <style lang="scss">
 	@use '_index' as *;
 
+	button,
+	input {
+		all: unset;
+	}
+
 	.option124 {
 		display: flex;
 		justify-content: space-between;
-		padding-left: $x-space-xs;
 		align-items: center;
+		user-select: none;
+		display: flex;
+		align-items: stretch;
+		font-weight: 600;
 
-		&__label {
-			user-select: none;
+		@include layout-respond('md') {
+			font-size: $x-font-size-md;
 			letter-spacing: 1px;
-			font-weight: 600;
-			padding-block: calc($x-space-xs / 2);
-			display: flex;
-			gap: $x-space-sm;
-
-			@include layout-respond-max('md') {
-				font-size: $x-font-size-md;
-			}
-
-			&::after {
-				aspect-ratio: 1;
-				background: var(--color-bg);
-				width: $x-space-xs;
-			}
+			gap: $x-space-xs;
 		}
 
-		&__input {
-			> * {
-				color: var(--color-primary);
+		@include layout-respond-max('xl') {
+			font-size: $x-font-size-sm;
+		}
+
+		&__track,
+		&__style-name,
+		&__value {
+			// padding-block: calc($x-space-xs / 4);
+			// padding-inline: calc($x-space-xs / 4);
+		}
+
+		&__track {
+			text-align: center;
+			font-size: $x-font-size-md;
+
+			-webkit-text-stroke-width: 2px;
+			color: var(--color-tracker, --color-diamond-color--tracked);
+			-webkit-text-stroke-color: var(--color-diamond-border--tracked);
+
+			&:focus {
 				color: var(--color-text);
 			}
 
-			&--text {
-				width: $x-space-xxl;
+			@include layout-respond-max('lg') {
 				font-size: $x-font-size-md;
-				@include fonts-stack('Satoshi-Bold', sans-serif);
-				border: unset;
-				border: var(--color-add-var-border);
-				background: var(--color-add-var-bg);
+			}
+		}
 
-				padding: 2px;
-				cursor: pointer;
-				border-radius: 1px;
-				color: var(--color-add-var-text);
+		&__style-name {
+			flex-grow: 1;
+			padding-inline: calc($x-space-xs / 2);
+			text-align: justify;
+			text-transform: capitalize;
 
-				&:hover {
-					background: var(--color-surface-alt);
-					color: var(--color-text);
-				}
-
-				@include layout-respond('2xl') {
-					width: $x-space-xxl;
-					font-size: $x-font-size-md;
-				}
+			@include layout-respond('lg') {
+				padding-left: $x-space-xs;
 			}
 
-			&--track,
-			&--expand {
-				cursor: pointer;
-				border: unset;
-				background: unset;
+			&:hover {
+				background: var(--color-panel-border);
 			}
 
-			&--track {
-				width: $x-space-md;
-				font-size: $x-font-size-lg;
-
-				&:focus {
-					color: var(--color-accent);
-				}
+			&--highlighted {
+				background: var(--color-surface-alt);
 			}
+		}
 
-			&--expand {
-				width: $x-space-md;
+		&__value {
+			all: unset;
+			border: 1px solid var(--color-panel-border);
+			padding: 2px;
+			// background: var(--color-add-var-bg);
+			text-align: center;
+			flex-basis: 60%;
+			flex-shrink: 1;
+			position: relative;
+			border-radius: 1px;
+			color: var(--color-add-var-text);
+			cursor: text;
+			font-size: $x-font-size-md;
+
+			&::placeholder {
 				font-size: $x-font-size-md;
-
-				@include layout-respond('2xl') {
-					width: $x-space-lg;
-					// font-size: $x-font-size-xl;
-				}
 			}
+
+			&--new {
+				cursor: pointer;
+			}
+
+			&:hover {
+				background: var(--color-surface-alt);
+				color: var(--color-text);
+			}
+		}
+
+		&--top > * {
+			border-radius: $x-space-xs $x-space-xs 0 0;
+		}
+		&--bottom > * {
+			border-radius: 0 0 $x-space-xs $x-space-xs;
+		}
+
+		&--top > *,
+		&--mid > * {
+			border-bottom: unset;
 		}
 	}
 </style>

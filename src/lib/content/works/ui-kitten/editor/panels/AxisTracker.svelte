@@ -1,77 +1,110 @@
+<!-- 
+  This Axis Tracker is intended to be coloured based on whether there is an entry of the variant in the kit definition 
+  with its accompanying colour heuristic; when no entry: NO colours.
+
+  Note:
+  When the variant with the tracker is NOT selected AKA NOT the current parameter of the Kit, then colour is desaturated and darkened
+
+  TODO: Facilitate syncing with the current state
+
+  Interaction
+
+  Note:
+  When interacting with a Tracker, 
+-->
+
+<script lang="ts" module>
+	export type HSV = { h: number; s: number; v: number }
+
+	export const stringSetToHSV = (() => {
+		const cache = new Map<string, HSV>()
+
+		const hash = (str: string): number => {
+			let h = 0
+			for (let i = 0; i < str.length; i++) {
+				h = (h * 131 + str.charCodeAt(i)) >>> 0
+			}
+			return h
+		}
+
+		return function (parts: string[]): HSV {
+			// Normalize + canonicalize
+			const cleaned = Array.from(
+				new Set(parts.map((s) => s.trim()).filter((s) => s.length > 0))
+			).sort()
+
+			const key = cleaned.join(';') // canonical memo key
+
+			if (cache.has(key)) return cache.get(key)!
+
+			// Hash whole set for hue
+			const hWhole = hash(key)
+
+			// Hash each element for value variation
+			let elementHashTotal = 0
+			for (const p of cleaned) elementHashTotal += hash(p)
+
+			const len = cleaned.length
+
+			// Saturation: specificity-based (smooth 50–100)
+			const s = 50 + Math.tanh(len / 3) * 50
+
+			// Value: 40–100 based on hashed composition
+			const v = 60 + ((elementHashTotal % 1000) / 1000) * 40
+
+			// Hue: 0–360
+			const h = hWhole % 360
+
+			const result = { h, s, v }
+			cache.set(key, result)
+			return result
+		}
+	})()
+</script>
+
 <script lang="ts">
 	import { type AxesSet } from '../../cascadeAxesMap'
 
 	type AxisTrackerProps = {
-		axesSet?: AxesSet
+		axisVariant: string
+		layers?: AxesSet
+		focused?: boolean
 	}
 
-type HSV = { h: number; s: number; v: number };
+	const { layers = $bindable({}), axisVariant, focused }: AxisTrackerProps = $props()
 
-export const stringSetToHSV = (() => {
-  const cache = new Map<string, HSV>();
+	const color = $derived.by(() => {
+		let layerExists = layers[axisVariant]
 
-  const hash = (str: string): number => {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = (h * 131 + str.charCodeAt(i)) >>> 0;
-    }
-    return h;
-  };
+		if (layerExists) {
+			const hsv = stringSetToHSV(Object.keys(layerExists[layerExists.length - 1]))
+			return `hsl(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`
+		}
 
-  return function (parts: string[]): HSV {
-    // Normalize + canonicalize
-    const cleaned = Array.from(new Set(
-      parts
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0)
-    )).sort();
+		return `var(--color-diamond-color--untracked)`
+	})
 
-    const key = cleaned.join(";"); // canonical memo key
+	const ticked = $derived.by(() => {
+		return true
+	})
 
-    if (cache.has(key)) return cache.get(key)!;
-
-    // Hash whole set for hue
-    const hWhole = hash(key);
-
-    // Hash each element for value variation
-    let elementHashTotal = 0;
-    for (const p of cleaned) elementHashTotal += hash(p);
-
-    const len = cleaned.length;
-
-    // Saturation: specificity-based (smooth 50–100)
-    const s = 50 + Math.tanh(len / 3) * 50;
-
-    // Value: 40–100 based on hashed composition
-    const v = 60 + ((elementHashTotal % 1000) / 1000) * 40;
-
-    // Hue: 0–360
-    const h = hWhole % 360;
-
-    const result = { h, s, v };
-    cache.set(key, result);
-    return result;
-  };
-})();
-
-
-	const { axesSet = $bindable({ cat: '1', dogger: '11', cutie: '99', dino: '43' }) }: AxisTrackerProps = $props()
-
-  const color = $derived.by(() => {
-    const hsv = stringSetToHSV(Object.keys(axesSet))
-    return `hsl(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`
-  })
+	const track = (axisVariant: string) => {}
 </script>
 
 <button
 	class="axis-tracker"
-	title={JSON.stringify(Object.keys(axesSet).sort().join(';'), null, 2)}
-	class:ticked={Object.keys(axesSet).length > 0}
-  style="--color: {color}"
-  aria-label="Pipette Axes Params"
+	class:focused
+	class:ticked
+	disabled={!focused}
+	style="--color: {color}"
+	aria-label="Pipette Axes Params"
+	onclick={() => track(axisVariant)}
 >
 	<i class="fa-solid fa-diamond"></i>
 </button>
+
+<!-- <pre>{JSON.stringify(layers, null, 2)}</pre> -->
+<!-- <pre>{axisVariant}</pre> -->
 
 <style lang="scss">
 	@use '_index' as *;
@@ -81,10 +114,35 @@ export const stringSetToHSV = (() => {
 	}
 
 	.axis-tracker {
-		background: inherit;
-		font-size: $x-font-size-lg;
-    color: var(--color);
-		-webkit-text-stroke-width: 2.5px;
-		-webkit-text-stroke-color: black;
+		background: unset;
+		font-size: $x-font-size-md;
+
+		@include layout-respond-max('lg') {
+			font-size: $x-font-size-md;
+		}
+		color: var(--color-diamond-color--tracked);
+		-webkit-text-stroke-width: 2px;
+		-webkit-text-stroke-color: var(--color-diamond-border--untracked);
+
+		&:hover {
+			transform-origin: center center;
+			scale: 1.6;
+		}
+
+		&.ticked {
+			color: var(--color);
+			-webkit-text-stroke-color: var(--color-diamond-border--tracked);
+		}
+
+		&:focus {
+			scale: 1;
+		}
+
+		&:not(.focused) {
+			filter: brightness(0.85) saturate(0.75);
+			cursor: not-allowed;
+			rotate: 45deg;
+			transition: 50ms linear;
+		}
 	}
 </style>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ComponentFlat, ComponentView } from '../Component.svelte'
 	import Panel from '../Panel.svelte'
-	import { type Snippet } from 'svelte'
-	import AxisTracker from './AxisTracker.svelte'
+	import { type AxesSet } from '../../cascadeAxesMap'
+	import { stringSetToHSV } from './AxisTracker.svelte'
 
 	type AxesPanel = {
 		selectedKit?: ComponentView
@@ -25,123 +25,203 @@
 			'hr',
 
 			...builtinAxes.map((axis) => {
-				if (axis === null) {
-					return 'hr'
-				}
-				return {
-					name: axis.name,
-					description: axis.description,
-					displayText: axis.name,
-					icon: `fa-solid ${axis.category === 'Static' ? 'fa-cubes' : 'fa-dice-d6'}`,
-					onClick: () => {
-						if (selectedKit) {
-							addAxis(selectedKit, axis)
+				if (axis) {
+					let disabled = false
+
+					if (selectedKit) {
+						const axisExistsAlready = kits[selectedKit.source_index].sets.axisRank.find((a) => {
+							console.log(`Comparing '${a.id}' to '${axis.id}'`)
+							return true
+						})
+
+						if (axisExistsAlready) {
+							console.log('Axis indeed exists')
+							disabled = true
 						}
 					}
+
+					return {
+						name: axis.name,
+						description: axis.description,
+						displayText: axis.name,
+						icon: `fa-solid ${axis.category === 'Static' ? 'fa-cubes' : 'fa-dice-d6'}`,
+						onClick: addAxis(axis),
+						disabled: disabled
+					}
+				} else {
+					return 'hr'
 				}
 			})
 		]
 	})
 
-	function addAxis(target: ComponentView, axis: AxisDefinition) {
-		// select the target
-		const source = kits[target.source_index]
+	function addAxis(axis: AxisDefinition) {
+		return () => {
+			if (selectedKit) {
+				// select the target
+				const source = kits[selectedKit.source_index]
 
-		if (source) {
-			source.sets.axisRank.push(axis)
-			add(source.sets, target.params, {})
+				if (source) {
+					source.sets.axisRank.push(axis)
+
+					// add(source.sets, selectedKit.params, {})
+
+					/*
+					recalcParams(
+						axis.id ?? axis.name.toLowerCase(),
+						axis.variants[0].id ?? axis.variants[0].name
+					)
+          */
+				}
+			}
 		}
 	}
 
 	import { type TrackerExclusiveVariant, type AxisDefinition, builtinAxes } from '../../axesBuiltIn'
 	import type { ContextMenuContent } from '../contextMenuStore'
-	import { add } from '../../cascadeAxesMap'
+	import Axis from './Axis.svelte'
+	import type { AxisVariantLayerTrace } from '../../cascadeAxesMap'
+
+	// Basically backtracks kit Definitions to find respective
+	// Layers for each axis variant
+	const layers: AxisVariantLayerTrace | undefined = $derived.by(() => {
+		if (selectedKit) {
+			// select the target
+			const source = kits[selectedKit.source_index]
+
+			if (source) {
+				// Start iterating per axis
+				let thing = source.sets.axisRank.map((item) => {
+					// Then per axis variant
+					return item.variants.map((v: TrackerExclusiveVariant) => {
+						// Filter if the variant exists in the set
+						let layers = source.sets.layers.filter((l) => {
+							return Object.values(l.axes).find((a) => a === (v.id ?? v.name.toLowerCase()))
+						})
+
+						return {
+							axis: `${item.id}:${v.id ?? v.name.toLowerCase()}`,
+							layers: layers.map((l) => l.axes)
+						}
+					})
+				})
+
+				// Exclude unfounded layers
+				return thing
+					.flat(1)
+					.filter((l) => l.layers.length > 0)
+					.reduce((acc, item) => {
+						acc[item.axis] = item.layers
+						return acc
+					}, {})
+			}
+		}
+	})
+
+	const layersCollapsed: AxesSet[] | undefined = $derived.by(() => {
+		if (layers) {
+			const collapsed = Object.values(layers)
+				.flat() // flatten all layer arrays
+				.map((o) => JSON.stringify(o)) // convert to string to dedupe
+				.filter((v, i, arr) => arr.indexOf(v) === i)
+				.map((v) => JSON.parse(v))
+
+			return collapsed
+		}
+	})
+
+	const layerWidgets = $derived.by(() => {
+		if (layersCollapsed) {
+			// Step 1: get key arrays, sorted
+			const keyArrays = layersCollapsed.map((layer) => Object.keys(layer).sort())
+
+			// Step 2: group by length and remove duplicates
+			const grouped = keyArrays.reduce((acc: { [name: string]: {} }, keys) => {
+				const len = keys.length
+				const serialized = keys.join(',')
+				acc[len] = acc[len] || new Set()
+				acc[len].add(serialized)
+				return acc
+			}, {})
+
+			// Step 3: convert sets back to array of arrays
+			const axisShapes = Object.values(grouped).map((set) =>
+				Array.from(set).map((s) => s.split(','))
+			)
+
+			return axisShapes
+		}
+	})
+
+	let selectedLayer: string = $state('')
+
+	/*
+	$effect(() => {
+		console.log('Selected layer: ' + JSON.stringify(selectedLayer, null, 2))
+	})
+  */
 </script>
-
-{#snippet axisOption(axis_: AxisDefinition)}
-	{#snippet options()}
-		{@render trackerExclusive(axis_.name, axis_.variants)}
-	{/snippet}
-
-	{@render axis(axis_.name, options, axis_.description)}
-{/snippet}
-
-<!-- For axes that require exclusive values -->
-{#snippet trackerExclusive(id: string, elements: TrackerExclusiveVariant[])}
-	<ul class="tracker">
-		{#each elements as element, i}
-			<li class="tracker__element">
-				<label title={element.tooltip}>
-					<span class="tracker__element__label">{element.name}</span>
-					<input class="tracker__element__input" type="radio" name={id} checked={i === 0} />
-				</label>
-				<button class="tracker__element__track" aria-label="Includes the axes into the set">
-					<i class="fa-solid fa-diamond"></i>
-				</button>
-			</li>
-		{/each}
-	</ul>
-{/snippet}
-
-{#snippet axis(heading: string, content: Snippet, tooltip?: string)}
-	<details class="axis" title={tooltip} open>
-		<summary class="axis__heading">
-			<h3>{heading}</h3>
-			<i class="fa-solid fa-angle-down axis__heading__collapse-icon"></i>
-		</summary>
-		<div class="axis__content">
-			{@render content()}
-		</div>
-	</details>
-{/snippet}
 
 <Panel contextMenuContent={axesAddContextMenu} name="Axes" tooltip="Adjust the axes set">
 	{#snippet content()}
-<AxisTracker axesSet={{theme: 'dark'}} />
-<AxisTracker axesSet={{density: 'fluffy'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'high'}} />
-<AxisTracker axesSet={{density: 'high', theme: 'dark'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'high', mode: 'compact'}} />
-<AxisTracker axesSet={{mode: 'compact', theme: 'dark', density: 'high'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'high', mode: 'compact', fluffy: 'yes'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'high', mode: 'compact', fluffy: 'yes', accent: 'blue'}} />
-<AxisTracker axesSet={{}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'high', mode: 'compact', fluffy: 'yes', accent: 'blue', region: 'eu', intent: 'primary', level: '3'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'super-ultra-mega-high'}} />
-<AxisTracker axesSet={{theme: 'dark', level: '42'}} />
-<AxisTracker axesSet={{fluffy: 'true', compact: 'false'}} />
-<AxisTracker axesSet={{variant: 'v2', mode: 'beta'}} />
-<AxisTracker axesSet={{theme: 'dark', density: 'low', spacing: 'tight', radius: 'rounded', motion: 'snappy'}} />
-<AxisTracker axesSet={{radius: 'rounded', theme: 'dark', accent: 'blue', intent: 'primary', mode: 'compact', region: 'eu', fluffy: 'yes', density: 'high'}} />
-		<!-- {JSON.stringify(selectedKit?.params, null, 2)} -->
+		<!-- <p>{JSON.stringify(selectedLayer)}</p> -->
 		<div class="layers">
-			<label class="layer layer--base" aria-label="&lcub; &rcub;">
+			<label class="layer layer--base" aria-label="&lcub; &rcub;" title="No Axes layer">
 				<i class="layer--new__icon fa-solid fa-diamond"></i>
 				<input type="radio" name="same" disabled />
 			</label>
 
-			<label class="layer layer--new" aria-label="&lcub; &rcub;">
+			{#if layerWidgets}
+				{#each layerWidgets as layer}
+					<div class="layer__specificity">
+						{#each layer as l}
+							{@const hsv = stringSetToHSV(l)}
+
+							<label
+								style="--colour:hsl({hsv.h}, {hsv.s}%, {hsv.v}%);"
+								title={JSON.stringify(l, null, 2)}
+								class="layer layer--valued"
+								aria-label="&lcub; &rcub;"
+							>
+								<i class="layer--new__icon fa-solid fa-diamond"></i>
+								<input
+									type="radio"
+									value={JSON.stringify(l)}
+									name="layers"
+									disabled
+									bind:group={selectedLayer}
+								/>
+							</label>
+						{/each}
+					</div>
+				{/each}
+			{/if}
+
+			<label class="layer layer--new layer--last" aria-label="&lcub; &rcub;">
 				<i class="layer--new__icon fa-solid fa-diamond"></i>
-				<!-- <i class="layer--new__icon fa-solid fa-plus"></i> -->
-				<input type="radio" name="same" checked />
+				<input type="radio" name="some" disabled />
+				<i class="layer--new__icon fa-solid fa-plus"></i>
 			</label>
 		</div>
 
-		{#if selectedKit}
-			{#if kits[selectedKit.source_index]}
-				{#if kits[selectedKit.source_index].sets.axisRank.length === 0}
-					<p>
-						<i class="fa-solid fa-up-long"></i> Add Axis to
-						<strong>{selectedKit.name ?? kits[selectedKit.source_index].name}</strong>
-					</p>
-				{/if}
+		{#if !selectedKit}
+			<p>Select a <strong>Kit</strong></p>
+		{:else if kits[selectedKit.source_index]}
 
-				{#each kits[selectedKit.source_index].sets.axisRank as axis}
-					{@render axisOption(axis)}
-				{/each}
+      <!-- Add Axis to Selected Kit -->
+			{#if kits[selectedKit.source_index].sets.axisRank.length === 0}
+				<p>
+					<i class="fa-solid fa-up-long"></i> Add Axis to
+					<strong>{selectedKit.name ?? kits[selectedKit.source_index].name}</strong>
+				</p>
 			{/if}
-		{:else}
-			<p>Select a <strong>Component</strong></p>
+
+      <!-- Use key to rerender selected variant properly -->
+      {#key kits[selectedKit.source_index]}
+			  {#each kits[selectedKit.source_index].sets.axisRank as axis}
+				  <Axis {selectedKit} {axis} {kits} {kitViews} />
+			  {/each}
+      {/key}
 		{/if}
 	{/snippet}
 </Panel>
@@ -154,62 +234,106 @@
 		text-align: center;
 	}
 
+	.layer__specificity {
+		@include layout-flex-column();
+		gap: $x-space-xs;
+	}
+
 	.layers {
 		display: flex;
 		gap: $x-space-xs;
+		overflow-x: auto;
+		padding-block: $x-space-xs;
+		user-select: none;
 
 		.layer {
-			padding: calc($x-space-xs / 2) $x-space-xs;
+			padding: 0 $x-space-xs;
+			font-size: $x-font-size-md;
 
-			&--base {
-				border: 2px dashed var(--color-panel-border);
-				background: var(--color-bg);
+			@include layout-respond-max('lg') {
+				font-size: $x-font-size-sm;
+				padding: 0 calc($x-space-xs / 2);
+			}
+
+			-webkit-text-stroke-width: 2px;
+			height: max-content;
+
+			@keyframes rainbow {
+				0%,
+				100% {
+					--colour: rgb(220, 150, 150);
+				} /* soft dark red */
+				10% {
+					--colour: rgb(220, 165, 140);
+				} /* soft dark orange */
+				20% {
+					--colour: rgb(160, 200, 160);
+				} /* muted darker green */
+				35% {
+					--colour: rgb(160, 200, 200);
+				} /* muted cyan */
+				50% {
+					--colour: rgb(160, 175, 210);
+				} /* muted sky */
+				60% {
+					--colour: rgb(150, 150, 210);
+				} /* muted blue */
+				75% {
+					--colour: rgb(185, 160, 210);
+				} /* softened violet */
+				85% {
+					--colour: rgb(220, 160, 220);
+				} /* muted magenta */
+				95% {
+					--colour: rgb(220, 160, 180);
+				} /* muted rose */
+			}
+
+			&--valued {
+				border: 2px solid var(--color-panel-border);
+				box-shadow: 0rem 0.3rem var(--color-panel-border);
+				color: var(--colour);
+				-webkit-text-stroke-color: black;
+
+				&:hover {
+					background: var(--color-bg);
+				}
 			}
 
 			&--new {
-				border: 2px solid var(--color-panel-border);
-				translate: 0 calc($x-space-xs * -0.25);
-				box-shadow: 0rem 0.35rem var(--color-bg);
-				color: var(--color-warning);
-				text-shadow:
-					3px 0px black,
-					-3px 0px black,
-					0 3px black,
-					0 -3px black;
+				box-shadow: 0rem 0.25rem var(--colour);
+				border: 2px solid var(--colour);
+				color: var(--colour);
+
+				animation: rainbow 5s linear;
+				animation-iteration-count: infinite;
+
+				-webkit-text-stroke-width: unset;
 			}
 
 			border-radius: $x-space-xs;
 			background: var(--color-surface);
-			color: var(--color-text);
 
-			> input[type='radio'] {
+			// hide the radios
+			input[type='radio'] {
 				position: absolute;
 				opacity: 0;
 			}
 
-			&:hover {
-				background: var(--color-surface-alt);
-			}
-
 			&:has(input[type='radio']:checked) {
+				translate: 0 calc($x-space-xs * -0.25);
 				box-shadow: 0 0.15rem var(--color-surface-alt);
-				translate: 0 calc($x-space-xs * 0.25);
-				border: 2px solid var(--color-primary);
+				translate: 0 calc($x-space-xs * 0.55);
+				border: 2px solid var(--colour, --color-primary);
 				background: var(--color-surface-alt);
+				filter: brightness(1.1) saturate(1.1);
 			}
 
-			div &__icon {
-				mask-image: radial-gradient(
-					circle,
-					rgba(194, 134, 70, 1) 9%,
-					rgba(188, 194, 70, 1) 25%,
-					rgba(124, 194, 70, 1) 16%,
-					rgba(70, 194, 171, 1) 33%,
-					rgba(88, 138, 204, 1) 58%,
-					rgba(158, 88, 204, 1) 3%,
-					rgba(187, 88, 204, 1) 51%,
-					rgba(204, 88, 173, 1) 84%
-				);
+			&:has(input[type='radio']:disabled) {
+				border: 2px dashed var(--color-bg);
+				background: var(--color-bg);
+				color: var(--color-surface);
+				-webkit-text-stroke-color: var(--color-text);
 			}
 		}
 	}
@@ -233,6 +357,11 @@
 			font-size: $x-font-size-xs;
 			text-transform: uppercase;
 			@include fonts-stack('Satoshi-Bold', sans);
+			gap: $x-space-md;
+
+			& h3 {
+				flex-grow: 1;
+			}
 
 			&__collapse-icon {
 				transition: rotate 200ms ease-out;
@@ -241,7 +370,7 @@
 		}
 
 		&__content {
-			padding-inline: $x-space-xs;
+			// padding-inline: $x-space-xs;
 			transition:
 				max-height 100ms ease-out,
 				translate 200ms ease-out;
@@ -259,20 +388,21 @@
 		display: flex;
 		flex-grow: 1;
 		cursor: pointer;
-		border-left: 2px solid var(--color-surface);
+		// border-left: 2px solid var(--color-surface);
 		padding-left: $x-space-xs;
 		flex-direction: row-reverse;
 		align-items: center;
+		border-radius: $x-space-md;
 
 		gap: $x-space-xs;
 
 		label {
-			padding-block: calc($x-space-xs / 2);
 			cursor: pointer;
 			display: flex;
 			flex-grow: 1;
 			padding-inline: $x-space-xs;
 			@include fonts-stack('Satoshi-Regular', sans);
+			font-size: $x-font-size-md;
 			font-weight: 600;
 
 			&:hover {
@@ -288,7 +418,7 @@
 
 		&__track {
 			width: $x-space-md;
-			font-size: $x-font-size-lg;
+			font-size: $x-font-size-md;
 			border: unset;
 			background: unset;
 			cursor: pointer;
@@ -303,7 +433,7 @@
 		}
 
 		&:has(input[type='radio']:checked) {
-			border-left: 2px solid var(--color-primary);
+			// border-left: 2px solid var(--color-primary);
 			background-color: var(--color-surface-alt);
 
 			label {
@@ -386,7 +516,6 @@
 
 				&.active {
 					background: var(--color-bg);
-					letter-spacing: 1px;
 
 					&.first,
 					&.last {
