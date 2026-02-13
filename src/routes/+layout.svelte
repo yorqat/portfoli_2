@@ -3,12 +3,15 @@
 
 	import { initializeTheme } from '$lib/theming'
 	import { initializeReducedMotion } from '$lib/reduced-motion'
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
 
 	let { children } = $props()
 
 	$effect(() => {
 		initializeTheme(page.data.theme)
 		initializeReducedMotion(page.data.reducedMotion)
+
+	  injectSpeedInsights()
 	})
 
 	/* Normalize normalize */
@@ -23,9 +26,7 @@
 	/* Based styling opinions */
 	// import '$styles/opinionated.scss'
 
-	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
 
-	injectSpeedInsights()
 </script>
 
 {#key page.url.pathname}
