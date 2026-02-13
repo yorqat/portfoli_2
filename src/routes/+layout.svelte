@@ -4,6 +4,7 @@
 	import { initializeTheme } from '$lib/theming'
 	import { initializeReducedMotion } from '$lib/reduced-motion'
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+  import { injectAnalytics } from '@vercel/analytics/sveltekit'
 
 	let { children } = $props()
 
@@ -12,6 +13,7 @@
 		initializeReducedMotion(page.data.reducedMotion)
 
 	  injectSpeedInsights()
+    injectAnalytics()
 	})
 
 	/* Normalize normalize */
