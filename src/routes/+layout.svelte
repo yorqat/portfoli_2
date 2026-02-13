@@ -22,6 +22,10 @@
 
 	/* Based styling opinions */
 	// import '$styles/opinionated.scss'
+
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+
+	injectSpeedInsights()
 </script>
 
 {#key page.url.pathname}
