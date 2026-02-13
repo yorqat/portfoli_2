@@ -1,9 +1,11 @@
 <script>
+	import { dev } from '$app/environment'
 	import { page } from '$app/state'
 
 	import { initializeTheme } from '$lib/theming'
 	import { initializeReducedMotion } from '$lib/reduced-motion'
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+	import { injectAnalytics } from '@vercel/analytics/sveltekit'
 
 	let { children } = $props()
 
@@ -11,7 +13,8 @@
 		initializeTheme(page.data.theme)
 		initializeReducedMotion(page.data.reducedMotion)
 
-	  injectSpeedInsights()
+		injectSpeedInsights()
+		injectAnalytics({ mode: dev ? 'development' : 'production' })
 	})
 
 	/* Normalize normalize */
@@ -25,8 +28,6 @@
 
 	/* Based styling opinions */
 	// import '$styles/opinionated.scss'
-
-
 </script>
 
 {#key page.url.pathname}
