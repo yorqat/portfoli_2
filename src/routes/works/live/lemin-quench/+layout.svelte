@@ -43,13 +43,9 @@
 
 					<li>
 						The style follows a curvy, solid lined characters with loose joints and simplified faces
-						with eyes separated by big gaps
 					</li>
 
-					<li>
-						Accompanied by 4 flavours shining the spotlight for products unheard of, creating
-						novelty out of a simple reframe
-					</li>
+					<li>Accompanied by 4 flavours shining the spotlight for products unheard of</li>
 				</ul>
 				<h3>Colours</h3>
 

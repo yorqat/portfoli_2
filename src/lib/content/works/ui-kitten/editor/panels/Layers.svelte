@@ -1,19 +1,16 @@
 <script module>
-
 </script>
 
 <script lang="ts">
-	import type { AxisVariantLayerTrace } from "../../cascadeAxesMap"
+	import type { AxisVariantLayerTrace } from '../../cascadeAxesMap'
 
 	type LayerWidgetProps = {
-    layers: AxisVariantLayerTrace
-  }
+		layers: AxisVariantLayerTrace
+	}
 
 	const { layers }: LayerWidgetProps = $props()
 
-	const layerWidgets = $derived.by(() => {
-    
-  })
+	const layerWidgets = $derived.by(() => {})
 </script>
 
 <div class="layers">

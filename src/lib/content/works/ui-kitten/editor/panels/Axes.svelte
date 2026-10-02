@@ -207,8 +207,7 @@
 		{#if !selectedKit}
 			<p>Select a <strong>Kit</strong></p>
 		{:else if kits[selectedKit.source_index]}
-
-      <!-- Add Axis to Selected Kit -->
+			<!-- Add Axis to Selected Kit -->
 			{#if kits[selectedKit.source_index].sets.axisRank.length === 0}
 				<p>
 					<i class="fa-solid fa-up-long"></i> Add Axis to
@@ -216,12 +215,12 @@
 				</p>
 			{/if}
 
-      <!-- Use key to rerender selected variant properly -->
-      {#key kits[selectedKit.source_index]}
-			  {#each kits[selectedKit.source_index].sets.axisRank as axis}
-				  <Axis {selectedKit} {axis} {kits} {kitViews} />
-			  {/each}
-      {/key}
+			<!-- Use key to rerender selected variant properly -->
+			{#key kits[selectedKit.source_index]}
+				{#each kits[selectedKit.source_index].sets.axisRank as axis}
+					<Axis {selectedKit} {axis} {kits} {kitViews} />
+				{/each}
+			{/key}
 		{/if}
 	{/snippet}
 </Panel>

@@ -7,15 +7,18 @@
 	}
 
 	const { text, separator = ' ', magnitude = 1, duration = '10s' }: MarqueeProps = $props()
+
+	const copies = $derived(Math.max(2, Math.ceil(magnitude * 4)))
 </script>
 
 {#snippet TrackContent(text: string, separator: string)}
-	<span aria-hidden="true">{text} {separator} </span>
+	<span>{text} {separator}</span>
 {/snippet}
 
-<div class="marquee" style="--duration: {duration}" aria-label={text}>
-	<div class="track">
-		{#each Array(magnitude * 4) as _}
+<div class="marquee" style="--duration: {duration}">
+	<p class="marquee__sr-only">{text}</p>
+	<div class="track" aria-hidden="true">
+		{#each Array(copies) as _}
 			{@render TrackContent(text, separator)}
 		{/each}
 	</div>
@@ -24,8 +27,14 @@
 <style lang="scss">
 	@use '_index' as *;
 
-	:global([data-compel-reduced-motion='reduce'] .marquee) {
+	:global([data-compel-reduced-motion='reduce']) .track {
 		animation-play-state: paused;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.track {
+			animation-play-state: paused;
+		}
 	}
 
 	.marquee {
@@ -38,15 +47,22 @@
 		overflow-x: hidden;
 	}
 
+	.marquee__sr-only {
+		@include a11y-visually-hidden();
+	}
+
 	.track {
 		color: var(--color-text-muted);
 		flex-shrink: 0;
-		padding: 0 1rem;
 
 		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 
 		animation: scroll var(--duration) linear infinite;
+
+		> span {
+			padding-inline: 0.5rem;
+		}
 
 		@include layout-respond-max('md') {
 			font-size: $x-font-size-xl;
