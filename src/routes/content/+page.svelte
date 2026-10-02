@@ -44,13 +44,13 @@
 		margin-bottom: $x-space-lg;
 		padding-inline: $x-space-sm;
 
-		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 
 		.quiet-text {
 			color: var(--color-text-muted);
 
-			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-stack('Satoshi-Light', sans);
 			@include fonts-alternate-style();
 		}
 
@@ -88,7 +88,7 @@
 
 		.super-text {
 			vertical-align: middle;
-			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-stack('Satoshi-Light', sans);
 			@include fonts-alternate-style();
 		}
 	}

@@ -64,7 +64,7 @@
 		/* Extra wide desktops*/
 
 		padding-block: $x-space-md;
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		@include fonts-alternate-style();
 	}
 

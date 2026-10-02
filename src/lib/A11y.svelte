@@ -118,7 +118,7 @@
 		@include layout-flex-column();
 		gap: $x-font-size-xl;
 
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		@include fonts-alternate-style();
 
 		background: var(--color-surface);

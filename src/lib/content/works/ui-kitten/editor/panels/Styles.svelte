@@ -239,7 +239,7 @@
 
 			font-size: $x-font-size-xs;
 			text-transform: uppercase;
-			@include fonts-stack('Satoshi-Bold', sans-serif);
+			@include fonts-stack('Satoshi-Bold', sans);
 			letter-spacing: 1px;
 			color: var(--color-text);
 		}

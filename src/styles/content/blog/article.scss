@@ -57,7 +57,7 @@
 	}
 
 	code {
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		letter-spacing: 1.2px;
 	}
 
@@ -78,7 +78,7 @@
 
 	aside {
 		.table-of-contents {
-			@include fonts-stack('Satoshi', sans-serif);
+			@include fonts-stack('Satoshi', sans);
 			@include fonts-alternate-style();
 			background: var(--color-surface);
 			line-height: 180%;
@@ -97,7 +97,7 @@
 				margin-inline: $x-space-xs;
 
 				a {
-					@include fonts-stack('Satoshi-Italic', sans-serif);
+					@include fonts-stack('Satoshi-Italic', sans);
 					@include fonts-alternate-style();
 					font-size: $x-font-size-lg;
 					padding-block: $x-space-xs;
@@ -168,7 +168,7 @@
 		color: var(--color-heading);
 
 		padding-top: $x-space-md;
-		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 		padding-inline: $x-font-size-md;
 	}
@@ -202,7 +202,7 @@
 	}
 
 	h3 {
-		@include fonts-stack('Satoshi-Light', sans-serif);
+		@include fonts-stack('Satoshi-Light', sans);
 		@include fonts-alternate-style();
 		margin-bottom: $x-space-md;
 
@@ -221,7 +221,7 @@
 
 	p,
 	li {
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		@include fonts-alternate-style();
 
 		letter-spacing: 0.6px;
@@ -266,7 +266,7 @@
 	blockquote {
 		text-indent: $x-space-lg;
 
-		@include fonts-stack('Satoshi', sans-serif);
+		@include fonts-stack('Satoshi', sans);
 		@include fonts-alternate-style();
 		box-shadow: $x-bs-sketch-falloff;
 

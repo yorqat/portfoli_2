@@ -17,7 +17,7 @@
 		font-size: $x-font-size-xl;
 	}
 
-	@include fonts-stack('Satoshi-Regular', sans-serif);
+	@include fonts-stack('Satoshi-Regular', sans);
 	@include fonts-alternate-style();
 
 	h1,
@@ -25,7 +25,7 @@
 		// line-height: 100%;
 
 		font-size: $x-font-size-2xl;
-		@include fonts-stack('Satoshi-Black', sans-serif);
+		@include fonts-stack('Satoshi-Black', sans);
 		@include fonts-alternate-style();
 	}
 
@@ -41,7 +41,7 @@
 .overview {
 	grid-area: 3 / 1 / 5 / 4;
 
-	@include fonts-stack('Satoshi-Light', sans-serif);
+	@include fonts-stack('Satoshi-Light', sans);
 	text-transform: uppercase;
 	font-size: $x-font-size-2xl;
 }

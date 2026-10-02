@@ -228,7 +228,7 @@
 			&--text {
 				width: $x-space-xxl;
 				font-size: $x-font-size-md;
-				@include fonts-stack('Satoshi-Bold', sans-serif);
+				@include fonts-stack('Satoshi-Bold', sans);
 				border: unset;
 				border: var(--color-add-var-border);
 				background: var(--color-add-var-bg);

@@ -230,7 +230,7 @@
 	.span-collapse {
 		// display: none;
 
-		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 
 		color: var(--color-text-muted);
@@ -302,7 +302,7 @@
 	}
 
 	.section {
-		@include fonts-stack('Satoshi', sans-serif);
+		@include fonts-stack('Satoshi', sans);
 		@include fonts-alternate-style();
 
 		min-height: 100vh;
@@ -328,7 +328,7 @@
 
 	.nav__list {
 		@include layout-flex-column();
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		@include fonts-alternate-style();
 		list-style-type: none;
 
@@ -370,7 +370,7 @@
 	}
 
 	.hero__title {
-		@include fonts-stack('Satoshi-Black', sans-serif);
+		@include fonts-stack('Satoshi-Black', sans);
 		@include fonts-alternate-style();
 
 		@include layout-respond-max('lg') {
@@ -401,7 +401,7 @@
 
 		> * {
 			text-transform: uppercase;
-			@include fonts-stack('Satoshi-Light', sans-serif);
+			@include fonts-stack('Satoshi-Light', sans);
 			@include fonts-alternate-style();
 
 			@include layout-respond-max('md') {
@@ -419,7 +419,7 @@
 	}
 
 	.hero__intro {
-		@include fonts-stack('Satoshi-Light', sans-serif);
+		@include fonts-stack('Satoshi-Light', sans);
 		@include fonts-alternate-style();
 
 		line-height: 110%;
@@ -495,7 +495,7 @@
 	}
 
 	.section__header {
-		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 		line-height: 115%;
 

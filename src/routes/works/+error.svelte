@@ -67,11 +67,11 @@
 	}
 
 	h1 {
-		@include fonts-stack('Satoshi-BlackItalic', 'sans-serif');
+		@include fonts-stack('Satoshi-BlackItalic', sans);
 	}
 
 	h2 {
-		@include fonts-stack('Satoshi-Light', 'sans-serif');
+		@include fonts-stack('Satoshi-Light', sans);
 	}
 
 	h1,

@@ -99,7 +99,7 @@
 		cursor: pointer;
 		font-size: $x-font-size-sm;
 		font-weight: 600;
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		letter-spacing: 1px;
 		border-left: 2px solid var(--color-surface);
 		border-right: 1px solid var(--color-surface);

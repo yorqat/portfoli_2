@@ -145,7 +145,7 @@
 		&__icon {
 			padding: $mobile-padding;
 			font-size: $x-font-size-2xl;
-			@include fonts-stack('Satoshi-Bold', sans-serif);
+			@include fonts-stack('Satoshi-Bold', sans);
 			@include fonts-alternate-style();
 		}
 	}
@@ -218,7 +218,7 @@
 		color: var(--color-text);
 		padding-block: $x-space-3;
 
-		@include fonts-stack('Satoshi-Regular', sans-serif);
+		@include fonts-stack('Satoshi-Regular', sans);
 		@include fonts-alternate-style();
 		font-size: $x-font-size-lg;
 

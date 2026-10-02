@@ -9,7 +9,7 @@ h2,
 h3 {
 	padding-top: $x-space-sm;
 
-	@include fonts-stack('Satoshi-Regular', sans-serif);
+	@include fonts-stack('Satoshi-Regular', sans);
 	@include fonts-alternate-style();
 }
 
@@ -50,7 +50,7 @@ header {
 }
 
 #legal {
-	@include fonts-stack('Cantarell', sans-serif);
+	@include fonts-stack('Cantarell', sans);
 	@include fonts-alternate-style();
 
 	font-size: $x-font-size-lg;

@@ -43,7 +43,7 @@
 		flex-shrink: 0;
 		padding: 0 1rem;
 
-		@include fonts-stack('Satoshi-Bold', sans-serif);
+		@include fonts-stack('Satoshi-Bold', sans);
 		@include fonts-alternate-style();
 
 		animation: scroll var(--duration) linear infinite;
