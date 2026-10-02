@@ -3,7 +3,19 @@
 	import { getReducedMotion } from '$lib/reduced-motion'
 
 	import NavBar from '$lib/NavBar.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
+	import { OG } from '$lib/site'
 </script>
+
+<svelte:head>
+	{@render Seo({
+		title: 'Content',
+		description:
+			'Writing on interface design, accessibility and the web — notes on building products people can actually use.',
+		path: '/content',
+		image: OG.content
+	})}
+</svelte:head>
 
 <div
 	data-prefers-color-scheme

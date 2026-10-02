@@ -3,7 +3,8 @@
 	import { getReducedMotion } from '$lib/reduced-motion'
 
 	import type { Post, BlogPosting } from '$lib/content/blogs/types'
-	import { SeoBlogIndex } from '$lib/content/blogs/Snips.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
+	import { SITE, OG, absolute, postCard } from '$lib/site'
 
 	import NavBar from '$lib/NavBar.svelte'
 	import { posts } from '$lib/content/blogs/indexPosts'
@@ -14,29 +15,46 @@
 		posts: Post[]
 	}
 
+	const description =
+		'Insights, guides, and tutorials on interface design, accessibility, and the web.'
+
 	const blogPosts: BlogPosting[] = posts.map((p) => ({
 		'@type': 'BlogPosting',
 		headline: p.metadata.seoTitle || p.metadata.title,
 		description: p.metadata.seoDescription || p.metadata.description,
-		url: `https://www.yorqat.com/blog/${p.slug}`,
-		image: `https://www.yorqat.com/${p.slug + '.webp'}`,
-		datePublished: p.metadata.date,
-		dateModified: p.metadata.date,
+		url: absolute(`/blog/${p.slug}`),
+		image: absolute(postCard(p.slug)),
+		datePublished: new Date(p.metadata.date).toISOString().slice(0, 10),
+		dateModified: new Date(p.metadata.date).toISOString().slice(0, 10),
 		author: {
 			'@type': 'Person',
-			name: p.metadata.author
+			name: p.metadata.author ?? SITE.name
 		}
 	}))
 </script>
 
 <svelte:head>
-	{@render SeoBlogIndex(
-		'Yor Qat Blog',
-		'Insights, guides, and tutorials on design, development, and technology.',
-		'https://www.yorqat.com/blog',
-		'https://www.yorqat.com/cover.webp',
-		blogPosts
-	)}
+	{@render Seo({
+		title: 'Blog',
+		description,
+		path: '/blog',
+		image: OG.blog,
+		imageAlt: `Blog by ${SITE.name}`,
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'Blog',
+			name: `Yor Qat Blog`,
+			description,
+			url: absolute('/blog'),
+			inLanguage: SITE.lang,
+			publisher: {
+				'@type': 'Organization',
+				name: SITE.name,
+				logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
+			},
+			blogPost: blogPosts
+		}
+	})}
 </svelte:head>
 
 <div

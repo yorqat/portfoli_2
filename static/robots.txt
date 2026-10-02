@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Server-rendered app shells that exist only to redirect.
+Disallow: /works/live/lemin-quench$
+
+Sitemap: https://www.yorqat.com/sitemap.xml

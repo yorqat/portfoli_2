@@ -5,11 +5,32 @@
 	import { getReducedMotion } from '$lib/reduced-motion'
 
 	import NavBar from '$lib/NavBar.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
+	import { SITE } from '$lib/site'
 
 	export let data: { slug: string; projects: Project[]; project: Project }
 
 	const { site, descriptor } = data.project
+	const path = `/works/describe/${data.slug}`
 </script>
+
+<svelte:head>
+	{@render Seo({
+		title: `${site.title} — ${site.subtitle ?? 'case study'}`,
+		description: descriptor.projectOverview,
+		path,
+		type: 'article',
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'CreativeWork',
+			name: site.title,
+			description: descriptor.projectOverview,
+			url: SITE.origin + path,
+			creator: { '@type': 'Person', name: SITE.name },
+			keywords: [...(site.tags ?? []), ...(descriptor.technologies ?? [])].join(', ')
+		}
+	})}
+</svelte:head>
 
 <div
 	id="work-home"

@@ -5,6 +5,7 @@
 
 	import { getTheme } from '$lib/theming'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
 	import { contextMenu } from '$lib/content/works/ui-kitten/editor/contextMenu'
 	import type {
 		ComponentView,
@@ -434,11 +435,13 @@
 </script>
 
 <svelte:head>
-	<title>KIT•10 Scale your UX</title>
-	<meta
-		name="description"
-		content="Axes-based data-driven UI + UX editor that actually scales with seemless developer handoff"
-	/>
+	{@render Seo({
+		title: 'KIT•10 — scale your UX',
+		description:
+			'An axes-based, data-driven UI and UX editor that scales with seamless developer handoff.',
+		path: '/works/live/ui-kitten',
+		type: 'article'
+	})}
 
 	<link
 		rel="stylesheet"

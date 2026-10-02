@@ -7,6 +7,8 @@
 	import type { Post } from '$lib/content/blogs/types'
 
 	import { page } from '$app/state'
+	import { Seo } from '$lib/components/Seo.svelte'
+	import { SITE, OG, absolute, postCard } from '$lib/site'
 
 	export let data: {
 		slug: string
@@ -23,17 +25,45 @@
 		console.dir(data.metadata)
 	})
 
-	const domain = 'https://www.yorqat.com'
+	const title = data.metadata.seoTitle ?? data.metadata.title
+	const description = data.metadata.seoDescription ?? data.metadata.description
+	const canonical = `/blog/${data.slug}`
+	const card = postCard(data.slug)
+	const published = new Date(data.metadata.date).toISOString().slice(0, 10)
 </script>
 
 <svelte:head>
-	{@render Snips.Seo(
-		data.metadata.seoTitle ?? data.metadata.title,
-		data.metadata.seoDescription ?? data.metadata.description,
-		domain + page.url.pathname,
-		domain + '/' + data.slug + '.webp',
-		data.metadata.date
-	)}
+	{@render Seo({
+		title,
+		description,
+		path: canonical,
+		image: card,
+		imageAlt: `${title} — ${SITE.name}`,
+		type: 'article',
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'BlogPosting',
+			headline: title,
+			description,
+			mainEntityOfPage: { '@type': 'WebPage', '@id': absolute(canonical) },
+			url: absolute(canonical),
+			image: {
+				'@type': 'ImageObject',
+				url: absolute(card),
+				width: OG.width,
+				height: OG.height
+			},
+			datePublished: published,
+			dateModified: published,
+			inLanguage: SITE.lang,
+			author: { '@type': 'Person', name: data.metadata.author ?? SITE.name },
+			publisher: {
+				'@type': 'Organization',
+				name: SITE.name,
+				logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
+			}
+		}
+	})}
 </svelte:head>
 
 <BlogLayout>

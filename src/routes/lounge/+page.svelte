@@ -10,6 +10,8 @@
 	import NavBar from '$lib/NavBar.svelte'
 	import Footer from '$lib/content/Footer.svelte'
 	import Marquee from '$lib/components/Marquee.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
+	import { OG, SITE, absolute } from '$lib/site'
 
 	import pfp from '$lib/content/blogs/posts/cropped-pfp.png'
 
@@ -53,11 +55,30 @@
 </script>
 
 <svelte:head>
-	<title>Smile at Yor Qat</title>
-	<meta
-		name="description"
-		content="I make UX you can feel in your bones and back up with numbers. Hi, I’m Yor Qat."
-	/>
+	{@render Seo({
+		title: 'Smile at Yor Qat',
+		bareTitle: true,
+		description:
+			'I make UX you can feel in your bones and back up with numbers. Hi, I’m Yor Qat — interface designer and front-end engineer.',
+		path: '/lounge',
+		image: OG.lounge,
+		imageAlt: 'Yor Qat, interface designer and front-end engineer',
+		type: 'profile',
+		jsonLd: {
+			'@context': 'https://schema.org',
+			'@type': 'Person',
+			name: SITE.name,
+			url: absolute('/lounge'),
+			image: absolute(OG.lounge),
+			jobTitle: 'Interface designer & front-end engineer',
+			description: SITE.tagline,
+			sameAs: [
+				SITE.social.linkedin,
+				SITE.social.github,
+				`https://x.com/${SITE.social.x.replace('@', '')}`
+			]
+		}
+	})}
 </svelte:head>
 
 {#snippet Heading3D(heading: string)}
@@ -111,15 +132,15 @@
 	<section class="section section--hero" inert={scrolledPastLoungeNav ?? undefined}>
 		<div class="hero__content banner">
 			<div class="hero__branding">
-				<span class="hero__title box">
+				<h1 class="hero__title box">
 					{#snippet TransitionLetter(letter: string)}
 						<span style="--vt:{letter.toString()};" class:vt={!scrolledPastLoungeNav}>{letter}</span
 						>
 					{/snippet}
 
 					{@render TransitionLetter('Y')}<span class="span-collapse">or</span>
-					{@render TransitionLetter('Q')}<span class="span-collapse">at</span></span
-				>
+					{@render TransitionLetter('Q')}<span class="span-collapse">at</span>
+				</h1>
 				<div class="hero__subtitle">
 					<A11y />
 					<span> ux dev </span>
@@ -369,9 +390,16 @@
 		}
 	}
 
+	/* h1 reset — the name was a <span> before it became the page heading, so it
+	   must not pick up UA heading margins or font-weight. `display: inline`
+	   keeps the original inline flow of the per-letter transition spans. */
 	.hero__title {
 		@include fonts-stack('Satoshi-Black', sans);
 		@include fonts-alternate-style();
+
+		display: inline;
+		margin: 0;
+		font-weight: inherit;
 
 		@include layout-respond-max('lg') {
 			font-size: $x-font-size-4xl;

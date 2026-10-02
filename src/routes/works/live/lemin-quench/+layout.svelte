@@ -4,6 +4,7 @@
 
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
+	import { Seo } from '$lib/components/Seo.svelte'
 
 	const { children } = $props()
 
@@ -16,6 +17,15 @@
 		path: 'lemin-quench'
 	}
 </script>
+
+<svelte:head>
+	{@render Seo({
+		title: site.title,
+		description:
+			'A product line for a fictional soft drink brand — curvy solid-lined characters, loose joints, simplified faces, and four flavours built to reframe a simple drink.',
+		path: '/works/live/lemin-quench'
+	})}
+</svelte:head>
 
 <div
 	style="display: contents;"

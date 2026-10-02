@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit'
 
 export const load = () => {
-	throw redirect(307, 'lemin-quench/persimmon')
+	throw redirect(308, '/works/live/lemin-quench/persimmon')
 }

@@ -1,6 +1,7 @@
 <script>
 	import QuizOptions from '$lib/periodic-memory/quiz-options.svelte'
 	import Quiz from '$lib/periodic-memory/quiz.svelte'
+	import { Seo } from '$lib/components/Seo.svelte'
 
 	const quizOptions = {
 		isRandom: true,
@@ -10,6 +11,14 @@
 		range: { start: 1, end: 20 }
 	}
 </script>
+
+<svelte:head>
+	{@render Seo({
+		title: 'Periodic Memory — quiz',
+		description: 'Prove how much of the periodic table you actually remember.',
+		path: '/works/live/periodic-memory/quiz'
+	})}
+</svelte:head>
 
 <div class="quiz">
 	<QuizOptions />
