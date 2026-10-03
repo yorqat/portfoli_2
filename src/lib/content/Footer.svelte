@@ -1,24 +1,34 @@
+<script lang="ts">
+	import { SITE, ROLE } from '$lib/site'
+</script>
+
 <footer class="site-footer">
 	<div class="footer-content">
 		<!-- About / Brand -->
 		<div class="footer-column">
 			<h4>About me</h4>
-			<p>Designing products that ship, scale, and serve real users.</p>
+			<p>
+				{SITE.name}, {ROLE.level}
+				{ROLE.primary}. Everything here is self-initiated work.
+			</p>
 		</div>
 
 		<!-- Quick Links -->
 		<div class="footer-column">
 			<h4>Quick Links</h4>
 			<ul>
-				<li><a href="/#about">About</a></li>
-				<li><a href="/#services">Services</a></li>
-				<li><a href="/#contact">Contact</a></li>
+				<li><a href="/works">Works</a></li>
+				<li><a href="/blog">Writing</a></li>
+				<li><a href="/contact">Contact</a></li>
 			</ul>
 		</div>
 
 		<!-- Connect / Social -->
 		<div class="footer-column">
 			<h4>Connect</h4>
+			<p class="footer-email">
+				<a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+			</p>
 			<div class="social-links">
 				<a href="https://www.linkedin.com/in/yorqat/" target="_blank" aria-label="LinkedIn">
 					<img src="/icons/linkedin.svg" alt="LinkedIn" />
@@ -96,6 +106,8 @@
 	}
 
 	.social-links {
+		margin-block-start: $x-space-sm;
+
 		a {
 			display: flex;
 			align-items: center;
@@ -105,6 +117,14 @@
 				aspect-ratio: 1;
 				max-width: $x-font-size-lg;
 			}
+		}
+	}
+
+	.footer-email {
+		margin-block-end: $x-space-xs;
+
+		a {
+			overflow-wrap: anywhere;
 		}
 	}
 </style>

@@ -54,7 +54,7 @@
 	import { page } from '$app/state'
 	import type { Project } from '$lib/content/works/types'
 	import { Seo } from '$lib/components/Seo.svelte'
-	import { OG } from '$lib/site'
+	import { OG, SITE } from '$lib/site'
 </script>
 
 <svelte:head>
@@ -84,6 +84,8 @@
 			Recruiters spend <span class="quiet-text"> only about </span>
 			<span class="super-text">6</span> <span class="quiet-text"> seconds on </span> a portfolio
 		</h1>
+
+		<p class="projects__context">{SITE.workContext}</p>
 
 		<!-- <div class=""> -->
 		<!-- 	{#each links as link} -->
@@ -121,6 +123,13 @@
 			max-width: $x-breakpoint-xl-content;
 			margin-inline: auto;
 		}
+	}
+
+	.projects__context {
+		@include fonts-stack('Satoshi-Regular', sans);
+		color: var(--color-text-muted);
+		max-width: 60ch;
+		margin-block: $x-space-sm $x-space-lg;
 	}
 
 	.project {

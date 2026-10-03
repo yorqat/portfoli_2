@@ -1,8 +1,9 @@
 export const navLinks = [
-	{ path: 'blog', name: 'Blogs', hotkey: 'b' },
 	{ path: 'works', name: 'Works', hotkey: 'w' },
+	{ path: 'blog', name: 'Writing', hotkey: 'b' },
 	// { path: 'reach', name: 'Reach', hotkey: 'r' },
-	{ path: 'content', name: 'Content', hotkey: 'c' }
+	{ path: 'content', name: 'Content', hotkey: 'c' },
+	{ path: 'contact', name: 'Contact', hotkey: 'r' }
 ]
 
 export const chapters: unique symbol = 'chapters'

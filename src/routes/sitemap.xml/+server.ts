@@ -7,7 +7,8 @@ const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = 
 	{ path: '/lounge', priority: '1.0', changefreq: 'monthly' },
 	{ path: '/works', priority: '0.9', changefreq: 'monthly' },
 	{ path: '/blog', priority: '0.8', changefreq: 'weekly' },
-	{ path: '/content', priority: '0.7', changefreq: 'monthly' }
+	{ path: '/content', priority: '0.7', changefreq: 'monthly' },
+	{ path: '/contact', priority: '0.7', changefreq: 'monthly' }
 ]
 
 /**

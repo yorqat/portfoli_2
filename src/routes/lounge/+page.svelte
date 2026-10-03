@@ -11,7 +11,7 @@
 	import Footer from '$lib/content/Footer.svelte'
 	import Marquee from '$lib/components/Marquee.svelte'
 	import { Seo } from '$lib/components/Seo.svelte'
-	import { OG, SITE, absolute } from '$lib/site'
+	import { OG, SITE, ROLE, absolute } from '$lib/site'
 
 	import pfp from '$lib/content/blogs/posts/cropped-pfp.png'
 
@@ -124,7 +124,7 @@
 
 {#snippet content()}
 	<Marquee
-		text="Hi, I'm Yor Qat ◦ UX Designer ◦ Data-driven ◦ Multi-paradigm ◦ AI superpowered ◦ Human-Centered ◦ Post-Agile ◦ Systems-Level Design ◦ Accessibility-First ◦ Emergent Complexity Wrangler"
+		text="Hi, I'm Yor Qat ◦ Design Engineer ◦ Svelte ◦ SCSS Design Systems ◦ Accessibility ◦ Data-driven UI ◦ Currently seeking a junior role"
 		separator="◦ "
 		magnitude={1}
 		duration="200s"
@@ -143,12 +143,15 @@
 				</h1>
 				<div class="hero__subtitle">
 					<A11y />
-					<span> ux dev </span>
+					<span> {ROLE.level} {ROLE.primary} </span>
 				</div>
 			</div>
 
 			<div class="hero__showcase">
-				<h2 class="hero__intro">I design products that ship and scale for real people</h2>
+				<h2 class="hero__intro">
+					I build interfaces and the design systems behind them — currently self-initiated, and
+					looking for a team to learn inside.
+				</h2>
 
 				<div class="profile-picture">
 					<img class="profile-picture__img" sizes="400px" src={pfp} alt="yor's profile" />
@@ -231,7 +234,11 @@
 	<!-- Call to Action -->
 	<section class="section section--cta">
 		{@render Heading3D('Curious of what I bring to the table?')}
-		<button class="cta__button corsette">Review my work together?</button>
+		<a class="cta__button corsette" href="/contact">Review my work together?</a>
+		<p class="cta__status">
+			Looking for a {ROLE.level}
+			{ROLE.primary} role. {SITE.availability}.
+		</p>
 	</section>
 
 	<section class="section">

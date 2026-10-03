@@ -44,7 +44,9 @@ const config = {
 		}),
 		csp: {
 			directives: {
-				'script-src': ['self']
+				// '@vercel/analytics' and '@vercel/speed-insights' inject a
+				// script from this origin, so it has to be allowed explicitly.
+				'script-src': ['self', 'https://va.vercel-scripts.com']
 			}
 		},
 		alias: {

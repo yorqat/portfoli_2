@@ -20,6 +20,19 @@ export const SITE = {
 	lang: 'en',
 
 	/**
+	 * TODO: replace both of these. The address is the only one that existed in
+	 * the repo and reads like a feedback inbox; the date is a placeholder.
+	 */
+	contactEmail: 'feedback+dev.yorqat@gmail.com',
+	availability: 'Available from [add date]',
+
+	/**
+	 * Stated plainly so self-initiated work is never mistaken for client or
+	 * employment work.
+	 */
+	workContext: 'All projects here are self-initiated. No client, no team.',
+
+	/**
 	 * Fallback for routes that set no title of their own. Page-level titles win:
 	 * Svelte renders the page's `<svelte:head>` before the layout's, and both
 	 * browsers and crawlers read the first occurrence.
@@ -29,8 +42,16 @@ export const SITE = {
 	social: {
 		x: '@yorqat',
 		linkedin: 'https://www.linkedin.com/in/yorqat/',
-		github: 'https://github.com/yorqat'
+		github: 'https://github.com/yorqat',
+		dribbble: 'https://dribbble.com/yorqat'
 	}
+} as const
+
+/** Primary and secondary role, stated so a visitor can place me without guessing. */
+export const ROLE = {
+	primary: 'design engineer',
+	secondary: 'interface design',
+	level: 'junior'
 } as const
 
 /** Every card is generated at this size by `scripts/generate-og.mjs`. */
