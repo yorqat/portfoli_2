@@ -245,8 +245,8 @@ async function main() {
 		const badge = await faceBadge(360, face)
 		const { svg } = textLayer({
 			eyebrow: 'Yor Qat',
-			title: 'I make UX you can feel in your bones',
-			subtitle: 'Portfolio — interface design and front-end engineering.',
+			title: 'Designing end to end with agentic, modern tooling',
+			subtitle: 'Portfolio.',
 			fonts: styles,
 			maxWidth: 700,
 			x: 72,
