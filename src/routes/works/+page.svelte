@@ -53,19 +53,16 @@
 
 	import { page } from '$app/state'
 	import type { Project } from '$lib/content/works/types'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { OG, SITE } from '$lib/site'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Works',
-		description:
-			'Selected interface design and front-end engineering work by Yor Qat — design systems, data-driven UI, and interactive tools.',
-		path: '/works',
-		image: OG.works
-	})}
-</svelte:head>
+<Seo
+	title="Works"
+	description="Selected interface design and front-end engineering work by Yor Qat — design systems, data-driven UI, and interactive tools."
+	path="/works"
+	image={OG.works}
+/>
 
 <div
 	data-prefers-color-scheme

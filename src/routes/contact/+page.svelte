@@ -4,18 +4,16 @@
 
 	import NavBar from '$lib/NavBar.svelte'
 	import Footer from '$lib/content/Footer.svelte'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { SITE, ROLE, OG } from '$lib/site'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Contact',
-		description: `Get in touch with ${SITE.name} about ${ROLE.level} ${ROLE.primary} work.`,
-		path: '/contact',
-		image: OG.default
-	})}
-</svelte:head>
+<Seo
+	title="Contact"
+	description={`Get in touch with ${SITE.name} about ${ROLE.level} ${ROLE.primary} work.`}
+	path="/contact"
+	image={OG.default}
+/>
 
 <div
 	class="base scroll-scheme"

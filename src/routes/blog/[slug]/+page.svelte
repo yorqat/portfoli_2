@@ -7,7 +7,7 @@
 	import type { Post } from '$lib/content/blogs/types'
 
 	import { page } from '$app/state'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { SITE, OG, absolute, postCard } from '$lib/site'
 
 	export let data: {
@@ -32,39 +32,37 @@
 	const published = new Date(data.metadata.date).toISOString().slice(0, 10)
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title,
+<Seo
+	{title}
+	{description}
+	path={canonical}
+	image={card}
+	imageAlt={`${title} — ${SITE.name}`}
+	type="article"
+	jsonLd={{
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		headline: title,
 		description,
-		path: canonical,
-		image: card,
-		imageAlt: `${title} — ${SITE.name}`,
-		type: 'article',
-		jsonLd: {
-			'@context': 'https://schema.org',
-			'@type': 'BlogPosting',
-			headline: title,
-			description,
-			mainEntityOfPage: { '@type': 'WebPage', '@id': absolute(canonical) },
-			url: absolute(canonical),
-			image: {
-				'@type': 'ImageObject',
-				url: absolute(card),
-				width: OG.width,
-				height: OG.height
-			},
-			datePublished: published,
-			dateModified: published,
-			inLanguage: SITE.lang,
-			author: { '@type': 'Person', name: data.metadata.author ?? SITE.name },
-			publisher: {
-				'@type': 'Organization',
-				name: SITE.name,
-				logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
-			}
+		mainEntityOfPage: { '@type': 'WebPage', '@id': absolute(canonical) },
+		url: absolute(canonical),
+		image: {
+			'@type': 'ImageObject',
+			url: absolute(card),
+			width: OG.width,
+			height: OG.height
+		},
+		datePublished: published,
+		dateModified: published,
+		inLanguage: SITE.lang,
+		author: { '@type': 'Person', name: data.metadata.author ?? SITE.name },
+		publisher: {
+			'@type': 'Organization',
+			name: SITE.name,
+			logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
 		}
-	})}
-</svelte:head>
+	}}
+/>
 
 <BlogLayout>
 	{#snippet content()}

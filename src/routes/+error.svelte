@@ -1,15 +1,9 @@
 <script>
 	import { page } from '$app/state'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Page not found',
-		description: 'That page does not exist.',
-		noindex: true
-	})}
-</svelte:head>
+<Seo title="Page not found" description="That page does not exist." noindex />
 
 <main id="error" class="base">
 	<h1>404</h1>

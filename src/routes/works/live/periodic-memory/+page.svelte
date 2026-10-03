@@ -4,7 +4,7 @@
 
 	import RangeSlider from '$lib/periodic-memory/range_slider.svelte'
 	import QuizOptions from '$lib/periodic-memory/quiz-options.svelte'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 
 	const result = Papa.parse(raw, {
 		header: true,
@@ -42,14 +42,11 @@
 	// function onClick(e, atomicNumber) {}
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Periodic Memory',
-		description:
-			'An interactive periodic table that tests recall — hover an element to reveal it, then prove what you remember in a quiz.',
-		path: '/works/live/periodic-memory'
-	})}
-</svelte:head>
+<Seo
+	title="Periodic Memory"
+	description="An interactive periodic table that tests recall — hover an element to reveal it, then prove what you remember in a quiz."
+	path="/works/live/periodic-memory"
+/>
 
 <div class="periodic-reviewer">
 	<main class="quiz-options">

@@ -5,7 +5,7 @@
 
 	import { getTheme } from '$lib/theming'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { contextMenu } from '$lib/content/works/ui-kitten/editor/contextMenu'
 	import type {
 		ComponentView,
@@ -434,20 +434,12 @@
 	import colours from './libraries/colours'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'KIT•10 — scale your UX',
-		description:
-			'An axes-based, data-driven UI and UX editor that scales with seamless developer handoff.',
-		path: '/works/live/ui-kitten',
-		type: 'article'
-	})}
-
-	<link
-		rel="stylesheet"
-		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-	/>
-</svelte:head>
+<Seo
+	title="KIT•10 — scale your UX"
+	description="An axes-based, data-driven UI and UX editor that scales with seamless developer handoff."
+	path="/works/live/ui-kitten"
+	type="article"
+/>
 
 <div id="ui-kitten" data-prefers-color-scheme data-compel-color-scheme={getTheme()}>
 	<ContextMenu />

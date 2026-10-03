@@ -2,16 +2,10 @@
 	import { page } from '$app/state'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { theme } from '$lib/theming'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Privacy Policy',
-		description: 'How this portfolio handles your data.',
-		path: '/privacy'
-	})}
-</svelte:head>
+<Seo title="Privacy Policy" description="How this portfolio handles your data." path="/privacy" />
 
 <div
 	class="base"

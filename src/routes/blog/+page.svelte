@@ -3,7 +3,7 @@
 	import { getReducedMotion } from '$lib/reduced-motion'
 
 	import type { Post, BlogPosting } from '$lib/content/blogs/types'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { SITE, OG, absolute, postCard } from '$lib/site'
 
 	import NavBar from '$lib/NavBar.svelte'
@@ -33,29 +33,27 @@
 	}))
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Blog',
+<Seo
+	title="Blog"
+	{description}
+	path="/blog"
+	image={OG.blog}
+	imageAlt={`Blog by ${SITE.name}`}
+	jsonLd={{
+		'@context': 'https://schema.org',
+		'@type': 'Blog',
+		name: `Yor Qat Blog`,
 		description,
-		path: '/blog',
-		image: OG.blog,
-		imageAlt: `Blog by ${SITE.name}`,
-		jsonLd: {
-			'@context': 'https://schema.org',
-			'@type': 'Blog',
-			name: `Yor Qat Blog`,
-			description,
-			url: absolute('/blog'),
-			inLanguage: SITE.lang,
-			publisher: {
-				'@type': 'Organization',
-				name: SITE.name,
-				logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
-			},
-			blogPost: blogPosts
-		}
-	})}
-</svelte:head>
+		url: absolute('/blog'),
+		inLanguage: SITE.lang,
+		publisher: {
+			'@type': 'Organization',
+			name: SITE.name,
+			logo: { '@type': 'ImageObject', url: absolute('/favicon.svg') }
+		},
+		blogPost: blogPosts
+	}}
+/>
 
 <div
 	id="blogs"

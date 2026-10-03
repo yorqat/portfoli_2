@@ -2,16 +2,14 @@
 	import { page } from '$app/state'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { theme } from '$lib/theming'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Terms of Use',
-		description: 'The terms that apply to using this portfolio.',
-		path: '/terms'
-	})}
-</svelte:head>
+<Seo
+	title="Terms of Use"
+	description="The terms that apply to using this portfolio."
+	path="/terms"
+/>
 
 <div
 	class="base"

@@ -10,7 +10,7 @@
 	import NavBar from '$lib/NavBar.svelte'
 	import Footer from '$lib/content/Footer.svelte'
 	import Marquee from '$lib/components/Marquee.svelte'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 	import { OG, SITE, ROLE, absolute } from '$lib/site'
 
 	import pfp from '$lib/content/blogs/posts/cropped-pfp.png'
@@ -54,32 +54,29 @@
 	})
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Smile at Yor Qat',
-		bareTitle: true,
-		description:
-			'I make UX you can feel in your bones and back up with numbers. Hi, I’m Yor Qat — interface designer and front-end engineer.',
-		path: '/lounge',
-		image: OG.lounge,
-		imageAlt: 'Yor Qat, interface designer and front-end engineer',
-		type: 'profile',
-		jsonLd: {
-			'@context': 'https://schema.org',
-			'@type': 'Person',
-			name: SITE.name,
-			url: absolute('/lounge'),
-			image: absolute(OG.lounge),
-			jobTitle: 'Interface designer & front-end engineer',
-			description: SITE.tagline,
-			sameAs: [
-				SITE.social.linkedin,
-				SITE.social.github,
-				`https://x.com/${SITE.social.x.replace('@', '')}`
-			]
-		}
-	})}
-</svelte:head>
+<Seo
+	title="Smile at Yor Qat"
+	bareTitle
+	description="I make UX you can feel in your bones and back up with numbers. Hi, I’m Yor Qat — interface designer and front-end engineer."
+	path="/lounge"
+	image={OG.lounge}
+	imageAlt="Yor Qat, interface designer and front-end engineer"
+	type="profile"
+	jsonLd={{
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		name: SITE.name,
+		url: absolute('/lounge'),
+		image: absolute(OG.lounge),
+		jobTitle: 'Interface designer & front-end engineer',
+		description: SITE.tagline,
+		sameAs: [
+			SITE.social.linkedin,
+			SITE.social.github,
+			`https://x.com/${SITE.social.x.replace('@', '')}`
+		]
+	}}
+/>
 
 {#snippet Heading3D(heading: string)}
 	<div class="section__header--3d corsette" aria-label={heading}>

@@ -5,16 +5,10 @@
 	import { getTheme } from '$lib/theming'
 	import { getReducedMotion } from '$lib/reduced-motion'
 	import SpinButtonNumerical from '$lib/periodic-memory/spin-button-numerical.svelte'
-	import { Seo } from '$lib/components/Seo.svelte'
+	import Seo from '$lib/components/Seo.svelte'
 </script>
 
-<svelte:head>
-	{@render Seo({
-		title: 'Page not found',
-		description: 'That page does not exist.',
-		noindex: true
-	})}
-</svelte:head>
+<Seo title="Page not found" description="That page does not exist." noindex />
 
 <div
 	id="error"
