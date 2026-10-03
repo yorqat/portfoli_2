@@ -177,52 +177,36 @@
 		margin-bottom: $x-space-lg;
 		padding-inline: $x-space-sm;
 
-		@include fonts-stack('Satoshi-Bold', sans);
+		@include fonts-stack('Satoshi-Light', sans);
 		@include fonts-alternate-style();
 
 		.quiet-text {
 			color: var(--color-text-muted);
+		}
 
-			@include fonts-stack('Satoshi-Light', sans);
+		.super-text {
+			@include fonts-stack('Satoshi-Bold', sans);
 			@include fonts-alternate-style();
 		}
 
 		@include layout-respond-max('md') {
 			font-size: $x-font-size-2xl;
 			line-height: 140%;
-
-			.super-text {
-				font-size: $x-font-size-4xl;
-			}
 		}
 
 		@include layout-respond('md') {
 			font-size: $x-font-size-4xl;
 			line-height: 125%;
-
-			.super-text {
-				font-size: $x-font-size-6xl;
-			}
 		}
 
 		@include layout-respond('lg') {
 			font-size: $x-font-size-6xl;
 			line-height: 115%;
-
-			.super-text {
-				font-size: $x-font-size-8xl;
-			}
 		}
 
 		@include layout-respond('xl') {
 			line-height: 125%;
 			max-width: 20ch;
-		}
-
-		.super-text {
-			vertical-align: middle;
-			@include fonts-stack('Satoshi-Light', sans);
-			@include fonts-alternate-style();
 		}
 	}
 
