@@ -1,13 +1,12 @@
 /**
- * Sources for factual claims made across the site.
+ * Sources for the figures quoted in page copy.
  *
- * Every entry here was opened and read before it was added. A claim that cannot
- * be traced to a source in this file does not belong on the site as a fact.
+ * These record where a number came from. Several are sources that later
+ * disowned the figure they are best known for, so read the entry before
+ * repeating the claim as fact.
  *
- * Cite from a Svelte page with `<Cite n={0} />` and render the list with
- * `<References />`. Markdown posts under `blogs/posts` cannot use either, so
- * they carry their own sources inline; keep any new post honest by either
- * citing a source here in prose or not making the claim as fact.
+ * Cite with `<Cite n={0} />` next to the claim, then render the list once
+ * per page with `<References only={[...]} />`.
  */
 export type Reference = {
 	/** Rendered as the `[n]` marker and used as the list anchor `#ref-n`. */
@@ -20,10 +19,7 @@ export type Reference = {
 	year?: number
 	/** Omitted only where no stable public link exists. */
 	url?: string
-	/**
-	 * Why this source is here. Several entries exist to show that a widely
-	 * repeated claim is *not* supported, so the caveat is the point.
-	 */
+	/** One clause. Anything longer belongs in the page copy. */
 	note?: string
 }
 
@@ -35,7 +31,7 @@ export const references: Reference[] = [
 		source: 'Insivia',
 		year: 2020,
 		url: 'https://www.insivia.com/why-does-video-convert-better-than-text/',
-		note: 'Origin of the 95%/10% figure. In this article the company states it came from an internal survey of roughly 200 B2B buyers, that the percentages were "directional", and that it was "not a peer-reviewed neuroscience study".'
+		note: 'Origin of the figure; the authors later described it as directional.'
 	},
 	{
 		id: 1,
@@ -43,7 +39,7 @@ export const references: Reference[] = [
 		title: 'Audio-Visual Methods in Teaching',
 		source: 'Audio-Visual Methods in Teaching, 1st edition',
 		year: 1946,
-		note: 'Contains the Cone of Experience, a ranked set of teaching methods. Dale assigned it no percentages; the retention ladder attached to it later was added by training vendors without attribution.'
+		note: 'Source of the Cone of Experience, which carries no percentages.'
 	},
 	{
 		id: 2,
@@ -51,26 +47,25 @@ export const references: Reference[] = [
 		title: 'Pictorial superiority effect',
 		source: 'Journal of Experimental Psychology: Human Learning and Memory, 2(5), 523–528',
 		year: 1976,
-		url: 'https://doi.org/10.1037/0278-7393.2.5.523',
-		note: 'The peer-reviewed basis for the real effect hiding underneath the video claim: recall for pictorial material tends to beat recall for verbal material.'
+		url: 'https://doi.org/10.1037/0278-7393.2.5.523'
 	},
 	{
 		id: 3,
-		label: 'TheLadders, 2012',
+		label: 'The Ladders, 2012',
 		title: 'Eye Tracking Study: Keeping an Eye on Recruiter Behavior',
 		source: 'TheLadders whitepaper',
 		year: 2012,
 		url: 'https://www.bu.edu/com/files/2018/10/TheLadders-EyeTracking-StudyC2.pdf',
-		note: 'Origin of the "six seconds" figure. Measured resumes rather than portfolios, with 30 recruiters over 10 weeks, and published by a company selling a resume-writing service.'
+		note: 'Origin of the six-second figure, measured on resumes.'
 	},
 	{
 		id: 4,
-		label: 'TheLadders, 2018',
+		label: 'The Ladders, 2018',
 		title: 'Eye-Tracking Study, 2018 update',
 		source: 'TheLadders press release',
 		year: 2018,
 		url: 'https://www.prnewswire.com/news-releases/ladders-updates-popular-recruiter-eye-tracking-study-with-new-key-insights-on-how-job-seekers-can-improve-their-resumes-300744217.html',
-		note: 'Supersedes the 2012 figure with an average of 7.4 seconds. The release publishes no sample size at all.'
+		note: 'Supersedes the 2012 figure with 7.4 seconds.'
 	},
 	{
 		id: 5,
@@ -80,6 +75,6 @@ export const references: Reference[] = [
 		source: 'Machine Learning and Knowledge Extraction, 5(3), 713–724',
 		year: 2023,
 		url: 'https://doi.org/10.3390/make5030038',
-		note: 'Peer-reviewed eye-tracking study, 221 recruiters and 2,043 resume views. Notably it reports no screening duration whatsoever, only which regions of the page predicted a decision.'
+		note: 'Peer-reviewed; reports no screening duration.'
 	}
 ]

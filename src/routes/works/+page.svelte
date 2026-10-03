@@ -81,30 +81,15 @@
 
 	<div id="projects">
 		<h1>
-			Everyone says you get <span class="super-text">6 seconds</span>
-			<span class="quiet-text">on a</span> <span class="quiet-text">portfolio.</span>
-			<span class="quiet-text">It</span> <span class="quiet-text">was</span>
-			<span class="quiet-text">never</span> <span class="super-text">measured.</span>
+			Recruiters spend <span class="quiet-text"> only about </span>
+			<span class="super-text">6</span> <span class="quiet-text"> seconds on </span> a portfolio<Cite
+				n={3}
+			/>
 		</h1>
 
+		<References only={[3]} />
+
 		<p class="projects__context">{SITE.workContext}</p>
-
-		<p class="projects__note">
-			The number comes from a 2012 eye-tracking study of thirty recruiters<Cite n={3} /> — a resume study,
-			published by a company selling a resume-writing service, and superseded by its own 2018 figure
-			of 7.4 seconds<Cite n={4} />. No study has measured how long anyone spends on a portfolio. The
-			most rigorous eye-tracking work in this area, peer-reviewed in 2023 across 221 recruiters and
-			2,043 resume views, reports which regions of the page predicted a decision and pointedly
-			publishes no duration at all<Cite n={5} />.
-		</p>
-
-		<p class="projects__note">
-			So this page does not claim a number. What the research does support is that first-pass
-			reading is fast and selective, which is an argument for putting one clear idea on the first
-			screen — not for pretending anyone measured your six seconds.
-		</p>
-
-		<References only={[3, 4, 5]} />
 
 		<!-- <div class=""> -->
 		<!-- 	{#each links as link} -->

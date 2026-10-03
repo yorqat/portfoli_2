@@ -20,27 +20,24 @@
 		<ol>
 			{#each shown as reference (reference.id)}
 				<li id="ref-{reference.id}">
-					<span class="references__marker"><sub>[{reference.id}]</sub></span>
-					<span class="references__body">
-						<span class="references__label">{reference.label}.</span>
-						<span class="references__title">{reference.title}.</span>
-						<span class="references__source"
-							>{reference.source}{reference.year ? `, ${reference.year}` : ''}.</span
+					<span class="references__label">{reference.label}.</span>
+					<span class="references__title">{reference.title}.</span>
+					<span class="references__source"
+						>{reference.source}{reference.year ? `, ${reference.year}` : ''}.</span
+					>
+					{#if reference.url}
+						<a
+							class="references__link"
+							href={reference.url}
+							target="_blank"
+							rel="noreferrer noopener"
 						>
-						{#if reference.url}
-							<a
-								class="references__link"
-								href={reference.url}
-								target="_blank"
-								rel="noreferrer noopener"
-							>
-								Source
-							</a>
-						{/if}
-						{#if reference.note}
-							<span class="references__note">{reference.note}</span>
-						{/if}
-					</span>
+							Source
+						</a>
+					{/if}
+					{#if reference.note}
+						<span class="references__note">{reference.note}</span>
+					{/if}
 				</li>
 			{/each}
 		</ol>
@@ -67,24 +64,11 @@
 
 		li {
 			display: flex;
-			gap: $x-space-xs;
+			flex-wrap: wrap;
+			gap: 0 $x-space-xs;
 			font-size: $x-font-size-sm;
 			line-height: 140%;
 		}
-	}
-
-	.references__marker {
-		flex-shrink: 0;
-		font-variant-numeric: tabular-nums;
-
-		sub {
-			font-size: 0.7em;
-			line-height: 0;
-		}
-	}
-
-	.references__body {
-		display: block;
 	}
 
 	.references__label {
