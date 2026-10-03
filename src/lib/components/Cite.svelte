@@ -25,11 +25,10 @@
 			target="_blank"
 			rel="noreferrer noopener"
 		>
-			[{reference.label}]{#if reference.note}<span class="cite__note">{reference.note}</span
-				>{/if}</a
+			{reference.label}{#if reference.note}<span class="cite__note">{reference.note}</span>{/if}</a
 		>
 	{:else}
-		<span class="cite">[{reference.label}]</span>
+		<span class="cite">{reference.label}</span>
 	{/if}
 {/if}
 
@@ -41,8 +40,11 @@
 		text-decoration: none;
 		font-size: $x-font-size-md;
 		vertical-align: baseline;
+		transform: translateY($x-space-xs);
 		color: var(--color-text-muted);
 
+		@include fonts-stack('Satoshi-Light', sans);
+		@include fonts-alternate-style();
 		@include a11y-focus-ring-styles();
 
 		&:hover,
