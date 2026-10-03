@@ -145,10 +145,7 @@
 			</div>
 
 			<div class="hero__showcase">
-				<h2 class="hero__intro">
-					I build interfaces and the design systems behind them. Now, looking for a new team to cook
-					with
-				</h2>
+				<h2 class="hero__intro">I build Interfaces and their Design Systems</h2>
 
 				<div class="profile-picture">
 					<img class="profile-picture__img" sizes="400px" src={pfp} alt="yor's profile" />
