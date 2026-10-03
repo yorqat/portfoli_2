@@ -176,7 +176,7 @@
 		margin-top: $x-space-lg;
 		margin-bottom: $x-space-lg;
 		padding-inline: $x-space-sm;
-		line-height: 80%;
+		line-height: 85%;
 
 		@include fonts-stack('Satoshi-Light', sans);
 		@include fonts-alternate-style();
