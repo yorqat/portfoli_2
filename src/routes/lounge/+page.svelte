@@ -146,8 +146,8 @@
 
 			<div class="hero__showcase">
 				<h2 class="hero__intro">
-					I build interfaces and the design systems behind them — currently self-initiated, and
-					looking for a team to learn inside.
+					I build interfaces and the design systems behind them. Now, looking for a new team to cook
+					with
 				</h2>
 
 				<div class="profile-picture">
