@@ -122,12 +122,12 @@
 
 	$custom-light-theme: (
 		bg: $x-gray-50,
-		surface: #ff9499
+		surface: #26dcae
 	);
 
 	$custom-dark-theme: (
 		bg: #0f0f0f,
-		surface: #511723,
+		surface: #1b5d62,
 		surface-alt: #212121,
 		text: #eaeaea
 	);
