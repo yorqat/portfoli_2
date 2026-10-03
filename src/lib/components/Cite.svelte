@@ -41,9 +41,13 @@
 		text-decoration: none;
 		font-size: $x-font-size-md;
 		vertical-align: baseline;
+		color: var(--color-text-muted);
+
+		@include a11y-focus-ring-styles();
 
 		&:hover,
 		&:focus-visible {
+			color: var(--color-text);
 			text-decoration: underline;
 		}
 	}
