@@ -16,6 +16,10 @@
 		})
 	})
 
+	onNavigate(() => {
+		toggle = false
+	})
+
 	import { page } from '$app/state'
 
 	import { onUnfocus } from '$lib/actions'
@@ -37,16 +41,24 @@
 
 	const { tagViewTransition = true, extraChapters }: NavBarProps = $props()
 
+	let headerEl = $state<HTMLElement | null>(null)
+
 	$effect(() => {
+		/* Scoped to this header on purpose. A bare '.nav__link' selector also
+		   matches the lounge's own nav links, so SplitText was reaching across
+		   components and splitting markup it does not own. */
+		const targets = headerEl?.querySelectorAll('.nav__link')
+		if (!targets?.length) return
+
 		gsap.registerPlugin(SplitText)
 
-		let tl = gsap.timeline()
-
-		let splitLinks = SplitText.create('.nav__link', {
+		const splitLinks = SplitText.create(targets, {
 			type: 'chars,words',
 			mask: 'lines', // <-- this can be "lines" or "words" or "chars"
 			autoSplit: true
 		})
+
+		const tl = gsap.timeline()
 
 		tl.from(splitLinks.chars, {
 			duration,
@@ -55,15 +67,23 @@
 			transformOrigin: '50% 50% -20',
 			ease: 'back.out(1.7)'
 		})
+
+		/* The header is re-created on every navigation by the {#key} below, so
+		   without this the wrappers and the timeline accumulated one set per
+		   route. */
+		return () => {
+			tl.kill()
+			splitLinks.revert()
+		}
 	})
 </script>
 
 {#key page.url.pathname}
 	<header
+		bind:this={headerEl}
 		data-extra-chapters={extraChapters !== undefined}
 		class="nav-bar no-default"
 		use:onUnfocus={() => (toggle = false)}
-		onclick={() => (toggle = false)}
 	>
 		<div class="logo">
 			<a class="logo__icon" href="/lounge">
@@ -80,7 +100,7 @@
 		<div class="nothing"></div>
 
 		<details bind:open={toggle} style="display: contents;" class="nav-toggle-container expand">
-			<summary class="nav-toggle">
+			<summary class="nav-toggle" aria-label="Menu">
 				<span class="material-symbols-outlined"> </span>
 			</summary>
 
@@ -236,7 +256,11 @@
 			grid-template-rows 0.4s ease,
 			grid-row-gap 0.4s ease;
 
-		@include layout-respond-max('md') {
+		/* Paired with the 'lg' block below: the burger only disappears at 'lg',
+		   so the collapsed layout has to persist up to the same width. Scoping
+		   this to 'md' left 768-1023px with no rule at all, which rendered the
+		   burger and both nav lists at once. */
+		@include layout-respond-max('lg') {
 			grid-row-gap: $x-space-6;
 			.desktop {
 				display: none;
@@ -316,7 +340,6 @@
 			.nav-links {
 				grid-area: 1 / 2 / 2 / 4;
 				justify-content: flex-end;
-				display: flex !important;
 				align-items: center;
 				height: 100%;
 				flex-direction: row;
@@ -327,11 +350,7 @@
 					text-align: right;
 					flex-grow: unset;
 				}
-			}
-		}
 
-		@include layout-respond('lg') {
-			.nav-links {
 				a {
 					padding-inline: $x-space-6;
 				}

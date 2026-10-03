@@ -21,7 +21,10 @@ export const animateLoungeElements = () => {
 		effects: true
 	})
 
-	let splitLinks = SplitText.create('.nav__link', {
+	/* Scoped to the hero nav on purpose. A bare '.nav__link' also matches the
+	   navbar's own links, so this split the navbar's markup as well and both
+	   effects animated the same characters. */
+	let splitLinks = SplitText.create('.hero__nav .nav__link', {
 		type: 'chars,words',
 		autoSplit: true,
 		mask: 'lines' // <-- this can be "lines" or "words" or "chars"
