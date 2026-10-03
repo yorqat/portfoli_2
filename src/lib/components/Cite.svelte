@@ -39,7 +39,7 @@
 	.cite {
 		white-space: nowrap;
 		text-decoration: none;
-		font-size: 0.7em;
+		font-size: $x-font-size-md;
 		vertical-align: baseline;
 
 		&:hover,
