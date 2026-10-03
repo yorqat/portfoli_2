@@ -1,9 +1,9 @@
 ---
 title: This Design Hated Its Users, So I Made It Care
-seoTitle: 'UX Case Study: Redesigning a Website to Improve User Experience'
+seoTitle: 'UX Teardown: Why a Cluttered Site Breaks the People Using It'
 
-description: Is this an inevitable clash of Artistic expression and Design intention? I'm here to prove you can have both
-seoDescription: A UX case study exploring a website redesign. Learn how fixing usability issues and design flaws improved accessibility and user satisfaction
+description: Is this an inevitable clash of artistic expression and design intention? I think you can have both
+seoDescription: A self-initiated UX teardown of a cluttered university site — what breaks navigation, contrast and legibility, and what a clearer rebuild would change.
 
 thumbnailHeroCaption: Delinquet children
 
@@ -13,7 +13,6 @@ tags:
   - type:case-study
   - type:redesign
   - topic:ux
-  - audience:for-clients
   - audience:for-designers
 ---
 
@@ -41,7 +40,7 @@ The problem wasn't chaos; it was control. The creator(s) imposed meaning, demand
 
 ## UX Goals
 
-- Restore user trust by making the interface predictable, responsive, and clear
+- Make the interface predictable, responsive, and clear
 - Preserve the artistic voice without letting it sabotage usability
 - Create an experience that feels intentional and navigable
 - Reframe creativity as a form of care, not control

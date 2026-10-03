@@ -37,7 +37,7 @@ Here’s how to implement dark mode correctly, taking advantage of Svelte + Kit'
 
 ## The Problem
 
-Most sites today:
+A common pattern:
 
 - Ignores system preference `prefers-color-scheme`.
 - Apply dark mode only after JavaScript loads causing a flash of white screen ([FOUC][FOUC]) before switching to dark.

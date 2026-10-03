@@ -1,7 +1,7 @@
 ---
 title: GSAP library is too useful to be free!
 seoTitle: 'GSAP Tips and Tricks for Web Animations'
-description: GSAP is the most powerful JavaScript animation library around. Here’s why it feels criminal that it’s free—and how to get the most out of it.
+description: GSAP is the animation library I reach for most, and it’s free. Here’s why that feels criminal—and how to get the most out of it.
 seoDescription: Learn GSAP tips and tricks to supercharge your animations. Discover why GSAP feels too good to be free and how to use it effectively in your projects.
 thumbnailHeroCaption: Animations that don’t just move—they breathe
 author: Yor Qat
