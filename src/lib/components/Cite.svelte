@@ -39,6 +39,7 @@
 		white-space: nowrap;
 		text-decoration: none;
 		font-size: $x-font-size-md;
+		margin-inline-start: $x-space-base;
 		vertical-align: baseline;
 		transform: translateY($x-space-xs);
 		color: var(--color-text-muted);

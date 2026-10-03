@@ -176,6 +176,7 @@
 		margin-top: $x-space-lg;
 		margin-bottom: $x-space-lg;
 		padding-inline: $x-space-sm;
+		line-height: 80%;
 
 		@include fonts-stack('Satoshi-Light', sans);
 		@include fonts-alternate-style();
@@ -191,21 +192,17 @@
 
 		@include layout-respond-max('md') {
 			font-size: $x-font-size-2xl;
-			line-height: 140%;
 		}
 
 		@include layout-respond('md') {
 			font-size: $x-font-size-4xl;
-			line-height: 125%;
 		}
 
 		@include layout-respond('lg') {
 			font-size: $x-font-size-6xl;
-			line-height: 115%;
 		}
 
 		@include layout-respond('xl') {
-			line-height: 125%;
 			max-width: 20ch;
 		}
 	}
