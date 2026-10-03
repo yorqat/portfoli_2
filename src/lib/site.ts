@@ -12,9 +12,9 @@ export const SITE = {
 	name: 'Yor Qat',
 	/** Appended as " — Yor Qat" to page titles that set their own. */
 	titleSuffix: 'Yor Qat',
-	tagline: 'I make UX you can feel in your bones and back up with numbers.',
+	tagline: 'Designing end to end with agentic, modern tooling',
 	description:
-		'I’m Yor Qat, an interface designer and front-end engineer building products that ship, scale, and serve real users.',
+		'I’m Yor Qat, an interface designer and front-end engineer building products that compel your audience',
 
 	locale: 'en_GB',
 	lang: 'en',
@@ -23,14 +23,14 @@ export const SITE = {
 	 * TODO: replace both of these. The address is the only one that existed in
 	 * the repo and reads like a feedback inbox; the date is a placeholder.
 	 */
-	contactEmail: 'feedback+dev.yorqat@gmail.com',
-	availability: 'Available from [add date]',
+	contactEmail: 'now+dev.yorqat@gmail.com',
+	availability: 'Available during GMT+8',
 
 	/**
 	 * Stated plainly so self-initiated work is never mistaken for client or
 	 * employment work.
 	 */
-	workContext: 'All projects here are self-initiated. No client, no team.',
+	workContext: 'All projects here are self-initiated.',
 
 	/**
 	 * Fallback for routes that set no title of their own. Page-level titles win:

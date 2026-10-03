@@ -57,7 +57,7 @@
 <Seo
 	title="Smile at Yor Qat"
 	bareTitle
-	description="I make UX you can feel in your bones and back up with numbers. Hi, I’m Yor Qat — interface designer and front-end engineer."
+	description={SITE.description}
 	path="/lounge"
 	image={OG.lounge}
 	imageAlt="Yor Qat, interface designer and front-end engineer"
