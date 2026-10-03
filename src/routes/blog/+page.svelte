@@ -8,6 +8,7 @@
 
 	import NavBar from '$lib/NavBar.svelte'
 	import Footer from '$lib/content/Footer.svelte'
+	import Cite from '$lib/components/Cite.svelte'
 	import { posts } from '$lib/content/blogs/indexPosts'
 
 	import '@material-symbols/font-400'
@@ -73,7 +74,7 @@
 			<h1>
 				<span class="super-text">55%</span> <span class="quiet-text">of readers</span> skim
 				<span class="quiet-text">rather</span>
-				than read <span class="quiet-text">every word.</span>
+				than read <span class="quiet-text">every word.</span><Cite n={6} />
 			</h1>
 
 			<div class="blogs">

@@ -76,5 +76,14 @@ export const references: Reference[] = [
 		year: 2023,
 		url: 'https://doi.org/10.3390/make5030038',
 		note: 'Peer-reviewed; reports no screening duration.'
+	},
+	{
+		id: 6,
+		label: 'Chartbeat, 2012',
+		title: 'The Attention Economy',
+		source: 'Chartbeat',
+		year: 2012,
+		url: 'https://heidicohen.com/content-traffic-research/',
+		note: 'Cited via a secondary write-up; the original report is offline. The study measured page attention, not skimming.'
 	}
 ]
