@@ -100,7 +100,7 @@ $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 	$min-size: map.get(v.$breakpoints, $min);
 	$max-size: map.get(v.$breakpoints, $max);
 	@if $min-size and $max-size {
-		@media (min-width: $min-size) and (max-width: $max-size) {
+		@media (min-width: $min-size) and (max-width: $max-size - 0.02px) {
 			@content;
 		}
 	} @else {
@@ -108,11 +108,16 @@ $full-viewport-height-guaranteed: 100svh; // Smallest guaranteed visible height
 	}
 }
 
+/* Exclusive upper bound. `max-width: $size` and the matching
+   `respond($breakpoint)` (`min-width: $size`) both match at exactly $size,
+   so the pair cascaded into a hybrid of the two blocks on a one-pixel
+   boundary. Subtracting a hair keeps the two halves disjoint and makes the
+   usual mobile-first `-max` / min pair a clean partition of the range. */
 @mixin respond-max($breakpoint) {
 	$size: map.get(v.$breakpoints, $breakpoint);
 
 	@if $size {
-		@media (max-width: $size) {
+		@media (max-width: $size - 0.02px) {
 			@content;
 		}
 	} @else {

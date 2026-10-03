@@ -442,10 +442,10 @@
 			}
 		}
 
-		@include layout-respond('xl') {
-			gap: $x-space-md;
-		}
-
+		/* No `xl` step: it set gap back to $x-space-md, the only value in this
+		   file that shrank as the viewport grew. Font-size also holds at 4xl from
+		   lg through to 2xl, so a gap change here had nothing to track. Restore
+		   this block with $x-space-xl if the nav should keep opening up. */
 		@include layout-respond('2xl') {
 			a {
 				font-size: $x-font-size-6xl;
