@@ -178,8 +178,10 @@
 
 	     The section headers and the CTA have been rewritten: the old ones claimed
 	     outcomes this work cannot support (metrics, user research, a team), which
-	     contradicted SITE.workContext. The notes below them are still the old copy
-	     and three of them are fabricated — see the cuts noted under each section.
+	     contradicted SITE.workContext on the same site. Three fabricated notes were
+	     cut for the same reason — "Tracking impact with funnel data", "Bug report
+	     from a usability session", and a pair of invented Slack handoff snippets.
+	     What remains on slide 4 still leans on team process language; see there.
 
 	     The artwork is undesigned. Two rules for it:
 
@@ -208,7 +210,6 @@
 
 	<!-- GRAPHIC BRIEF — undesigned.
 	     NOTES STILL PENDING: "Fewer form fields", "Clearer primary action".
-	     Cut "Tracking impact with funnel data" — no product, no users, no funnel.
 	     Draw a form collapsing: nine fields grey out and strike through, three
 	     survive, the count ticks 9 to 3, and the primary button gains weight as
 	     the rest fade. Before and after, no metric.
@@ -218,13 +219,11 @@
 		{@render Heading3D('I Cut the Work a User Has To Do')}
 		<p class="section__note">Reduced form fields</p>
 		<p class="section__note">Increased CTA visibility</p>
-		<p class="section__note">Tracking impact with funnel data</p>
 	</section>
 
 	<!-- GRAPHIC BRIEF — undesigned. Keep the morpher; it is the strongest asset on
 	     the page and an honest metaphor, rough resolving into structure.
 	     NOTES STILL PENDING: "Userflow first", "Personas, still rough".
-	     Cut "Bug report from a usability session" — no session happened.
 	     Let the blob become the diagram: morph into three labelled nodes with the
 	     connectors drawn on via DrawSVG as the labels settle. One object,
 	     structure out of nothing.
@@ -235,7 +234,6 @@
 		{@render Heading3D('I Plan Before I Open Figma')}
 		<p class="section__note">Userflow from Miro or Figjam</p>
 		<p class="section__note">Persona Drafts</p>
-		<p class="section__note">Bug report from a usability session</p>
 
 		<div class="morpher-container" aria-hidden="true">
 			<svg
@@ -265,9 +263,11 @@
 	     Proposed header: "I Leave the Work Readable".
 	     NOTES STILL PENDING: "Component docs", "Written rationale in the README",
 	     "Issues I filed and fixed".
-	     Cut the Slack handoff snippets — invented dialogue from a team that does
-	     not exist. Cut "Userflow from Miro or Figjam" (duplicates slide 3) and
-	     "Timeline or roadmap alignment doc" (implies stakeholders).
+	     Cut "Userflow from Miro or Figjam" (verbatim duplicate of slide 3) and
+	     "Timeline or roadmap alignment doc" (implies stakeholders who are not
+	     there). "Jira ticket with latest iteration design attached" is left in
+	     place: solo use of Jira is plausible, but "latest iteration" reads as a
+	     team cycle, so it needs your call.
 	     Draw a git trail as a vertical timeline of real commit messages, with one
 	     token change rippling out to N call sites: one dot lights, eleven update.
 	     That is the actual argument for a design system and it can be
@@ -279,9 +279,6 @@
 	<section class="section section--slide">
 		{@render Heading3D('I Leave the Work Readable')}
 		<p class="section__note">Jira ticket with latest iteration design attached</p>
-		<p class="section__note">
-			Slack Handoff snippets: "Final assets uploaded", "Spec clarified here"
-		</p>
 		<p class="section__note">Userflow from Miro or Figjam</p>
 		<p class="section__note">Timeline or roadmap alignment doc</p>
 	</section>
