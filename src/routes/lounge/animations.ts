@@ -47,6 +47,12 @@ export const animateLoungeElements = () => {
 		`<`
 	)
 
+	/* Reduced motion is never consulted in this module. src/lib/reduced-motion.ts
+	   holds the store and A11y.svelte renders a user-facing toggle, but nothing
+	   here reads either, so that toggle currently has no effect on the lounge.
+	   Gate the timelines below on getReducedMotion() before adding the slide
+	   artwork — four more animated graphics will make this harder to ignore, not
+	   easier. */
 	gsap.utils.toArray<HTMLElement>('.section--slide').forEach((section) => {
 		const header = section.querySelector('.section__header--3d')
 		if (!header) return
@@ -66,6 +72,10 @@ export const animateLoungeElements = () => {
 			ease: 'sine.in'
 		})
 
+		/* The two rendered paths share the same `d`, so this only rotates them.
+		   A real morph set is staged in the commented block below — uncomment it,
+		   or give the paths genuinely different geometry, once the slide 3 artwork
+		   is designed. */
 		const tlMorph = gsap.timeline({
 			repeat: -1,
 			yoyo: true,
