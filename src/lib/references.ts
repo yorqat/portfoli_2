@@ -2,14 +2,14 @@
  * Sources for the figures quoted in page copy.
  *
  * These record where a number came from. Several are sources that later
- * disowned the figure they are best known for, so read the entry before
+ * qualified the figure they are best known for, so read the entry before
  * repeating the claim as fact.
  *
- * Cite with `<Cite n={0} />` next to the claim, then render the list once
- * per page with `<References only={[...]} />`.
+ * Cite with `<Cite n={0} />` directly after the claim. The marker links to
+ * `url` and carries `note` as its tooltip, so no bibliography is rendered.
  */
 export type Reference = {
-	/** Rendered as the `[n]` marker and used as the list anchor `#ref-n`. */
+	/** Stable identifier passed to `<Cite n={...} />`. */
 	id: number
 	/** Short inline label, e.g. `Pina et al., 2023`. */
 	label: string

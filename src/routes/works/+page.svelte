@@ -56,7 +56,6 @@
 	import Seo from '$lib/components/Seo.svelte'
 	import Footer from '$lib/content/Footer.svelte'
 	import Cite from '$lib/components/Cite.svelte'
-	import References from '$lib/components/References.svelte'
 	import { OG, SITE } from '$lib/site'
 </script>
 
@@ -86,8 +85,6 @@
 				n={3}
 			/>
 		</h1>
-
-		<References only={[3]} />
 
 		<p class="projects__context">{SITE.workContext}</p>
 

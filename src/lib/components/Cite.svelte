@@ -17,10 +17,25 @@
 </script>
 
 {#if reference}
-	<a class="cite" href="#ref-{n}">[{reference.label}]</a>
+	{#if reference.url}
+		<a
+			class="cite"
+			href={reference.url}
+			title={reference.note}
+			target="_blank"
+			rel="noreferrer noopener"
+		>
+			[{reference.label}]{#if reference.note}<span class="cite__note">{reference.note}</span
+				>{/if}</a
+		>
+	{:else}
+		<span class="cite">[{reference.label}]</span>
+	{/if}
 {/if}
 
 <style lang="scss">
+	@use '_index' as *;
+
 	.cite {
 		white-space: nowrap;
 		text-decoration: none;
@@ -31,5 +46,9 @@
 		&:focus-visible {
 			text-decoration: underline;
 		}
+	}
+
+	.cite__note {
+		@include a11y-visually-hidden();
 	}
 </style>
