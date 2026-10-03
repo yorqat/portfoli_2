@@ -80,6 +80,9 @@
 
 	.footer-content {
 		display: flex;
+		/* Without wrapping, the three columns and the bottom bar all share one
+		   row and flex shrinks each of them to a fraction of the width. */
+		flex-wrap: wrap;
 		gap: $x-space-md;
 		justify-content: space-around;
 
@@ -87,13 +90,25 @@
 			flex-direction: column;
 		}
 
+		/* Row direction only: in a column flex container flex-basis would resolve
+		   against the height instead of the width. */
+		@include layout-respond('md') {
+			/* Content-sized columns left a 528/128/248 split and could orphan the
+			   third column onto its own centred line, so share the row evenly. */
+			.footer-column {
+				flex: 1 1 0;
+				min-width: 0;
+			}
+
+			.footer-bottom {
+				flex-basis: 100%;
+			}
+		}
+
+		/* Extra wide desktops */
 		@include layout-respond('2xl') {
 			max-width: $x-breakpoint-xl-content;
 			margin-inline: auto;
-
-			> * {
-				flex-basis: 100%;
-			}
 		}
 	}
 
