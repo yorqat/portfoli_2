@@ -54,6 +54,7 @@
 	import { page } from '$app/state'
 	import type { Project } from '$lib/content/works/types'
 	import Seo from '$lib/components/Seo.svelte'
+	import Footer from '$lib/content/Footer.svelte'
 	import { OG, SITE } from '$lib/site'
 </script>
 
@@ -107,11 +108,22 @@
 			{/each}
 		</ul>
 	</div>
+
+	<div class="page-footer">
+		<Footer />
+	</div>
 </div>
 
 <style lang="scss">
 	@use '_index' as *;
 	@use 'content/work/layout' as *;
+
+	/* #work-home is a height-locked flex column, so letting the wrapper take the
+	   slack keeps the footer flush with the bottom instead of leaving a gap beneath.
+	   The wrapper is needed because a child component's root element is not scoped. */
+	.page-footer {
+		margin-top: auto;
+	}
 
 	#projects {
 		background-color: var(--color-bg);

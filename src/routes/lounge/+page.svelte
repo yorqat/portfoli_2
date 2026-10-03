@@ -297,7 +297,7 @@
 		</p>
 	</section>
 
-	<section class="section">
+	<section class="section section--footer">
 		<Footer />
 	</section>
 {/snippet}
@@ -408,6 +408,12 @@
 				padding-inline: $x-space-xxl;
 			}
 		}
+	}
+
+	/* The footer is shorter than a viewport, so the shared 100vh minimum on
+	   .section left a screen of dead space beneath it. */
+	.section--footer {
+		min-height: 0;
 	}
 
 	.nav__list {

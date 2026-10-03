@@ -57,6 +57,19 @@ h1 {
 .blogs-home {
 	overflow-y: auto;
 
+	/* The index scrolls inside .blogs-home rather than on the document, so main
+	   becomes the flex column and the wrapper absorbs the slack. The wrapper is
+	   needed because a child component's root element is not scoped. */
+	> main {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+
+		> .page-footer {
+			margin-top: auto;
+		}
+	}
+
 	@include layout-respond('2xl') {
 		max-width: $x-breakpoint-xl-content;
 		margin-inline: auto;

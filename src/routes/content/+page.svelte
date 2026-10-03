@@ -4,6 +4,7 @@
 
 	import NavBar from '$lib/NavBar.svelte'
 	import Seo from '$lib/components/Seo.svelte'
+	import Footer from '$lib/content/Footer.svelte'
 	import { OG } from '$lib/site'
 </script>
 
@@ -43,10 +44,21 @@
 		<!-- > -->
 		<!-- </iframe> -->
 	</div>
+
+	<div class="page-footer">
+		<Footer />
+	</div>
 </div>
 
 <style lang="scss">
 	@use '_index' as *;
+
+	/* #content-creation is a height-locked flex column, so letting the wrapper take
+	   the slack keeps the footer flush with the bottom instead of leaving a gap
+	   beneath. The wrapper is needed because a child component's root is not scoped. */
+	.page-footer {
+		margin-top: auto;
+	}
 
 	h1 {
 		margin-top: $x-space-lg;

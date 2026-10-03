@@ -7,6 +7,7 @@
 	import { SITE, OG, absolute, postCard } from '$lib/site'
 
 	import NavBar from '$lib/NavBar.svelte'
+	import Footer from '$lib/content/Footer.svelte'
 	import { posts } from '$lib/content/blogs/indexPosts'
 
 	import '@material-symbols/font-400'
@@ -122,6 +123,9 @@
 						<!-- 						</div> -->
 					</article>
 				{/each}
+			</div>
+			<div class="page-footer">
+				<Footer />
 			</div>
 		</main>
 	</div>

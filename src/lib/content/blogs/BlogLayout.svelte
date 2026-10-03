@@ -58,7 +58,7 @@
 		<aside>{@render chapters?.()}</aside>
 		<main>
 			{@render content?.()}
-			<!-- <Footer /> -->
+			<Footer />
 		</main>
 	</div>
 </div>
