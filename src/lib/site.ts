@@ -20,10 +20,14 @@ export const SITE = {
 	lang: 'en',
 
 	/**
-	 * TODO: replace both of these. The address is the only one that existed in
-	 * the repo and reads like a feedback inbox; the date is a placeholder.
+	 * Plus-addressed, so both land in the same Gmail inbox and can be split with
+	 * filters. The tag goes after the account name: `dev.yorqat+now@gmail.com`
+	 * delivers to `dev.yorqat@gmail.com`, whereas `now+dev.yorqat@gmail.com`
+	 * asks Gmail for an account called `now`.
 	 */
-	contactEmail: 'now+dev.yorqat@gmail.com',
+	contactEmail: 'dev.yorqat+now@gmail.com',
+	feedbackEmail: 'dev.yorqat+feedback@gmail.com',
+
 	availability: 'Available during GMT+8',
 
 	/**

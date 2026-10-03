@@ -3,6 +3,7 @@
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { theme } from '$lib/theming'
 	import Seo from '$lib/components/Seo.svelte'
+	import { SITE } from '$lib/site'
 </script>
 
 <Seo
@@ -90,7 +91,7 @@
 			<h2>5. Contact Information</h2>
 			<p>
 				If you have any questions about these Terms of Use, please contact us at: <a
-					href="mailto:feedback+dev.yorqat@gmail.com">feedback+dev.yorqat@gmail.com</a
+					href={`mailto:${SITE.feedbackEmail}`}>{SITE.feedbackEmail}</a
 				>
 			</p>
 		</section>

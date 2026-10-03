@@ -3,6 +3,7 @@
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { theme } from '$lib/theming'
 	import Seo from '$lib/components/Seo.svelte'
+	import { SITE } from '$lib/site'
 </script>
 
 <Seo title="Privacy Policy" description="How this portfolio handles your data." path="/privacy" />
@@ -98,7 +99,7 @@
 			<h2>4. Contact Information</h2>
 			<p>If you have any questions about this Privacy Policy, you can contact us at:</p>
 			<address>
-				<a href="mailto:feedback+dev.yorqat@gmail.com">feedback+dev.yorqat@gmail.com</a>
+				<a href={`mailto:${SITE.feedbackEmail}`}>{SITE.feedbackEmail}</a>
 			</address>
 		</section>
 	</main>
