@@ -64,7 +64,10 @@
 			padding-inline: 0.5rem;
 		}
 
-		@include layout-respond-max('md') {
+		/* Paired with the 'lg' block below. Scoping the base size to 'md' left
+		   768-1023px matched by neither rule, so the track inherited the 16px
+		   body default and rendered smaller than on either side of that range. */
+		@include layout-respond-max('lg') {
 			font-size: $x-font-size-xl;
 		}
 
