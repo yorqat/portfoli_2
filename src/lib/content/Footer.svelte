@@ -30,7 +30,7 @@
 
 					Github
 				</a>
-				<a href="https://dribbble.com/yourprofile" target="_blank" aria-label="Dribbble">
+				<a href="https://dribbble.com/yorqat" target="_blank" aria-label="Dribbble">
 					<img src="/icons/dribbble.svg" alt="Dribbble" />
 
 					Dribbble
