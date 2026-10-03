@@ -176,13 +176,12 @@
 
 	<!-- Slides.
 
-	     Each section below still carries the old copy. Headers 2-4 describe client
-	     work that never happened — metrics, user research, a team — which
-	     contradicts SITE.workContext. The briefs here record the agreed
-	     replacements; the copy itself is deliberately not applied yet, so the
-	     wording can follow the graphic rather than lead it.
+	     The section headers and the CTA have been rewritten: the old ones claimed
+	     outcomes this work cannot support (metrics, user research, a team), which
+	     contradicted SITE.workContext. The notes below them are still the old copy
+	     and three of them are fabricated — see the cuts noted under each section.
 
-	     Two rules for the artwork:
+	     The artwork is undesigned. Two rules for it:
 
 	     - Nothing invented. No dashboards, no fake charts, no user avatars, no
 	       chat UI, no analytics. Slide 2 is the trap: a gauge or a percentage
@@ -197,19 +196,18 @@
 	     text budget, with heading and notes on the left. -->
 	<section class="section section--slide">
 		<!-- GRAPHIC BRIEF — undesigned.
-		     Header: keep "I Design with Delivery in Mind". Notes: keep as-is.
-		     One component at three widths — mobile, tablet highlighted, desktop —
-		     over breakpoint gridlines. Interpolate the frames on scroll instead
-		     of cutting between them. One object covers both notes.
-		     Alt: a button exploded into tokens (padding, radius, type scale). -->
+	     Notes are accurate as they stand; no change needed.
+	     One component at three widths — mobile, tablet highlighted, desktop —
+	     over breakpoint gridlines. Interpolate the frames on scroll instead
+	     of cutting between them. One object covers both notes.
+	     Alt: a button exploded into tokens (padding, radius, type scale). -->
 		{@render Heading3D('I Design with Delivery in Mind')}
 		<p class="section__note">Scoped for tablet breakpoints</p>
 		<p class="section__note">Componentized for reuse</p>
 	</section>
 
 	<!-- GRAPHIC BRIEF — undesigned.
-	     Proposed header: "I Cut the Work a User Has To Do".
-	     Proposed notes: "Fewer form fields", "Clearer primary action".
+	     NOTES STILL PENDING: "Fewer form fields", "Clearer primary action".
 	     Cut "Tracking impact with funnel data" — no product, no users, no funnel.
 	     Draw a form collapsing: nine fields grey out and strike through, three
 	     survive, the count ticks 9 to 3, and the primary button gains weight as
@@ -217,7 +215,7 @@
 	     Alt: a cursor path that used to zigzag through nine stops settling into
 	     three. -->
 	<section class="section section--slide">
-		{@render Heading3D('Design That Moves Metrics')}
+		{@render Heading3D('I Cut the Work a User Has To Do')}
 		<p class="section__note">Reduced form fields</p>
 		<p class="section__note">Increased CTA visibility</p>
 		<p class="section__note">Tracking impact with funnel data</p>
@@ -225,8 +223,7 @@
 
 	<!-- GRAPHIC BRIEF — undesigned. Keep the morpher; it is the strongest asset on
 	     the page and an honest metaphor, rough resolving into structure.
-	     Proposed header: "I Plan Before I Open Figma".
-	     Proposed notes: "Userflow first", "Personas, still rough".
+	     NOTES STILL PENDING: "Userflow first", "Personas, still rough".
 	     Cut "Bug report from a usability session" — no session happened.
 	     Let the blob become the diagram: morph into three labelled nodes with the
 	     connectors drawn on via DrawSVG as the labels settle. One object,
@@ -235,7 +232,7 @@
 	     rotation, a visible draft tag) rather than hiding it. Roughness is the
 	     honest part of a persona, so it should look deliberate, not sloppy. -->
 	<section class="section section--slide">
-		{@render Heading3D('Built with User Insight')}
+		{@render Heading3D('I Plan Before I Open Figma')}
 		<p class="section__note">Userflow from Miro or Figjam</p>
 		<p class="section__note">Persona Drafts</p>
 		<p class="section__note">Bug report from a usability session</p>
@@ -266,7 +263,7 @@
 
 	<!-- GRAPHIC BRIEF — undesigned.
 	     Proposed header: "I Leave the Work Readable".
-	     Proposed notes: "Component docs", "Written rationale in the README",
+	     NOTES STILL PENDING: "Component docs", "Written rationale in the README",
 	     "Issues I filed and fixed".
 	     Cut the Slack handoff snippets — invented dialogue from a team that does
 	     not exist. Cut "Userflow from Miro or Figjam" (duplicates slide 3) and
@@ -280,7 +277,7 @@
 	     This is the one section that can show genuine artifacts. Make it the proof
 	     section. -->
 	<section class="section section--slide">
-		{@render Heading3D('Design is a Team Sport')}
+		{@render Heading3D('I Leave the Work Readable')}
 		<p class="section__note">Jira ticket with latest iteration design attached</p>
 		<p class="section__note">
 			Slack Handoff snippets: "Final assets uploaded", "Spec clarified here"
@@ -290,14 +287,13 @@
 	</section>
 
 	<!-- GRAPHIC BRIEF — none recommended.
-	     Proposed header: "Want to see more?". Proposed button: "Get in touch".
 	     Let the email be the visual, set large. An illustration would fight the
 	     button, and the portrait already carries the OG card, so the face does not
 	     need to repeat here. -->
 	<!-- Call to Action -->
 	<section class="section section--cta">
-		{@render Heading3D('Curious of what I bring to the table?')}
-		<a class="cta__button corsette" href="/contact">Review my work together?</a>
+		{@render Heading3D('Want to see more?')}
+		<a class="cta__button corsette" href="/contact">Get in touch</a>
 		<p class="cta__status">
 			Looking for a {ROLE.level}
 			{ROLE.primary} role. {SITE.availability}.
